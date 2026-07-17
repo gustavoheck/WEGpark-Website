@@ -29,7 +29,9 @@ export default function RootLayout({
           <AppSidebar />
           <Header />
           <main>
-            {children}
+            <QueryProvider>
+              {children}
+            </QueryProvider>
           </main>
           <SidebarInset/>
         </SidebarProvider>
