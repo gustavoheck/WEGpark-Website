@@ -1,15 +1,16 @@
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader } from "../../../components/ui/sidebar";
+import { Car } from "lucide-react";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../../../components/ui/sidebar";
 
  
 export function AppSidebar() {
+
   return (
     <Sidebar>
-      <SidebarHeader />
       <SidebarContent>
-        <SidebarGroup />
-        <SidebarGroup />
+        <SidebarMenuButton size="xl" className="text-white">
+          <Car className="size-7"/> Veículos
+        </SidebarMenuButton>
       </SidebarContent>
-      <SidebarFooter />
     </Sidebar>
   )
 }
