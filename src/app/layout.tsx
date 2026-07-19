@@ -2,17 +2,21 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/shared/lib/utils";
-import { QueryProvider } from "@/shared/providers/QueryProvider";
 import Header from "@/shared/components/organisms/Header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/shared/components/organisms/AppSidebar";
+import SidebarItem from "@/shared/types/SidebarItem";
+import { Car } from "lucide-react";
+import sidebarItemsMock from "@/shared/mocks/SideBarItemsMock";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: "WEGpark",
   description: "WEGpark",
 };
+
+const items = sidebarItemsMock
 
 export default function RootLayout({
   children,
@@ -26,12 +30,12 @@ export default function RootLayout({
     >
       <body>
         <SidebarProvider>
-          <AppSidebar />
+          <AppSidebar menuItems={items} />
           <Header />
           <main>
             {children}
           </main>
-          <SidebarInset/>
+          <SidebarInset />
         </SidebarProvider>
       </body>
     </html>
