@@ -78,7 +78,7 @@ export function LoginForm() {
                                     <Input
                                         {...field}
                                         id="login-email"
-                                        type="email"
+                                        type="text"
                                         aria-invalid={fieldState.invalid}
                                     />
                                     {fieldState.invalid ? (
