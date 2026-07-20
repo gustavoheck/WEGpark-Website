@@ -11,8 +11,6 @@ export const metadata: Metadata = {
   description: "WEGpark",
 };
 
-const items = sidebarItemsMock
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,7 +22,7 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", "font-sans", geist.variable)}
     >
       <body>
-        {children}
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );
