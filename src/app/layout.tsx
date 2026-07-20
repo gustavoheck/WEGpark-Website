@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/shared/lib/utils";
-import sidebarItemsMock from "@/shared/mocks/SideBarItemsMock";
+import { QueryProvider } from "@/shared/providers/QueryProvider";
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
