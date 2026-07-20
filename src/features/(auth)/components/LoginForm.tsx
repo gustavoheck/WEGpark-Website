@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -62,6 +63,20 @@ export function LoginForm() {
                         )}
                     </div>
                     
+                    <Link
+                        href={"/forgot-pass"}
+                        className="text-sm text-primary hover:text-primary hover:underline"
+                    >
+                        Esqueceu a Senha?
+                    </Link>
+
+                    <Link
+                        href={"/sign-up"}
+                        className="text-sm text-primary hover:text-primary hover:underline"
+                    >
+                        Ainda não possui uma conta? Cadastre-se aqui
+                    </Link>
+
                     {isError && (
                         <p className="text-sm text-destructive">
                             Email ou senha inválidos.
