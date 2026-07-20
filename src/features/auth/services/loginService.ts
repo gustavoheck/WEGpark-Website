@@ -1,5 +1,5 @@
 import { api } from "@/shared/lib/api";
-import { LoginFormData } from "../types/LoginSchema";
+import { LoginFormData } from "../schemas/LoginSchema";
 import { LoginResponseDTO } from "../types/LoginResponse";
 
 export async function loginService(
