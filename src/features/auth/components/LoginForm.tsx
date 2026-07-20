@@ -21,7 +21,7 @@ import {
     FieldLabel
 } from "@/components/ui/field";
 
-import { loginSchema, LoginFormData } from "../types/LoginSchema";
+import { loginSchema, LoginFormData } from "../schemas/LoginSchema";
 import { useLogin } from "../hooks/useLogin";
 
 export function LoginForm() {
