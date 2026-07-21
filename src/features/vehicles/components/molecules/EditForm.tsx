@@ -74,19 +74,19 @@ export default function EditForm({ vehicle }: EditFormProps) {
                         />
                     </FieldGroup>
                     <FormButton
-                        normalText="Editar"
+                        normalText="Salvar Alterações"
                         isPending={isPending}
-                        pendingText="Editando"
+                        pendingText="Salvando"
                         onClick={handleOpenModal}
                     />
                     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="text-xl font-bold mb-2">
-                                    Editar Veículo
+                                    Salvar Alterações
                                 </AlertDialogTitle>
                                 <AlertDialogDescription className="text-md w-full text-wrap text-center">
-                                    Você realmente deseja confirmar a edição deste veículo?
+                                    Você deseja salvar as alterações feitas sobre esse veículo?
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -96,7 +96,7 @@ export default function EditForm({ vehicle }: EditFormProps) {
                                     disabled={isPending}
                                     className="py-5 text-md font-semibold"
                                 >
-                                    Continue
+                                    Salvar
                                 </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
