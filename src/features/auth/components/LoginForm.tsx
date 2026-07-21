@@ -77,8 +77,8 @@ export function LoginForm() {
                                     <FieldLabel htmlFor="login-password">Senha</FieldLabel>
                                     <Input
                                         {...field}
-                                        id="login-email"
-                                        type="text"
+                                        id="login-password"
+                                        type="password"
                                         aria-invalid={fieldState.invalid}
                                     />
                                     {fieldState.invalid ? (
