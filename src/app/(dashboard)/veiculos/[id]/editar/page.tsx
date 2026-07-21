@@ -1,27 +1,32 @@
-"use client"
-
 import EditForm from "@/features/vehicles/components/molecules/EditForm";
 import VehicleListMock from "@/features/vehicles/mocks/VehicleListMock";
-import Vehicle from "@/features/vehicles/types/Vehicle";
-import { useParams } from "next/navigation";
+import BackButton from "@/shared/components/atoms/BackButton";
+import SectionTitle from "@/shared/components/atoms/SectionTitle";
+import { notFound } from "next/navigation";
 
-const vehicles: Vehicle[] = VehicleListMock
+interface EditarPageProps {
+    params: Promise<{ id: string }>;
+}
 
 
-export default function Editar () {
+export default async function Editar({ params }: EditarPageProps) {
 
-    const { id } = useParams();
+    const { id } = await params;
+    const vehicle = VehicleListMock.find((v) => v.id === Number(id));
 
-    const vehicle = vehicles.find((vehicle) => vehicle.id === Number(id));
-
-    if (vehicle === undefined){
-        return (
-            <p>Nao achamos</p>
-        )
+    if (!vehicle) {
+        notFound()
     }
 
     return (
-        <EditForm vehicle={vehicle} />
-    )
+        <section>
+            <div className="flex items-center w-full pt-6 pb-8 gap-3 relative justify-center">
+                <BackButton />
+                <SectionTitle text="editar veículo" className="py-0"/>
+            </div>
 
+            <EditForm vehicle={vehicle} />
+        </section>
+
+    )
 }

@@ -1,3 +1,5 @@
+'use client'
+
 import { FieldGroup} from "@/components/ui/field";
 import Vehicle from "../../types/Vehicle";
 import { Card, CardContent } from "@/components/ui/card";
@@ -5,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { EditFormData, editSchema } from "../../schemas/EditSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEdit } from "../../hooks/useEdit";
-import { Button } from "@/components/ui/button";
 import FormField from "../../../../shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 
