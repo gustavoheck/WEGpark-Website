@@ -4,7 +4,7 @@ import SidebarItem from "@/shared/types/SidebarItem"
 const ALL_MENU_ITEMS: Record<string, SidebarItem & { roles: string[] }> = {
   vehicles: {
     title: "veiculos",
-    href: "/vehicles",
+    href: "/veiculos",
     icon: CarFront,
     roles: ["parkuser", "guard", "admin"]
   },

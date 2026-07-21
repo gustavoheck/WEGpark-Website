@@ -16,7 +16,7 @@ interface VehicleCardProps {
 
 export default function VehicleCard({ vehicle }: VehicleCardProps) {
 
-    const { plate, brand, model, color, ownerId } = vehicle
+    const {id, plate, brand, model, color, ownerId } = vehicle
 
     const [isExpanded, setIsExpanded] = useState(false)
 
@@ -58,7 +58,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                         <div className="grid grid-cols-2 gap-3 w-full">
                             <VehicleCardButton title="ver ocorrências" Icon={Eye} href="/ocorrencias" />
                             <VehicleCardButton title="ver usuarios" Icon={Users} href="/ocorrencias" />
-                            <VehicleCardButton title="editar" Icon={Pencil} href="/ocorrencias" />
+                            <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${id}/editar`} />
                             <VehicleCardButton title="excluir" Icon={Trash2} href="/ocorrencias" destructive />
                         </div>
                     </CardContent>

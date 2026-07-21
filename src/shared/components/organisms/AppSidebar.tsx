@@ -24,7 +24,6 @@ export function AppSidebar({ menuItems }: AppSidebarProps) {
               <Link href={item.href} className="flex gap-2">
                 <item.icon className="size-7" /> {item.title}
               </Link>
-
             </SidebarMenuButton>
           )
         })}
