@@ -17,7 +17,7 @@ export default function RootLayout({
             <AppSidebar menuItems={sidebarItems} />
             <SidebarInset>
                 <Header />
-                <main>
+                <main className="px-4">
                     {children}
                 </main>
             </SidebarInset>

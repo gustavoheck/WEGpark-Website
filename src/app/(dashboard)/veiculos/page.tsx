@@ -1,21 +1,21 @@
-import VehicleCard from "@/features/vehicles/components/molecules/VehicleCard";
+import { Button } from "@/components/ui/button";
+import VehicleList from "@/features/vehicles/components/organisms/VehicleList";
+import VehicleListMock from "@/features/vehicles/mocks/VehicleListMock";
 import Vehicle from "@/features/vehicles/types/Vehicle";
+import { Plus } from "lucide-react";
 
-const vehicle : Vehicle = {
-    plate : "IQK1010",
-    model : "Beetle",
-    brand : "Volkswagen",
-    ownerId : 1,
-    color : "Branco"
-}
+const vehicles: Vehicle[] = VehicleListMock
 
-export default function Vehicles () {
+export default function Vehicles() {
     return (
-        <section className="m-[5%]">
-            <VehicleCard
-            vehicle={vehicle}
-         />
-        </section>
-        
+        <>
+            <VehicleList vehicles={vehicles} />
+            <Button className="fixed bottom-4 left-4 right-4 text-xl rounded-sm py-6 font-bold z-50">
+                <Plus className="size-7" />
+                Adicionar Veículo
+            </Button>
+        </>
+
+
     )
 }
