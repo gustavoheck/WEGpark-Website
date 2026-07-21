@@ -8,9 +8,9 @@ interface VehicleListProps {
 
 export default function VehicleList({ vehicles }: VehicleListProps) {
     return (
-        <section className="px-4">
+        <section>
             <SectionTitle text="Meus Veículos" />
-            <div className="flex flex-col gap-4 pb-8">
+            <div className="flex flex-col gap-4 pb-24">
                 {vehicles.map((vehicle) => {
                     return (
                         <VehicleCard key={vehicle.id} vehicle={vehicle} />
