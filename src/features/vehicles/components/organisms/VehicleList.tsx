@@ -1,0 +1,25 @@
+import SectionTitle from "@/shared/components/atoms/SectionTitle";
+import Vehicle from "../../types/Vehicle";
+import VehicleCard from "../molecules/VehicleCard";
+
+interface VehicleListProps {
+    vehicles: Vehicle[]
+}
+
+export default function VehicleList({ vehicles }: VehicleListProps) {
+    return (
+        <section className="px-4">
+            <SectionTitle text="Meus Veículos" />
+            <div className="flex flex-col gap-4 pb-8">
+                {vehicles.map((vehicle) => {
+                    return (
+                        <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                    )
+                })}
+            </div>
+
+        </section>
+
+    )
+
+}

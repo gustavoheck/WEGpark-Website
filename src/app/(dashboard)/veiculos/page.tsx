@@ -1,21 +1,12 @@
-import VehicleCard from "@/features/vehicles/components/molecules/VehicleCard";
+import VehicleList from "@/features/vehicles/components/organisms/VehicleList";
+import VehicleListMock from "@/features/vehicles/mocks/VehicleListMock";
 import Vehicle from "@/features/vehicles/types/Vehicle";
 
-const vehicle : Vehicle = {
-    plate : "IQK1010",
-    model : "Beetle",
-    brand : "Volkswagen",
-    ownerId : 1,
-    color : "Branco"
-}
+const vehicles: Vehicle[] = VehicleListMock
 
-export default function Vehicles () {
+export default function Vehicles() {
     return (
-        <section className="m-[5%]">
-            <VehicleCard
-            vehicle={vehicle}
-         />
-        </section>
-        
+        <VehicleList vehicles={vehicles}/>
+
     )
 }
