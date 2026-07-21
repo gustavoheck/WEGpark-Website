@@ -14,7 +14,7 @@ const VehicleListMock: Vehicle[] = [
     plate: "BQK1010",
     model: "Touro",
     brand: "Fiat",
-    ownerId: 1,
+    ownerId: 2,
     color: "Preto",
   },
   {
@@ -22,7 +22,7 @@ const VehicleListMock: Vehicle[] = [
     plate: "CQK1010",
     model: "Prisma",
     brand: "Chevrolet",
-    ownerId: 1,
+    ownerId: 3,
     color: "Branco",
   },
   {
