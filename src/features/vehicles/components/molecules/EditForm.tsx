@@ -1,6 +1,6 @@
 'use client'
 
-import { FieldGroup} from "@/components/ui/field";
+import { FieldGroup } from "@/components/ui/field";
 import Vehicle from "../../types/Vehicle";
 import { Card, CardContent } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEdit } from "../../hooks/useEdit";
 import FormField from "../../../../shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 interface EditFormProps {
     vehicle: Vehicle
@@ -17,6 +19,8 @@ interface EditFormProps {
 export default function EditForm({ vehicle }: EditFormProps) {
 
     const { id, plate, brand, model, color } = vehicle
+
+    const [isOpen, setIsOpen] = useState(false)
 
     const { register, handleSubmit, formState: { errors } } = useForm<EditFormData>({
         resolver: zodResolver(editSchema),
@@ -30,14 +34,19 @@ export default function EditForm({ vehicle }: EditFormProps) {
 
     const { mutate, isPending } = useEdit();
 
-    function onSubmit(data: EditFormData) {
+    function handleConfirmSubmit(data: EditFormData) {
         mutate({ id, vehicleData: data });
+        setIsOpen(false)
     }
+
+    const handleOpenModal = () => {
+        handleSubmit(() => setIsOpen(true))();
+    };
 
     return (
         <Card>
             <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(handleConfirmSubmit)}>
                     <FieldGroup className="gap-4 mb-6">
                         <FormField
                             text="placa"
@@ -65,14 +74,35 @@ export default function EditForm({ vehicle }: EditFormProps) {
                         />
                     </FieldGroup>
                     <FormButton
-                        isPending={isPending}
                         normalText="Editar"
+                        isPending={isPending}
                         pendingText="Editando"
+                        onClick={handleOpenModal}
                     />
+                    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="text-xl font-bold mb-2">
+                                    Editar Veículo
+                                </AlertDialogTitle>
+                                <AlertDialogDescription className="text-md w-full text-wrap text-center">
+                                    Você realmente deseja confirmar a edição deste veículo?
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className="py-5 text-md font-semibold">Cancelar</AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={handleSubmit(handleConfirmSubmit)}
+                                    disabled={isPending}
+                                    className="py-5 text-md font-semibold"
+                                >
+                                    Continue
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </form>
             </CardContent>
-
         </Card>
-
     )
 }

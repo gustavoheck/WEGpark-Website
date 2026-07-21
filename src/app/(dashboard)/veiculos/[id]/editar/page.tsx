@@ -20,7 +20,7 @@ export default async function Editar({ params }: EditarPageProps) {
 
     return (
         <section>
-            <div className="flex items-center w-full pt-6 pb-8 gap-3 relative justify-center">
+            <div className="flex items-center w-full pt-8 pb-10 gap-3 relative justify-center">
                 <BackButton />
                 <SectionTitle text="editar veículo" className="py-0"/>
             </div>
