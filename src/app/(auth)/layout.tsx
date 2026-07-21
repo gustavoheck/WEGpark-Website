@@ -14,6 +14,7 @@ export default function AuthLayout({
                     alt="Logo da WEGpark"
                     width={180}
                     height={50}
+                    loading="eager"
                 />
             </div>
 

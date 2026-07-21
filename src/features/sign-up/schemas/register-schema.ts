@@ -22,11 +22,15 @@ const visitorFields = z.object({
     cpf: z.string().regex(cpfRegex, "CPF Inválido"),
 });
 
+
+const employeeSchema = baseSchema.merge(employeeFields);
+const visitorSchema = baseSchema.merge(visitorFields);
+
+export type EmployeeFormValues = z.infer<typeof employeeSchema>;
+export type VisitorFormValues = z.infer<typeof visitorSchema>;
+
 export const registerSchema = z
-    .discriminatedUnion("type", [
-        baseSchema.merge(employeeFields),
-        baseSchema.merge(visitorFields),
-    ])
+    .discriminatedUnion("type", [employeeSchema, visitorSchema])
 
     .refine((data) => data.password === data.confirmPassword, {
         message: "As senhas não são iguais",
