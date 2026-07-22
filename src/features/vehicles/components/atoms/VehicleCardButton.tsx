@@ -7,11 +7,12 @@ interface VehicleCardButtonProps {
     href: string,
     Icon: ElementType
     destructive?: boolean
+    onClick?: () => void
 }
 
-export default function VehicleCardButton({ title, href, Icon, destructive = false }: VehicleCardButtonProps) {
+export default function VehicleCardButton({ title, href, Icon, destructive = false, onClick }: VehicleCardButtonProps) {
     return (
-        <Button asChild variant={destructive ? "destructive" : "outline"} className="w-full justify-start gap-2 h-11 text-md font-medium capitalize">
+        <Button asChild variant={destructive ? "destructive" : "outline"} className="w-full justify-start gap-2 h-11 text-md font-medium capitalize" onClick={onClick}>
             <Link href={href}>
                 <Icon className={`size-5 ${!destructive ? "text-foreground" : ""}`} />
                 {title}
