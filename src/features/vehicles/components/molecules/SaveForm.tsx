@@ -1,41 +1,34 @@
 'use client'
 
 import { FieldGroup } from "@/components/ui/field";
-import Vehicle from "../../types/Vehicle";
 import { Card, CardContent } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { VehicleFormData, vehicleSchema } from "../../schemas/VehicleSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEdit } from "../../hooks/useEdit";
 import FormField from "../../../../shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { useSave } from "../../hooks/useSave";
 
-interface EditFormProps {
-    vehicle: Vehicle
-}
-
-export default function EditForm({ vehicle }: EditFormProps) {
-
-    const { id, plate, brand, model, color } = vehicle
+export default function SaveForn() {
 
     const [isOpen, setIsOpen] = useState(false)
 
-    const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm<VehicleFormData>({
+    const { register, handleSubmit, formState: { errors, isValid, isDirty } } = useForm<VehicleFormData>({
         resolver: zodResolver(vehicleSchema),
         defaultValues: {
-            plate,
-            brand,
-            model,
-            color
+            plate : "",
+            brand : "",
+            model : "",
+            color : ""
         }
     });
 
-    const { mutate, isPending } = useEdit();
+    const { mutate, isPending } = useSave();
 
     function handleConfirmSubmit(data: VehicleFormData) {
-        mutate({ id, vehicleData: data });
+        mutate({vehicleData: data});
         setIsOpen(false)
     }
 
@@ -43,7 +36,7 @@ export default function EditForm({ vehicle }: EditFormProps) {
         handleSubmit(() => setIsOpen(true))();
     };
 
-    const isButtonDisabled = !isDirty || !isValid || isPending
+    const isButtonDisabled =  !isDirty || isPending
 
     return (
         <Card>
@@ -76,7 +69,7 @@ export default function EditForm({ vehicle }: EditFormProps) {
                         />
                     </FieldGroup>
                     <FormButton
-                        text="salvar alterações"
+                        text="salvar veículo"
                         disabled={isButtonDisabled}
                         onClick={handleOpenModal}
                     />
