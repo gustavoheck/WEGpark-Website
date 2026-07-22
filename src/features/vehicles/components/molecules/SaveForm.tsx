@@ -7,41 +7,50 @@ import { VehicleFormData, vehicleSchema } from "../../schemas/VehicleSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormField from "../../../../shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { useSave } from "../../hooks/useSave";
+import { DialogContent, DialogHeader, Dialog, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 
 export default function SaveForn() {
+    const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
+    const [isOpenInformative, setIsOpenInformative] = useState(false)
 
-    const [isOpen, setIsOpen] = useState(false)
-
-    const { register, handleSubmit, formState: { errors, isValid, isDirty } } = useForm<VehicleFormData>({
+    const { register, handleSubmit, formState: { errors, isValid } } = useForm<VehicleFormData>({
         resolver: zodResolver(vehicleSchema),
-        defaultValues: {
-            plate : "",
-            brand : "",
-            model : "",
-            color : ""
-        }
+        mode: "onChange"
     });
 
-    const { mutate, isPending } = useSave();
+    const { mutate: saveVehicle, isPending: isSaving } = useSave();
 
-    function handleConfirmSubmit(data: VehicleFormData) {
-        mutate({vehicleData: data});
-        setIsOpen(false)
+    function onSubmit(data: VehicleFormData){
+        saveVehicle(
+            { vehicleData : data },
+            {
+                onSuccess: () => {
+                    setIsOpenInformative(true)
+                },
+                onError: (error : any) => {
+                    if (error?.response?.status === 404){
+                        setIsOpenInformative(true)
+                    }
+                    if (error?.response?.status === 409){
+                        setIsOpenConfirmation(true)
+                    }
+                }
+            }
+        )
     }
 
-    const handleOpenModal = () => {
-        handleSubmit(() => setIsOpen(true))();
-    };
-
-    const isButtonDisabled =  !isDirty || isPending
+    function handleRequestOwnership () {
+        // Service que notificará o proprietário
+        setIsOpenConfirmation(false)
+    }
 
     return (
         <Card>
             <CardContent>
-                <form onSubmit={handleSubmit(handleConfirmSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <FieldGroup className="gap-4 mb-6">
                         <FormField
                             text="placa"
@@ -70,31 +79,45 @@ export default function SaveForn() {
                     </FieldGroup>
                     <FormButton
                         text="salvar veículo"
-                        disabled={isButtonDisabled}
-                        onClick={handleOpenModal}
+                        disabled={!isValid || isSaving}
                     />
-                    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+                    <AlertDialog open={isOpenConfirmation} onOpenChange={setIsOpenConfirmation}>
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="text-xl font-bold mb-2">
-                                    Salvar Alterações
+                                    Veículo já Existente
                                 </AlertDialogTitle>
-                                <AlertDialogDescription className="text-md w-full text-wrap text-center">
-                                    Você deseja salvar as alterações feitas sobre esse veículo?
+                                <AlertDialogDescription className="text-base w-full text-wrap text-center">
+                                    Esse veículo já está cadastrado no sistema, deseja mandar uma notificação ao proprietário para se tornar um usuário?
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel className="py-5 text-md font-semibold">Cancelar</AlertDialogCancel>
+                                <AlertDialogCancel className="py-5 text-lg font-semibold">Cancelar</AlertDialogCancel>
                                 <AlertDialogAction
-                                    onClick={handleSubmit(handleConfirmSubmit)}
-                                    disabled={isPending}
-                                    className="py-5 text-md font-semibold"
+                                    onClick={handleRequestOwnership}
+                                    className="py-5 text-lg font-semibold"
                                 >
-                                    Salvar
+                                    Solicitar
                                 </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
+
+                    <Dialog open={isOpenInformative} onOpenChange={setIsOpenInformative}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle className="text-xl font-bold mb-2 text-center">
+                                    Veículo Cadastrado
+                                </DialogTitle>
+                                <DialogDescription className="text-base w-full text-wrap text-center">
+                                    Veículo cadastrado com você de proprietário com sucesso!
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                                <DialogClose className="text-lg font-semibold">Fechar</DialogClose>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </form>
             </CardContent>
         </Card>
