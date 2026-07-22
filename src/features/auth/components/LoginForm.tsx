@@ -2,25 +2,20 @@
 
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
     Card,
     CardContent,
     CardDescription,
-    CardHeader,
-    CardTitle
+    CardHeader
 } from "@/components/ui/card";
+import { FieldGroup } from "@/components/ui/field";
 
-import { 
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel
-} from "@/components/ui/field";
+import FormField from "@/shared/components/atoms/FormField";
+import SectionTitle from "@/shared/components/atoms/SectionTitle";
 
+import FormButton from "@/shared/components/atoms/FormButton";
 import { loginSchema, LoginFormData } from "../schemas/LoginSchema";
 import { useLogin } from "../hooks/useLogin";
 
@@ -42,7 +37,7 @@ export function LoginForm() {
     return (
         <Card className="w-full max-w-sm">
             <CardHeader>
-                <CardTitle className="text-2xl">Entrar</CardTitle>
+                <SectionTitle text="Entrar" className="py-2 flex" />
                 <CardDescription>
                     Digite seu email e senha para acessar sua conta.
                 </CardDescription>
@@ -51,42 +46,22 @@ export function LoginForm() {
                 
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
                     <FieldGroup>
-                        <Controller
-                            name="email"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="login-email">Email</FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="login-email"
-                                        type="email"
-                                        aria-invalid={fieldState.invalid}
-                                    />
-                                    {fieldState.invalid ? (
-                                        <FieldError errors={[fieldState.error]}/>
-                                    ): null}
-                                </Field>
-                            )}
+
+                        <FormField 
+                            text="email"
+                            id="email"
+                            registration={form.register("email")}
+                            error={form.formState.errors.email}
                         />
-                        <Controller
-                            name="password"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="login-password">Senha</FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="login-password"
-                                        type="password"
-                                        aria-invalid={fieldState.invalid}
-                                    />
-                                    {fieldState.invalid ? (
-                                        <FieldError errors={[fieldState.error]}/>
-                                    ): null}
-                                </Field>
-                            )}
-                        />       
+
+                        <FormField 
+                            text="senha"
+                            type="password"
+                            id="password"
+                            registration={form.register("password")}
+                            error={form.formState.errors.password}
+                        />
+      
                     </FieldGroup>
                     
                     <Link
@@ -96,7 +71,7 @@ export function LoginForm() {
                         Esqueceu a senha?
                     </Link>
 
-                    <p className="text-sm text-sm text-primary">
+                    <p className="text-sm text-sm text-muted-foreground">
                         Ainda não possui uma conta?{" "}
                         <Link
                             href={"/cadastro"}
@@ -112,9 +87,8 @@ export function LoginForm() {
                         </p>
                     ): null}
 
-                    <Button type="submit" className="w-full" disabled={isPending}>
-                        {isPending ? "Entrando..." : "Entrar"}
-                    </Button>
+                    <FormButton disabled={isPending} text={isPending ? "Entrando..." : "Entrar"}/>
+                        
                 </form>
             </CardContent>
         </Card>

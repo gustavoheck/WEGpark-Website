@@ -4,22 +4,17 @@ import { useState } from "react";
 import { FieldErrors, useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel
-} from "@/components/ui/field";
-
+import { FieldGroup } from "@/components/ui/field";
 import {
     Card,
     CardContent,
     CardDescription,
-    CardHeader,
-    CardTitle
+    CardHeader
 } from "@/components/ui/card";
+
+import SectionTitle from "@/shared/components/atoms/SectionTitle";
+import FormField from "@/shared/components/atoms/FormField";
+import FormButton from "@/shared/components/atoms/FormButton";
 
 import { useRegister } from "../hooks/useRegister";
 import { UserTypeSelector } from "./UserTypeSelector";
@@ -69,7 +64,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
     return (
         <Card className="w-full max-w-sm">
             <CardHeader>
-                <CardTitle className="text-2xl">Cadastrar-se</CardTitle>
+                <SectionTitle className="py-2 flex" text="cadastrar-se" />
                 <CardDescription>
                     Insira seus dados para se cadastrar no WEGpark
                 </CardDescription>
@@ -77,45 +72,29 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
             <CardContent>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FieldGroup>
-                        <Field data-invalid={!!errors.email}>
-                            <FieldLabel htmlFor="email">E-mail</FieldLabel>
-                            <Input 
-                                id="email"
-                                type="email"
-                                placeholder={
-                                    userType === "COLABORADOR" ? "nome.sobrenome@weg.net" : "seuemail@exemplo.com"
-                                }
-                                aria-invalid={!!errors.email}
-                                {...registerField("email")}
-                            />
-                            {errors.email ? (
-                                <FieldError>{errors.email.message}</FieldError>
-                            ) : null}
-                        </Field>
 
-                        <Field data-invalid={!!errors.password}>
-                            <FieldLabel htmlFor="password">Senha</FieldLabel>
-                            <Input 
-                                id="password"
-                                type="password"
-                                aria-invalid={!!errors.password}
-                                {...registerField("password")}
-                            />
-                            {errors.password ? (
-                                <FieldError>{errors.password.message}</FieldError>
-                            ): null}
-                        </Field>
+                        <FormField 
+                            text="email"
+                            id="email"
+                            registration={registerField("email")}
+                            error={errors.email}
+                        />
 
-                        <Field data-invalid={!!errors.confirmPassword}>
-                            <FieldLabel htmlFor="confirm-password">Confirmar Senha</FieldLabel>
-                            <Input 
-                                id="confirm-password"
-                                type="password"
-                                aria-invalid={!!errors.confirmPassword}
-                                {...registerField("confirmPassword")}
-                            />
-                            {errors.password && <FieldError>{errors.password.message}</FieldError>}
-                        </Field>
+                        <FormField 
+                            text="senha"
+                            id="password"
+                            type="password"
+                            registration={registerField("password")}
+                            error={errors.password}
+                        />
+
+                        <FormField 
+                            text="confirmar senha"
+                            id="confirm-password"
+                            type="password"
+                            registration={registerField("confirmPassword")}
+                            error={errors.confirmPassword}
+                        />
 
                         <UserTypeSelector value={userType} onChange={handleSelectType}/>
 
@@ -142,9 +121,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
                                 Não foi possível concluir o cadastro. Tente novamente.
                             </p>
                         ) : null}
-                        <Button type="submit" disabled={!userType || isPending} className="w-full">
-                            {isPending ? "Enviando..." : "Cadastrar"}
-                        </Button>
+                        <FormButton disabled={!userType || isPending} text={isPending ? "Enviando..." : "Cadastrar"} />
                     </FieldGroup>
                 </form>
             </CardContent>
