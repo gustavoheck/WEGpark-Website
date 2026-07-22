@@ -7,10 +7,10 @@ import { VehicleFormData, vehicleSchema } from "../../schemas/VehicleSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormField from "../../../../shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { useSave } from "../../hooks/useSave";
-import { DialogContent, DialogHeader, Dialog, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
+import DialogComponent from "@/shared/components/organisms/Dialog";
 
 export default function SaveForn() {
     const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
@@ -34,6 +34,7 @@ export default function SaveForn() {
                     if (error?.response?.status === 404){
                         setIsOpenInformative(true)
                     }
+                    // Erro de conflito, que acionará o dialog de confirmação
                     if (error?.response?.status === 409){
                         setIsOpenConfirmation(true)
                     }
@@ -81,43 +82,22 @@ export default function SaveForn() {
                         text="salvar veículo"
                         disabled={!isValid || isSaving}
                     />
-                    <AlertDialog open={isOpenConfirmation} onOpenChange={setIsOpenConfirmation}>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle className="text-xl font-bold mb-2">
-                                    Veículo já Existente
-                                </AlertDialogTitle>
-                                <AlertDialogDescription className="text-base w-full text-wrap text-center">
-                                    Esse veículo já está cadastrado no sistema, deseja mandar uma notificação ao proprietário para se tornar um usuário?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel className="py-5 text-lg font-semibold">Cancelar</AlertDialogCancel>
-                                <AlertDialogAction
-                                    onClick={handleRequestOwnership}
-                                    className="py-5 text-lg font-semibold"
-                                >
-                                    Solicitar
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                    <AlertDialogComponent
+                        open={isOpenConfirmation}
+                        onOpenChange={setIsOpenConfirmation}
+                        title="Veículo já Existente"
+                        description="Esse veículo já está cadastrado no sistema, deseja mandar uma notificação ao proprietário para se tornar um usuário?"
+                        onClick={handleRequestOwnership}
+                        confirmText="Solicitar"
+                    />
 
-                    <Dialog open={isOpenInformative} onOpenChange={setIsOpenInformative}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle className="text-xl font-bold mb-2 text-center">
-                                    Veículo Cadastrado
-                                </DialogTitle>
-                                <DialogDescription className="text-base w-full text-wrap text-center">
-                                    Veículo cadastrado com você de proprietário com sucesso!
-                                </DialogDescription>
-                            </DialogHeader>
-                            <DialogFooter>
-                                <DialogClose className="text-lg font-semibold">Fechar</DialogClose>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                    <DialogComponent
+                        open={isOpenInformative}
+                        onOpenChange={setIsOpenInformative}
+                        title="Veículo Cadastrado"
+                        description="Veículo cadastrado com você de proprietário com sucesso!"
+                    
+                    />
                 </form>
             </CardContent>
         </Card>

@@ -4,16 +4,15 @@ import Header from "@/shared/components/organisms/Header";
 import { getSidebarItems } from "@/shared/config/sidebar";
 
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-
     const sidebarItems = getSidebarItems('parkuser')
 
     return (
-        <SidebarProvider>
+        <SidebarProvider defaultOpen={false}>
             <AppSidebar menuItems={sidebarItems} />
             <SidebarInset>
                 <Header />
