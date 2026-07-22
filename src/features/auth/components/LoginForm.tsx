@@ -99,7 +99,7 @@ export function LoginForm() {
                     <p className="text-sm text-sm text-primary">
                         Ainda não possui uma conta?{" "}
                         <Link
-                            href={"/sign-up"}
+                            href={"/cadastro"}
                             className="text-sm text-primary hover:text-primary hover:underline"
                         >
                             Cadastre-se aqui
