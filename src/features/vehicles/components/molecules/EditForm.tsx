@@ -9,21 +9,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEdit } from "../../hooks/useEdit";
 import FormField from "../../../../shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
+import DialogComponent from "@/shared/components/organisms/Dialog";
 
 interface EditFormProps {
     vehicle: Vehicle
 }
 
 export default function EditForm({ vehicle }: EditFormProps) {
+    const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
+    const [isOpenInformative, setIsOpenInformative] = useState(false)
 
     const { id, plate, brand, model, color } = vehicle
 
-    const [isOpen, setIsOpen] = useState(false)
-
     const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm<VehicleFormData>({
         resolver: zodResolver(vehicleSchema),
+        mode: "onChange",
         defaultValues: {
             plate,
             brand,
@@ -32,23 +34,33 @@ export default function EditForm({ vehicle }: EditFormProps) {
         }
     });
 
-    const { mutate, isPending } = useEdit();
+     const { mutate : editVehicle, isPending } = useEdit();
 
-    function handleConfirmSubmit(data: VehicleFormData) {
-        mutate({ id, vehicleData: data });
-        setIsOpen(false)
+    function onSubmit(data: VehicleFormData){
+        editVehicle(
+            { id, vehicleData : data },
+            {
+                onSuccess: () => {
+                    setIsOpenConfirmation(false)
+                    setIsOpenInformative(true)
+                },
+                //Função provisória para funcionar corretamente sem uma API
+                onError: (error : any) => {
+                    setIsOpenConfirmation(false)
+                    alert("Erro!")
+                }
+            }
+        )
     }
 
-    const handleOpenModal = () => {
-        handleSubmit(() => setIsOpen(true))();
+    function handleConfirmateEdit() {
+        setIsOpenConfirmation(true);
     };
-
-    const isButtonDisabled = !isDirty || !isValid || isPending
 
     return (
         <Card>
             <CardContent>
-                <form onSubmit={handleSubmit(handleConfirmSubmit)}>
+                <form onSubmit={handleSubmit(handleConfirmateEdit)}>
                     <FieldGroup className="gap-4 mb-6">
                         <FormField
                             text="placa"
@@ -77,31 +89,26 @@ export default function EditForm({ vehicle }: EditFormProps) {
                     </FieldGroup>
                     <FormButton
                         text="salvar alterações"
-                        disabled={isButtonDisabled}
-                        onClick={handleOpenModal}
+                        disabled={!isDirty || !isValid}
                     />
-                    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle className="text-xl font-bold mb-2">
-                                    Salvar Alterações
-                                </AlertDialogTitle>
-                                <AlertDialogDescription className="text-md w-full text-wrap text-center">
-                                    Você deseja salvar as alterações feitas sobre esse veículo?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel className="py-5 text-md font-semibold">Cancelar</AlertDialogCancel>
-                                <AlertDialogAction
-                                    onClick={handleSubmit(handleConfirmSubmit)}
-                                    disabled={isPending}
-                                    className="py-5 text-md font-semibold"
-                                >
-                                    Salvar
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+
+                    <AlertDialogComponent
+                        open={isOpenConfirmation}
+                        onOpenChange={setIsOpenConfirmation}
+                        title="Salvar Alterações"
+                        description="Você deseja salvar as alterações feitas sobre esse veículo?"
+                        onClick={handleSubmit(onSubmit)}
+                        confirmText="Salvar"
+                    
+                    />
+
+                    <DialogComponent
+                        open={isOpenInformative}
+                        onOpenChange={setIsOpenInformative}
+                        title="Alterações Salvas"
+                        description="Os dados editados sobre o veículo foram salvos com sucesso!"
+                    
+                    />
                 </form>
             </CardContent>
         </Card>
