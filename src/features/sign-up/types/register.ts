@@ -8,8 +8,9 @@ interface BaseRegisterRequest {
 
 export interface CollaboratorRegisterRequest extends BaseRegisterRequest {
     type: "COLABORADOR";
-    sector: string;
+    department: string;
     nameTagNumber: string;
+    
 }
 
 export interface VisitorRegisterRequest extends BaseRegisterRequest {
