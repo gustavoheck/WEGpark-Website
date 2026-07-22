@@ -7,7 +7,7 @@ interface FormFieldProps {
     text : string,
     id : string,
     type? : string,
-    registration: UseFormRegisterReturn,
+    registration?: UseFormRegisterReturn,
     error?: RHFFieldError
 
 }

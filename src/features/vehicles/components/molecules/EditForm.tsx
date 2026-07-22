@@ -4,7 +4,7 @@ import { FieldGroup } from "@/components/ui/field";
 import Vehicle from "../../types/Vehicle";
 import { Card, CardContent } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
-import { EditFormData, editSchema } from "../../schemas/EditSchema";
+import { VehicleFormData, vehicleSchema } from "../../schemas/VehicleSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEdit } from "../../hooks/useEdit";
 import FormField from "../../../../shared/components/atoms/FormField";
@@ -22,8 +22,8 @@ export default function EditForm({ vehicle }: EditFormProps) {
 
     const [isOpen, setIsOpen] = useState(false)
 
-    const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm<EditFormData>({
-        resolver: zodResolver(editSchema),
+    const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm<VehicleFormData>({
+        resolver: zodResolver(vehicleSchema),
         defaultValues: {
             plate,
             brand,
@@ -34,7 +34,7 @@ export default function EditForm({ vehicle }: EditFormProps) {
 
     const { mutate, isPending } = useEdit();
 
-    function handleConfirmSubmit(data: EditFormData) {
+    function handleConfirmSubmit(data: VehicleFormData) {
         mutate({ id, vehicleData: data });
         setIsOpen(false)
     }
