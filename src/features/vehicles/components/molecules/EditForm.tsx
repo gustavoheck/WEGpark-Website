@@ -78,7 +78,6 @@ export default function EditForm({ vehicle }: EditFormProps) {
                     <FormButton
                         text="salvar alterações"
                         disabled={isButtonDisabled}
-                        onClick={handleOpenModal}
                     />
                     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
                         <AlertDialogContent>

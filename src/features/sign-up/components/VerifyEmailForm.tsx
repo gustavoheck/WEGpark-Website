@@ -2,14 +2,13 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import {
     Field,
     FieldDescription,
     FieldError,
-    FieldGroup,
-    FieldLabel
+    FieldGroup
 } from "@/components/ui/field";
 
 import { 
@@ -22,12 +21,13 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardHeader,
-    CardTitle,
+    CardHeader
 } from "@/components/ui/card";
 
 import { useResendVerificationCode, useVerifyEmail } from "../hooks/useVerifyEmail";
 import { verifyEmailSchema, VerifyEmailFormValues } from "../schemas/register-schema";
+import SectionTitle from "@/shared/components/atoms/SectionTitle";
+import FormButton from "@/shared/components/atoms/FormButton";
 
 interface VerifyEmailFormProps {
     email: string;
@@ -62,8 +62,8 @@ export function VerifyEmailForm({ email, onVerified }: VerifyEmailFormProps) {
 
     return (
         <Card className="w-full max-w-sm">
-            <CardHeader>
-                <CardTitle className="text-2xl">Confirme seu e-mail</CardTitle>
+            <CardHeader className="flex flex-col items-center text-center">
+                <SectionTitle className="py-2 flex" text="confirme seu e-mail"/>
                 <CardDescription>
                     Enviamos um código de verificação para {email}
                 </CardDescription>
@@ -72,7 +72,6 @@ export function VerifyEmailForm({ email, onVerified }: VerifyEmailFormProps) {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FieldGroup>
                         <Field data-invalid={!!errors.code}>
-                            <FieldLabel htmlFor="code">Código de verificação</FieldLabel>
                                 <Controller
                                     control={control}
                                     name="code"
@@ -106,6 +105,18 @@ export function VerifyEmailForm({ email, onVerified }: VerifyEmailFormProps) {
                             {errors.code ? (
                                 <FieldError>{errors.code.message}</FieldError>
                             ) : null}
+                            
+                            
+                            <p className="text-sm text-sm text-muted-foreground">
+                                Não recebeu o código de verificação?{" "}
+                                <Link
+                                    href={"#"}
+                                    className="text-sm text-primary hover:text-primary hover:underline"
+                                    onClick={handleResend}
+                                >
+                                    Clique aqui para reenviar
+                                </Link>
+                            </p>
                         </Field>
 
                         {error ? (
@@ -114,19 +125,7 @@ export function VerifyEmailForm({ email, onVerified }: VerifyEmailFormProps) {
                             </p>
                         ) : null}
 
-                        <Button type="submit" disabled={isPending} className="w-full">
-                            {isPending ? "Verificando..." : "Confirmar"}
-                        </Button>
-
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            disabled={isResending}
-                            onClick={handleResend}
-                            className="w-full"
-                        >
-                            {isResending ? "Reenviando..." : "Reenviar código"}
-                        </Button>
+                        <FormButton disabled={isPending} text={isPending ? "Verificando..." : (isResending ? "Reenviando..." : "Confirmar")}/>
                     </FieldGroup>
                 </form>
             </CardContent>

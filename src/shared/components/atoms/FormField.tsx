@@ -7,7 +7,7 @@ interface FormFieldProps {
     text : string,
     id : string,
     type? : string,
-    registration?: UseFormRegisterReturn,
+    registration: UseFormRegisterReturn,
     error?: RHFFieldError
 
 }
@@ -36,11 +36,11 @@ export default function FormField(
                 {...registration}
                 aria-invalid={!!error}
             />
-            {error && (
+            {error ? (
                 <FieldError
                     className="ml-2"
                     errors={[error]} />
-            )}
+            ) : null}
         </Field>
     )
 }

@@ -1,6 +1,5 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import FormField from "@/shared/components/atoms/FormField";
 import { VisitorFormValues } from "../schemas/register-schema";
 
 interface VisitorFieldsProps {
@@ -11,21 +10,18 @@ interface VisitorFieldsProps {
 export function VisitorFields({ register, errors }: VisitorFieldsProps) {
     return (
         <>
-            <Field data-invalid={!!errors.company}>
-                <FieldLabel htmlFor="company">Empresa</FieldLabel>
-                <Input id="company" {...register("company")} />
-                {errors.company ? (
-                    <FieldError>{errors.company.message}</FieldError>
-                ): null}
-            </Field>
-
-            <Field data-invalid={!!errors.cpf}>
-                <FieldLabel htmlFor="cpf">CPF</FieldLabel>
-                <Input id="cpf" {...register("cpf")} />
-                {errors.cpf ? (
-                    <FieldError>{errors.cpf.message}</FieldError>
-                ): null}
-            </Field>
+            <FormField 
+                text="empresa"
+                id="company"
+                registration={register("company")}
+                error={errors.company}
+            />
+            <FormField 
+                text="CPF"
+                id="cpf"
+                registration={register("cpf")}
+                error={errors.cpf}
+            />
         </>
     );
 }
