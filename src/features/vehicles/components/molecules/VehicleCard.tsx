@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import Vehicle from "../../types/Vehicle";
-import { Car, Check, ChevronDown, Eye, Pencil, Trash2, Users, } from "lucide-react";
+import { Car, Check, ChevronDown, Eye, Pencil, Trash2, Unlink, Users, } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -19,25 +19,43 @@ interface VehicleCardProps {
 
 export default function VehicleCard({ vehicle }: VehicleCardProps) {
 
-    const {id, plate, brand, model, color, ownerId } = vehicle
+    const { id, plate, brand, model, color, ownerId } = vehicle
 
     const [isExpanded, setIsExpanded] = useState(false)
-    const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
-    const [isOpenInformative, setIsOpenInformative] = useState(false)
+    const [isOpenDeleteConfirmation, setIsOpenDeleteConfirmation] = useState(false)
+    const [isOpenDeleteInformative, setIsOpenDeleteInformative] = useState(false)
+    const [isOpenUnlinkConfirmation, setIsOpenUnlinkConfirmation] = useState(false)
+    const [isOpenUnlinkInformative, setIsOpenUnlinkInformative] = useState(false)
 
-    const { mutate : deleteVehicle} = useDelete()
+    const { mutate: deleteVehicle } = useDelete()
 
-    function onSubmit() {
+    function onSubmitDelete() {
         deleteVehicle(
-            {id},
+            { id },
             {
                 onSuccess: () => {
-                    setIsOpenConfirmation(false)
-                    setIsOpenInformative(true)
+                    setIsOpenDeleteConfirmation(false)
+                    setIsOpenDeleteInformative(true)
                 },
                 onError: () => {
-                    setIsOpenConfirmation(false)
-                    setIsOpenInformative(true)
+                    setIsOpenDeleteConfirmation(false)
+                    setIsOpenDeleteInformative(true)
+                }
+            }
+        )
+    }
+
+    function onSubmitUnlink() {
+        deleteVehicle(
+            { id },
+            {
+                onSuccess: () => {
+                    setIsOpenUnlinkConfirmation(false)
+                    setIsOpenUnlinkInformative(true)
+                },
+                onError: () => {
+                    setIsOpenUnlinkConfirmation(false)
+                    setIsOpenUnlinkInformative(true)
                 }
             }
         )
@@ -81,8 +99,17 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                         <div className="grid grid-cols-2 gap-3 w-full">
                             <VehicleCardButton title="ver ocorrências" Icon={Eye} href="/ocorrencias" />
                             <VehicleCardButton title="ver usuarios" Icon={Users} href="/ocorrencias" />
-                            <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${id}/editar`} />
-                            <VehicleCardButton title="excluir" Icon={Trash2} href="" destructive onClick={() => setIsOpenConfirmation(true)}/>
+                            {ownerId === 1 ? (
+                                <>
+                                    <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${id}/editar`} />
+                                    <VehicleCardButton title="excluir" Icon={Trash2} href="" destructive onClick={() => setIsOpenDeleteConfirmation(true)} />
+                                </>
+                            ) : (
+                                    <VehicleCardButton title="desvincular" Icon={Unlink} href="" destructive onClick={() => setIsOpenUnlinkConfirmation(true)}/>
+                                )
+
+                            }
+
                         </div>
                     </CardContent>
                 </CollapsibleContent>
@@ -100,19 +127,35 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                 </CardFooter>
 
                 <AlertDialog
-                    open={isOpenConfirmation}
-                    onOpenChange={setIsOpenConfirmation}
+                    open={isOpenDeleteConfirmation}
+                    onOpenChange={setIsOpenDeleteConfirmation}
                     title="Excluir Veículo"
                     description="Você realmente deseja exluir esse veículo? Esta ação removerá seu vinculo, e os vinculos de todos os usuários com esse veículo."
-                    onClick={() => {onSubmit()}}
+                    onClick={() => { onSubmitDelete() }}
                     confirmText="Excluir"
                 />
 
-                <Dialog 
-                    open={isOpenInformative}
-                    onOpenChange={setIsOpenInformative}
+                <Dialog
+                    open={isOpenDeleteInformative}
+                    onOpenChange={setIsOpenDeleteInformative}
                     title="Veículo Excluído"
                     description="Veículo e vínculos relacionados a ele excluidos com sucesso"
+                />
+
+                <AlertDialog
+                    open={isOpenUnlinkConfirmation}
+                    onOpenChange={setIsOpenUnlinkConfirmation}
+                    title="Desvincular Veículo"
+                    description="Você realmente deseja se desvincular desse veículo? Esta ação removerá seu vinculo, e você apenas o recupera-la ao pedir permissão novamente."
+                    onClick={() => { onSubmitUnlink() }}
+                    confirmText="Desvincular"
+                />
+
+                <Dialog
+                    open={isOpenUnlinkInformative}
+                    onOpenChange={setIsOpenUnlinkConfirmation}
+                    title="Veículo Desvinculado"
+                    description="Veículo desvinculado de vossa pessoa."
                 />
             </Card>
         </Collapsible>
