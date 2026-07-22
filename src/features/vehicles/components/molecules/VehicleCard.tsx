@@ -8,6 +8,9 @@ import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import VehicleCardButton from "../atoms/VehicleCardButton";
 import { buttonVariants } from "@/components/ui/button"
+import AlertDialog from "@/shared/components/organisms/AlertDialog";
+import { useDelete } from "../../hooks/useDelete";
+import Dialog from "@/shared/components/organisms/Dialog";
 
 interface VehicleCardProps {
     vehicle: Vehicle
@@ -19,6 +22,26 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
     const {id, plate, brand, model, color, ownerId } = vehicle
 
     const [isExpanded, setIsExpanded] = useState(false)
+    const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
+    const [isOpenInformative, setIsOpenInformative] = useState(false)
+
+    const { mutate : deleteVehicle} = useDelete()
+
+    function onSubmit() {
+        deleteVehicle(
+            {id},
+            {
+                onSuccess: () => {
+                    setIsOpenConfirmation(false)
+                    setIsOpenInformative(true)
+                },
+                onError: () => {
+                    setIsOpenConfirmation(false)
+                    setIsOpenInformative(true)
+                }
+            }
+        )
+    }
 
     return (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
@@ -59,7 +82,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                             <VehicleCardButton title="ver ocorrências" Icon={Eye} href="/ocorrencias" />
                             <VehicleCardButton title="ver usuarios" Icon={Users} href="/ocorrencias" />
                             <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${id}/editar`} />
-                            <VehicleCardButton title="excluir" Icon={Trash2} href="/ocorrencias" destructive />
+                            <VehicleCardButton title="excluir" Icon={Trash2} href="" destructive onClick={() => setIsOpenConfirmation(true)}/>
                         </div>
                     </CardContent>
                 </CollapsibleContent>
@@ -75,6 +98,22 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                         <ChevronDown className={`size-5 transition-transform duration-300 ${isExpanded ? "rotate-180" : "rotate-0"}`} />
                     </CollapsibleTrigger>
                 </CardFooter>
+
+                <AlertDialog
+                    open={isOpenConfirmation}
+                    onOpenChange={setIsOpenConfirmation}
+                    title="Excluir Veículo"
+                    description="Você realmente deseja exluir esse veículo? Esta ação removerá seu vinculo, e os vinculos de todos os usuários com esse veículo."
+                    onClick={() => {onSubmit()}}
+                    confirmText="Excluir"
+                />
+
+                <Dialog 
+                    open={isOpenInformative}
+                    onOpenChange={setIsOpenInformative}
+                    title="Veículo Excluído"
+                    description="Veículo e vínculos relacionados a ele excluidos com sucesso"
+                />
             </Card>
         </Collapsible>
 
