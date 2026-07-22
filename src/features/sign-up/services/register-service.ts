@@ -4,7 +4,7 @@ import {
     RegisterResponseDTO,
     VerifyEmailRequestDTO,
     VerifyEmailResponseDTO
-} from "../types/register";
+} from "../types/Register";
 
 export async function registerUser(payload: RegisterRequestDTO): Promise<RegisterResponseDTO> {
     const { data } = await api.post<RegisterResponseDTO>("/cadastro", payload);

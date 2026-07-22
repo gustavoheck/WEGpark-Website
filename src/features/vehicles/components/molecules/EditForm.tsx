@@ -44,8 +44,8 @@ export default function EditForm({ vehicle }: EditFormProps) {
                     setIsOpenConfirmation(false)
                     setIsOpenInformative(true)
                 },
-                //Função provisória para funcionar corretamente sem uma API
-                onError: (error : any) => {
+                // Função provisória para funcionar corretamente sem uma API
+                onError: (error) => {
                     setIsOpenConfirmation(false)
                     alert("Erro!")
                 }

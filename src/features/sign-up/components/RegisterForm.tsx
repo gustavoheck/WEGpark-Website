@@ -26,7 +26,7 @@ import {
     EmployeeFormValues,
     VisitorFormValues,
 } from "../schemas/register-schema";
-import { RegisterRequestDTO, UserType } from "../types/register";
+import { RegisterRequestDTO, UserType } from "../types/Register";
 
 interface RegisterFormProps {
     onRegistered: (email: string) => void;
