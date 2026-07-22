@@ -1,22 +1,21 @@
 import { Button } from "@/components/ui/button";
 
 interface FormButtonProps {
-    isPending: boolean,
-    normalText: string,
-    pendingText: string,
+    disabled: boolean,
+    text: string,
     type? : "submit" | "button",  
     onClick : () => void
 }
 
-export default function FormButton({ isPending, normalText, pendingText, type = "button", onClick }: FormButtonProps) {
+export default function FormButton({ disabled, text, type = "button", onClick }: FormButtonProps) {
     return (
         <Button
             type={type}
-            disabled={isPending}
-            className="w-full text-lg font-bold py-5"
+            disabled={disabled}
+            className="w-full text-lg font-bold py-5 capitalize disabled:bg-muted-foreground/50 disabled:text-black"
             onClick={onClick}
         >
-            {isPending ? `${pendingText}` : `${normalText}`}
+            {text}
         </Button>
     )
 }

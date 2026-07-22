@@ -22,7 +22,7 @@ export default function EditForm({ vehicle }: EditFormProps) {
 
     const [isOpen, setIsOpen] = useState(false)
 
-    const { register, handleSubmit, formState: { errors } } = useForm<EditFormData>({
+    const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm<EditFormData>({
         resolver: zodResolver(editSchema),
         defaultValues: {
             plate,
@@ -42,6 +42,8 @@ export default function EditForm({ vehicle }: EditFormProps) {
     const handleOpenModal = () => {
         handleSubmit(() => setIsOpen(true))();
     };
+
+    const isButtonDisabled = !isDirty || !isValid || isPending
 
     return (
         <Card>
@@ -74,9 +76,8 @@ export default function EditForm({ vehicle }: EditFormProps) {
                         />
                     </FieldGroup>
                     <FormButton
-                        normalText="Salvar Alterações"
-                        isPending={isPending}
-                        pendingText="Salvando"
+                        text="salvar alterações"
+                        disabled={isButtonDisabled}
                         onClick={handleOpenModal}
                     />
                     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
