@@ -16,8 +16,8 @@ import FormField from "@/shared/components/atoms/FormField";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 
 import FormButton from "@/shared/components/atoms/FormButton";
-import { loginSchema, LoginFormData } from "../../schemas/LoginSchema";
-import { useLogin } from "../../hooks/useLogin";
+import { loginSchema, LoginFormData } from "../../../schemas/LoginSchema";
+import { useLogin } from "../../../hooks/useLogin";
 
 export function LoginForm() {
     const form  = useForm<LoginFormData>({
