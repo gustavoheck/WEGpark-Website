@@ -16,17 +16,17 @@ import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 
-import { useRegister } from "../hooks/useRegister";
-import { UserTypeSelector } from "./UserTypeSelector";
-import { EmployeeFields } from "./EmployeeFields";
-import { VisitorFields } from "./VisitorFields";
+import { useRegister } from "../../hooks/useRegister";
+import { UserTypeSelector } from "../molecules/UserTypeSelector";
+import { EmployeeFields } from "../molecules/EmployeeFields";
+import { VisitorFields } from "../molecules/VisitorFields";
 import {
     registerSchema,
     RegisterFormValues,
     EmployeeFormValues,
     VisitorFormValues,
-} from "../schemas/register-schema";
-import { RegisterRequestDTO, UserType } from "../types/register";
+} from "../../schemas/register-schema";
+import { RegisterRequestDTO, UserType } from "../../types/Register";
 
 interface RegisterFormProps {
     onRegistered: (email: string) => void;

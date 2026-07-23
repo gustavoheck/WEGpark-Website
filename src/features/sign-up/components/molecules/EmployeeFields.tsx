@@ -1,5 +1,5 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
-import { EmployeeFormValues } from "../schemas/register-schema";
+import { EmployeeFormValues } from "../../schemas/register-schema";
 import FormField from "@/shared/components/atoms/FormField";
 
 interface EmployeeFieldsProps {

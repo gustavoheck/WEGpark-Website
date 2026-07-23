@@ -1,7 +1,7 @@
 import { cn } from "@/shared/lib/utils";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { UserType } from "../types/register";
+import { UserType } from "../../types/Register";
 
 interface UserTypeSelectorProps {
     value: UserType | null;
