@@ -61,6 +61,8 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
         )
     }
 
+    const isOwner = id === 1
+
     return (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
             <Card className="w-full shadow-sm gap-0">
@@ -73,23 +75,23 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                             <span className="text-lg font-bold tracking-wider text-foreground">
                                 {plate}
                             </span>
-                            {ownerId === 1 && (
-                                <Badge className="flex items-center gap-1 text-md">
-                                    <Check className="size-8 text-white" />
-                                    Proprietário
-                                </Badge>
-                            )}
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <p className="text-lg text-muted-foreground">
-                                {brand} <span className="font-medium text-foreground">{model}</span>
-                            </p>
                             <div className="flex items-center gap-2">
                                 <span className="text-md text-muted-foreground">Cor:</span>
                                 <Badge variant="outline" className="capitalize text-md mix-blend-multiply font-semibold">
                                     {color}
                                 </Badge>
                             </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <p className="text-lg text-muted-foreground">
+                                {brand} <span className="font-medium text-foreground">{model}</span>
+                            </p>
+                            {ownerId === 1 && (
+                                <Badge className="flex items-center gap-1 text-md">
+                                    <Check className="size-8 text-white" />
+                                    Proprietário
+                                </Badge>
+                            )}
 
                         </div>
                     </div>
@@ -98,14 +100,14 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                     <CardContent className="py-4 border-t border-dashed bg-muted/20">
                         <div className="grid grid-cols-2 gap-3 w-full">
                             <VehicleCardButton title="ver ocorrências" Icon={Eye} href="/ocorrencias" />
-                            <VehicleCardButton title="ver usuarios" Icon={Users} href="/ocorrencias" />
-                            {ownerId === 1 ? (
+                            <VehicleCardButton title="ver usuarios" Icon={Users} href={`/veiculos/${id}/usuarios`} />
+                            {isOwner ? (
                                 <>
                                     <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${id}/editar`} />
-                                    <VehicleCardButton title="excluir" Icon={Trash2} href="" destructive onClick={() => setIsOpenDeleteConfirmation(true)} />
+                                    <VehicleCardButton title="excluir" Icon={Trash2} destructive onClick={() => setIsOpenDeleteConfirmation(true)} />
                                 </>
                             ) : (
-                                <VehicleCardButton title="desvincular" Icon={Unlink} href="" destructive onClick={() => setIsOpenUnlinkConfirmation(true)} />
+                                <VehicleCardButton title="desvincular" Icon={Unlink} destructive onClick={() => setIsOpenUnlinkConfirmation(true)} variant="last" />
                             )
 
                             }
