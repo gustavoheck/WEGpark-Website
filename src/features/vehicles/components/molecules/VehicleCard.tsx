@@ -29,35 +29,35 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
 
     const { mutate: deleteVehicle } = useDelete()
 
-    function onSubmitDelete() {
-        deleteVehicle(
-            { id },
-            {
-                onSuccess: () => {
-                    setIsOpenDeleteConfirmation(false)
-                    setIsOpenDeleteInformative(true)
-                },
-                onError: () => {
-                    setIsOpenDeleteConfirmation(false)
-                    setIsOpenDeleteInformative(true)
+    function onSubmit(type: string) {
+        type === "delete" ? (
+            deleteVehicle(
+                { id },
+                {
+                    onSuccess: () => {
+                        setIsOpenDeleteConfirmation(false)
+                        setIsOpenDeleteInformative(true)
+                    },
+                    onError: () => {
+                        setIsOpenDeleteConfirmation(false)
+                        setIsOpenDeleteInformative(true)
+                    }
                 }
-            }
-        )
-    }
-
-    function onSubmitUnlink() {
-        deleteVehicle(
-            { id },
-            {
-                onSuccess: () => {
-                    setIsOpenUnlinkConfirmation(false)
-                    setIsOpenUnlinkInformative(true)
-                },
-                onError: () => {
-                    setIsOpenUnlinkConfirmation(false)
-                    setIsOpenUnlinkInformative(true)
+            )
+        ) : (
+            deleteVehicle(
+                { id },
+                {
+                    onSuccess: () => {
+                        setIsOpenUnlinkConfirmation(false)
+                        setIsOpenUnlinkInformative(true)
+                    },
+                    onError: () => {
+                        setIsOpenUnlinkConfirmation(false)
+                        setIsOpenUnlinkInformative(true)
+                    }
                 }
-            }
+            )
         )
     }
 
@@ -105,8 +105,8 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                                     <VehicleCardButton title="excluir" Icon={Trash2} href="" destructive onClick={() => setIsOpenDeleteConfirmation(true)} />
                                 </>
                             ) : (
-                                    <VehicleCardButton title="desvincular" Icon={Unlink} href="" destructive onClick={() => setIsOpenUnlinkConfirmation(true)}/>
-                                )
+                                <VehicleCardButton title="desvincular" Icon={Unlink} href="" destructive onClick={() => setIsOpenUnlinkConfirmation(true)} />
+                            )
 
                             }
 
@@ -131,7 +131,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                     onOpenChange={setIsOpenDeleteConfirmation}
                     title="Excluir Veículo"
                     description="Você realmente deseja exluir esse veículo? Esta ação removerá seu vinculo, e os vinculos de todos os usuários com esse veículo."
-                    onClick={() => { onSubmitDelete() }}
+                    onClick={() => { onSubmit("delete") }}
                     confirmText="Excluir"
                 />
 
@@ -147,7 +147,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                     onOpenChange={setIsOpenUnlinkConfirmation}
                     title="Desvincular Veículo"
                     description="Você realmente deseja se desvincular desse veículo? Esta ação removerá seu vinculo, e você apenas o recupera-la ao pedir permissão novamente."
-                    onClick={() => { onSubmitUnlink() }}
+                    onClick={() => { onSubmit("unlink") }}
                     confirmText="Desvincular"
                 />
 
