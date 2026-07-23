@@ -1,21 +1,25 @@
 import SectionTitle from "@/shared/components/atoms/SectionTitle"
-import { Occurence } from "../../types/Occurence"
 import OccurrenceCard from "../molecules/OccurrenceCard"
+import { Occurence } from "../../types/Occurrence"
 
 
 interface OccurrenceListProps {
-    occurrences : Occurence[]
+    occurrences: Occurence[]
 }
 
-export default function OccurrenceList ({occurrences} : OccurrenceListProps) {
+export default function OccurrenceList({ occurrences }: OccurrenceListProps) {
+    
     return (
         <section>
-            <SectionTitle text="ocorrências"/>
-            {occurrences.map((occurrence) => {
-                return (
-                    <OccurrenceCard key={occurrence.id} occurrence={occurrence} />
-                )
-            })}
+            <SectionTitle text="ocorrências" />
+            <div className="flex flex-col gap-4">
+                {occurrences.map((occurrence) => {
+                    return (
+                        <OccurrenceCard key={occurrence.id} occurrence={occurrence} />
+                    )
+                })}
+            </div>
+
         </section>
     )
 }

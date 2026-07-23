@@ -119,7 +119,6 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                     <CollapsibleTrigger
                         className={buttonVariants({
                             variant: "ghost",
-                            size: "lg",
                             className: "w-full font-bold text-primary flex items-center justify-center gap-2 aria-expanded:text-primary aria-expanded:bg-transparent hover:text-primary hover:bg-transparent"
                         })}
                     >
