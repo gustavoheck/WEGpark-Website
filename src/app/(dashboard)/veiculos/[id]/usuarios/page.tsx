@@ -1,8 +1,8 @@
 import UserList from "@/features/vehicles/components/organisms/UserList";
-import VehicleListMock from "@/features/vehicles/mocks/VehicleListMock";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import UserMockList from "@/shared/mocks/UserListMock";
+import VehicleListMock from "@/shared/mocks/VehicleListMock";
 import { notFound } from "next/navigation";
 
 interface EditarPageProps {

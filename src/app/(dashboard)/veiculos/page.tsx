@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import VehicleList from "@/features/vehicles/components/organisms/VehicleList";
-import VehicleListMock from "@/features/vehicles/mocks/VehicleListMock";
-import Vehicle from "@/features/vehicles/types/Vehicle";
+import VehicleListMock from "@/shared/mocks/VehicleListMock";
+import Vehicle from "@/shared/types/Vehicle";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 

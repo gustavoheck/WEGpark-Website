@@ -1,5 +1,5 @@
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
-import Vehicle from "../../types/Vehicle";
+import Vehicle from "../../../../shared/types/Vehicle";
 import VehicleCard from "../molecules/VehicleCard";
 
 interface VehicleListProps {

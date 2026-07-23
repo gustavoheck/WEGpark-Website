@@ -1,5 +1,5 @@
 import { api } from "@/shared/lib/api";
-import Vehicle from "../types/Vehicle";
+import Vehicle from "../../../shared/types/Vehicle";
 import { VehicleFormData } from "../schemas/VehicleSchema";
 
 interface EditServiceParams {

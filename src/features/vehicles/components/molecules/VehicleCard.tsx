@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import Vehicle from "../../types/Vehicle";
+import Vehicle from "../../../../shared/types/Vehicle";
 import { Car, Check, ChevronDown, Eye, Pencil, Trash2, Unlink, Users, } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";

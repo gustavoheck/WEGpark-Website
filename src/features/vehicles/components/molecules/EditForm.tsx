@@ -1,7 +1,7 @@
 'use client'
 
 import { FieldGroup } from "@/components/ui/field";
-import Vehicle from "../../types/Vehicle";
+import Vehicle from "../../../../shared/types/Vehicle";
 import { Card, CardContent } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { VehicleFormData, vehicleSchema } from "../../schemas/VehicleSchema";
