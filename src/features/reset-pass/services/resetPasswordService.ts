@@ -25,5 +25,5 @@ export async function verifyResetCode(
 export async function resetPassword(
     payload: ResetPasswordRequestDTO
 ): Promise<void> {
-    await api.post("/recuperar-senha/redefinit", payload);
+    await api.post("/recuperar-senha/redefinir", payload);
 }

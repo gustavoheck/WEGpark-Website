@@ -24,8 +24,8 @@ import {
     CardHeader
 } from "@/components/ui/card";
 
-import { useResendVerificationCode, useVerifyEmail } from "../hooks/useVerifyEmail";
-import { verifyEmailSchema, VerifyEmailFormValues } from "../schemas/register-schema";
+import { useResendVerificationCode, useVerifyEmail } from "../../hooks/useVerifyEmail";
+import { verifyEmailSchema, VerifyEmailFormValues } from "../../schemas/register-schema";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import FormButton from "@/shared/components/atoms/FormButton";
 

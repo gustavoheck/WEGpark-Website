@@ -10,7 +10,7 @@ export const verifyResetCodeSchema = z.object({
     code: z.string().length(6, "O código deve possuir 6 dígitos"),
 });
 
-export type VerifyResetCodeSchema = z.infer<typeof verifyResetCodeSchema>
+export type VerifyResetCodeFormValues = z.infer<typeof verifyResetCodeSchema>
 
 export const newPasswordSchema = z
     .object({

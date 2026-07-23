@@ -1,6 +1,6 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import FormField from "@/shared/components/atoms/FormField";
-import { VisitorFormValues } from "../schemas/register-schema";
+import { VisitorFormValues } from "../../schemas/register-schema";
 
 interface VisitorFieldsProps {
     register: UseFormRegister<VisitorFormValues>;
