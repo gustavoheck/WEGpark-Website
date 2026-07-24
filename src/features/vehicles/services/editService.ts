@@ -1,14 +1,14 @@
 import { api } from "@/shared/lib/api";
-import Vehicle from "../types/Vehicle";
+import Vehicle from "../../../shared/types/Vehicle";
 import { VehicleFormData } from "../schemas/VehicleSchema";
 
 interface EditServiceParams {
-    id: number;
+    uuid: string;
     vehicleData: VehicleFormData;
 }
 
-export async function editService({id, vehicleData} : EditServiceParams
+export async function editService({uuid, vehicleData} : EditServiceParams
 ): Promise<Vehicle> {
-    const { data } = await api.put<Vehicle>(`/vehicles/${id}`, vehicleData);
+    const { data } = await api.put<Vehicle>(`/vehicles/${uuid}`, vehicleData);
     return data;
 }

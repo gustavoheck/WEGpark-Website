@@ -10,7 +10,7 @@ const ALL_MENU_ITEMS: Record<string, SidebarItem & { roles: string[] }> = {
   },
   occurrences: {
     title: "ocorrencias",
-    href: "/occurrences",
+    href: "/ocorrencias",
     icon: Newspaper,
     roles: ["parkuser", "guard", "admin"]
   },

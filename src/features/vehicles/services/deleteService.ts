@@ -1,12 +1,12 @@
 import { api } from "@/shared/lib/api";
-import Vehicle from "../types/Vehicle";
+import Vehicle from "../../../shared/types/Vehicle";
 
-interface EditServiceParams {
-    id: number;
+interface DeleteServiceParams {
+    uuid: string;
 }
 
-export async function deleteService({id} : EditServiceParams
+export async function deleteService({uuid} : DeleteServiceParams
 ): Promise<Vehicle> {
-    const { data } = await api.delete<Vehicle>(`/vehicles/${id}`);
+    const { data } = await api.delete<Vehicle>(`/vehicles/${uuid}`);
     return data;
 }

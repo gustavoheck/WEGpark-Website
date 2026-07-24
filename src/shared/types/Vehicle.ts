@@ -1,5 +1,5 @@
 export default interface Vehicle {
-    id : number
+    uuid : string
     plate : string,
     brand : string,
     model : string,
