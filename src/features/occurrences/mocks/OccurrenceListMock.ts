@@ -1,28 +1,53 @@
 import VehicleListMock from "@/shared/mocks/VehicleListMock";
-import { Occurence } from "../types/Occurrence";
+import { Occurrence } from "../types/Occurrence";
 
-const OccurrencesListMock: Occurence[] = [
+const OccurrencesListMock: Occurrence[] = [
   {
-    id: 1,
-    dateTime : "2026-07-23T12:51:00",
-    locale : "WEG I",
-    vehicle : VehicleListMock[0],
-    type : "uso-irregular-vaga"
+    uuid: "123-abc",
+    defaults: {
+      dateHour: "2026-07-24T08:30:00",
+      location: "WEG I",
+      gate: "Portaria 1",
+      guard: "João",
+      vehicle: VehicleListMock[0],
+    },
+    description: "",
+    warningType: {
+      warning_type: "HEADLIGHT_ON",
+    },
   },
   {
-    id: 2,
-    dateTime : "2026-07-23T12:51:00",
-    locale : "WEG I",
-    vehicle : VehicleListMock[1],
-    type : "aviso"
+    uuid: "123-def",
+    defaults: {
+      dateHour: "2026-07-24T08:40:00",
+      location: "WEG 2",
+      gate: "Portaria 15",
+      guard: "Jonas",
+      vehicle: VehicleListMock[2],
+    },
+    description: "",
+    parkingSpaceType: {
+      parking_space_type: "COMMON",
+    },
   },
   {
-    id: 3,
-    dateTime : "2026-07-23T12:51:00",
-    locale : "WEG I",
-    vehicle : VehicleListMock[2],
-    type : "sinistro"
+    uuid: "123-ghi",
+    defaults: {
+      dateHour: "2026-07-24T08:55:00",
+      location: "WEG 1",
+      gate: "Portaria 2",
+      guard: "Cléber",
+      vehicle: VehicleListMock[1],
+    },
+    occurrenceDate: "2026-07-24T08:40:00",
+    victimName: "John Smith",
+    responsibleBossName: "John Smith",
+    responsibleFactory: "Smith Factory",
+    responsibleSection: "Mount Smith",
+    trafficOccurrenceType: "Explosion",
+    guardTestimony: "I saw everthing exploding",
+    victimTestimony: "I almost exploded",
   },
 ];
 
-export default OccurrencesListMock
+export default OccurrencesListMock;

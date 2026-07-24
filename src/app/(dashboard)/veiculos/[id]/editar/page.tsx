@@ -12,7 +12,7 @@ interface EditarPageProps {
 export default async function Editar({ params }: EditarPageProps) {
 
     const { id } = await params;
-    const vehicle = VehicleListMock.find((v) => v.id === Number(id));
+    const vehicle = VehicleListMock.find((v) => v.uuid === id);
 
     if (!vehicle) {
         notFound()

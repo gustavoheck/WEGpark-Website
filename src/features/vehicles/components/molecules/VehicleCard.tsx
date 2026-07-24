@@ -19,7 +19,7 @@ interface VehicleCardProps {
 
 export default function VehicleCard({ vehicle }: VehicleCardProps) {
 
-    const { id, plate, brand, model, color, ownerId } = vehicle
+    const { uuid, plate, brand, model, color, ownerId } = vehicle
 
     const [isExpanded, setIsExpanded] = useState(false)
     const [isOpenDeleteConfirmation, setIsOpenDeleteConfirmation] = useState(false)
@@ -32,7 +32,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
     function onSubmit(type: string) {
         type === "delete" ? (
             deleteVehicle(
-                { id },
+                { uuid },
                 {
                     onSuccess: () => {
                         setIsOpenDeleteConfirmation(false)
@@ -46,7 +46,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
             )
         ) : (
             deleteVehicle(
-                { id },
+                { uuid },
                 {
                     onSuccess: () => {
                         setIsOpenUnlinkConfirmation(false)
@@ -61,7 +61,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
         )
     }
 
-    const isOwner = id === 1
+    const isOwner = ownerId === 1
 
     return (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
@@ -100,10 +100,10 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                     <CardContent className="py-4 border-t border-dashed bg-muted/20">
                         <div className="grid grid-cols-2 gap-3 w-full">
                             <VehicleCardButton title="ver ocorrências" Icon={Eye} href="/ocorrencias" />
-                            <VehicleCardButton title="ver usuarios" Icon={Users} href={`/veiculos/${id}/usuarios`} />
+                            <VehicleCardButton title="ver usuarios" Icon={Users} href={`/veiculos/${uuid}/usuarios`} />
                             {isOwner ? (
                                 <>
-                                    <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${id}/editar`} />
+                                    <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${uuid}/editar`} />
                                     <VehicleCardButton title="excluir" Icon={Trash2} destructive onClick={() => setIsOpenDeleteConfirmation(true)} />
                                 </>
                             ) : (

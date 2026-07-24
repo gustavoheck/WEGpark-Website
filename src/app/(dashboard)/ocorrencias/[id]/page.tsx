@@ -12,7 +12,7 @@ interface OccurrencesProps {
 export default async function Occurrences({ params }: OccurrencesProps) {
 
     const { id } = await params;
-    const occurrence = OccurrencesListMock.find((o) => o.id === Number(id));
+    const occurrence = OccurrencesListMock.find((o) => o.uuid === id);
 
     if (!occurrence) {
         notFound()

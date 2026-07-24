@@ -1,13 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Occurence } from "../../types/Occurrence";
+import { Occurrence } from "../../types/Occurrence";
 
 interface DetailOccurence {
-    occurrence : Occurence
+    occurrence : Occurrence
 }
 
 export default function DetailOccurence ({occurrence} : DetailOccurence) {
 
-    const dateTime : Date = new Date(occurrence.dateTime)
+    const dateTime : Date = new Date(occurrence.defaults.dateHour)
     const formato = dateTime.toLocaleString("pt-BR")
 
     return (

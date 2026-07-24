@@ -2,7 +2,7 @@ import Vehicle from "../types/Vehicle";
 
 const VehicleListMock: Vehicle[] = [
   {
-    id: 1,
+    uuid: "111-111",
     plate: "AQK1010",
     model: "Beetle",
     brand: "Volkswagen",
@@ -10,7 +10,7 @@ const VehicleListMock: Vehicle[] = [
     color: "Branco",
   },
   {
-    id: 2,
+    uuid: "222-222",
     plate: "BQK1010",
     model: "Touro",
     brand: "Fiat",
@@ -18,7 +18,7 @@ const VehicleListMock: Vehicle[] = [
     color: "Preto",
   },
   {
-    id: 3,
+    uuid: "333-333",
     plate: "CQK1010",
     model: "Prisma",
     brand: "Chevrolet",
@@ -26,7 +26,7 @@ const VehicleListMock: Vehicle[] = [
     color: "Branco",
   },
   {
-    id: 4,
+    uuid: "444-444",
     plate: "DQK1010",
     model: "Uno",
     brand: "Fiat",

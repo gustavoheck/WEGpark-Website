@@ -1,9 +1,5 @@
-import Vehicle from "@/shared/types/Vehicle";
+import { BaseWarning } from "./BaseWarning";
+import { IllegalParking } from "./IllegalParking";
+import { TrafficAccident } from "./TrafficAccident";
 
-export interface Occurence {
-    id : number
-    dateTime : string,
-    locale : string,
-    vehicle : Vehicle,
-    type : string
-}
+export type Occurrence = BaseWarning | IllegalParking | TrafficAccident

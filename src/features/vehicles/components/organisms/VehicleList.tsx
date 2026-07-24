@@ -13,7 +13,7 @@ export default function VehicleList({ vehicles }: VehicleListProps) {
             <div className="flex flex-col gap-4 pb-24">
                 {vehicles.map((vehicle) => {
                     return (
-                        <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                        <VehicleCard key={vehicle.uuid} vehicle={vehicle} />
                     )
                 })}
             </div>

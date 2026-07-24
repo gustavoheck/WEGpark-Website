@@ -21,7 +21,7 @@ export default function EditForm({ vehicle }: EditFormProps) {
     const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
     const [isOpenInformative, setIsOpenInformative] = useState(false)
 
-    const { id, plate, brand, model, color } = vehicle
+    const { uuid, plate, brand, model, color } = vehicle
 
     const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm<VehicleFormData>({
         resolver: zodResolver(vehicleSchema),
@@ -38,7 +38,7 @@ export default function EditForm({ vehicle }: EditFormProps) {
 
     function onSubmit(data: VehicleFormData){
         editVehicle(
-            { id, vehicleData : data },
+            { uuid, vehicleData : data },
             {
                 onSuccess: () => {
                     setIsOpenConfirmation(false)
