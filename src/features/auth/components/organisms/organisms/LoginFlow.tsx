@@ -17,7 +17,6 @@ export function LoginFlow({ onLoginSuccess }: LoginFlowProps) {
   const [email, setEmail] = useState('');
   const [availableRoles, setAvailableRoles] = useState<UserRole[]>([]);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
-
   
   function handleEmailChecked(checkedEmail: string, roles: UserRole[]) {
     setEmail(checkedEmail);
@@ -51,7 +50,7 @@ export function LoginFlow({ onLoginSuccess }: LoginFlowProps) {
         />  
         {step === 'PASSWORD' && selectedRole ? (
           <PasswordForm email={email} role={selectedRole} onLoginSuccess={onLoginSuccess} />
-        ) : null}-
+        ) : null}
     </div>
   );
 }

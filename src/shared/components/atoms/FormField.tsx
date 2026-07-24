@@ -4,12 +4,13 @@ import { cn } from "@/shared/lib/utils";
 import { FieldError as RHFFieldError, UseFormRegisterReturn } from "react-hook-form";
 
 interface FormFieldProps {
-    text : string,
-    id : string,
-    type? : string,
-    registration: UseFormRegisterReturn,
-    error?: RHFFieldError
-
+    text : string;
+    id : string;
+    type? : string;
+    registration?: UseFormRegisterReturn;
+    error?: RHFFieldError;
+    disabled?: boolean;
+    defaultValue?: string;
 }
 
 export default function FormField(
@@ -18,7 +19,9 @@ export default function FormField(
         id,
         registration,
         error,
-        type = "text"
+        type = "text",
+        disabled = false,
+        defaultValue = ""
     } :
     FormFieldProps
 ) {
@@ -35,6 +38,8 @@ export default function FormField(
                 className={cn("py-5 text-lg ")}
                 {...registration}
                 aria-invalid={!!error}
+                disabled={disabled}
+                placeholder={defaultValue}
             />
             {error ? (
                 <FieldError

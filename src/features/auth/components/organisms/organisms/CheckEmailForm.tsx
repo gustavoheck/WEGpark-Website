@@ -43,8 +43,9 @@ export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
       },
     );
   }
-
+    console.log(process.env.NEXT_PUBLIC_USE_MOCKS);
   return (
+
     <Card className="w-full max-w-sm">
         <CardHeader>
             <SectionTitle text="Entrar" className="py-2 flex" />
