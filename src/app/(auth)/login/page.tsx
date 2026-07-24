@@ -1,7 +1,15 @@
-import { LoginForm } from "@/features/auth/components/organisms/LoginForm";
+"use client"; 
+
+import { useRouter } from "next/navigation";
+import { LoginFlow } from "@/features/auth/components/organisms/organisms/LoginFlow";
+import { LoginResponseDTO } from '@/features/auth/types/Login';
 
 export default function LoginPage() {
-    return (
-        <LoginForm />
-    );
+    const router = useRouter(); 
+    function handleLoginSuccess(response: LoginResponseDTO) {
+      router.push("/");
+    }
+
+    return <LoginFlow onLoginSuccess={handleLoginSuccess}/>
+    
 }
