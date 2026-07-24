@@ -11,6 +11,7 @@ import { buttonVariants } from "@/components/ui/button"
 import AlertDialog from "@/shared/components/organisms/AlertDialog";
 import { useDelete } from "../../hooks/useDelete";
 import Dialog from "@/shared/components/organisms/Dialog";
+import VehicleName from "@/shared/components/atoms/VehicleName";
 
 interface VehicleCardProps {
     vehicle: Vehicle
@@ -83,9 +84,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                             </div>
                         </div>
                         <div className="flex items-center justify-between">
-                            <p className="text-lg text-muted-foreground">
-                                {brand} <span className="font-medium text-foreground">{model}</span>
-                            </p>
+                            <VehicleName brand={brand} model={model} />
                             {ownerId === 1 && (
                                 <Badge className="flex items-center gap-1 text-md">
                                     <Check className="size-8 text-white" />

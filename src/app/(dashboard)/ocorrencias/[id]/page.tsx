@@ -1,4 +1,4 @@
-import DetailOccurence from "@/features/occurrences/components/molecules/DetailOccurence";
+import DetailOccurence from "@/features/occurrences/components/molecules/DetailOccurrence";
 import OccurrencesListMock from "@/features/occurrences/mocks/OccurrenceListMock";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";

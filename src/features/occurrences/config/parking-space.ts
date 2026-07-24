@@ -1,9 +1,9 @@
 export const PARKING_SPACE_CONFIG = {
-    COMMON : "comum",
-    PREGNANT_WOMAN : "gestante",
-    DISABLED : "deficiente",
-    VISITOR : "visitante",
-    CARPOOL : "carona solidária",
-    BANK : "banco",
-    UNMARKED_SPOT: "vaga imaginária"
+    COMMON : "Comum",
+    PREGNANT_WOMAN : "Gestante",
+    DISABLED : "Deficiente",
+    VISITOR : "Visitante",
+    CARPOOL : "Carona Solidária",
+    BANK : "Banco",
+    UNMARKED_SPOT: "Vaga Imaginária"
 } as const

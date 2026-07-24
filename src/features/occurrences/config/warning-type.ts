@@ -1,6 +1,6 @@
 export const WARNING_TYPE_CONFIG = {
-    HEADLIGHT_ON : "luz acessa",
-    OPENED_WINDOWS : "vidro aberto",
-    ALARM_ON : "alarme acionado",
-    OTHER : "outros"
+    HEADLIGHT_ON : "Luz Acessa",
+    OPENED_WINDOWS : "Vidro Aberto",
+    ALARM_ON : "Alarme Acionado",
+    OTHER : "Outros"
 } as const
