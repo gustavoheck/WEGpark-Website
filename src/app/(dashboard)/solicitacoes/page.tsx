@@ -1,7 +1,8 @@
-import RequestCard from "@/features/requests/components/RequestCard";
+import RequestList from "@/features/requests/components/RequestList";
+import RequestListMock from "@/features/requests/mocks/RequestListMock";
 
 export default function Requests () {
     return (
-        <RequestCard />
+        <RequestList requests={RequestListMock}/>
     )
 }
