@@ -1,14 +1,41 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Car, CarFront, Link } from "lucide-react";
 import { Request } from "../types/Request";
-
+import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
+import DialogComponent from "@/shared/components/organisms/Dialog";
+import { useState } from "react";
+import { useLink } from "../hooks/UseLink";
 interface RequestCardProps {
-    request : Request
+    request: Request
 
 }
 
-export default function RequestCard({request} : RequestCardProps) {
+export default function RequestCard({ request }: RequestCardProps) {
+
+
+    const [isOpenConfirmative, setIsOpenConfirmative] = useState(false)
+    const [isOpenInformative, setIsOpenInformative] = useState(false)
+
+    const {mutate : link} = useLink()
+
+    function onSubmit () {
+        link(
+            {request},
+            {
+                onSuccess: () => {
+                    setIsOpenConfirmative(false)
+                    setIsOpenInformative(true)
+                },
+                onError: () => {
+                    setIsOpenConfirmative(false)
+                }
+            }
+        )
+    }
+
     return (
         <Card>
             <CardHeader className="text-center text-primary text-xl font-semibold border-b pb-4">
@@ -41,9 +68,27 @@ export default function RequestCard({request} : RequestCardProps) {
                 </div>
             </CardContent>
             <CardFooter className="flex items-center justify-center gap-6">
-                <Button variant="link" className="text-lg font-semibold py-5">Aceitar</Button>
+                <Button variant="link" className="text-lg font-semibold py-5" onClick={() => setIsOpenConfirmative(true)}>Aceitar</Button>
                 <Button variant="link" className="text-lg font-semibold py-5">Rejeitar</Button>
             </CardFooter>
+
+            <AlertDialogComponent
+                open={isOpenConfirmative}
+                onOpenChange={setIsOpenConfirmative}
+                title="Vincular Usuário"
+                description="Você deseja vincular seu veículo a esse usuário?"
+                onClick={onSubmit}
+                confirmText="Vincular"
+
+            />
+
+            <DialogComponent
+                open={isOpenInformative}
+                onOpenChange={setIsOpenInformative}
+                title="Usuário Vinculado"
+                description="O usuário foi vinculado com sucesso a seu veículo"
+
+            />
         </Card>
     )
 }

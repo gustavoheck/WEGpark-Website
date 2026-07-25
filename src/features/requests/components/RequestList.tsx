@@ -8,7 +8,6 @@ interface RequestListProps {
 
 export default function RequestList({requests} : RequestListProps) {
 
-    requests = []
     return (
         <section>
             <SectionTitle text="solicitações" />
