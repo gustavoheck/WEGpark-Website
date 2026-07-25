@@ -28,7 +28,7 @@ const ALL_MENU_ITEMS: Record<string, SidebarItem & { roles: string[] }> = {
   },
   requests: {
     title: "solicitações",
-    href: "/requests",
+    href: "/solicitacoes",
     icon: PenBox,
     roles: ["parkuser"]
   }
