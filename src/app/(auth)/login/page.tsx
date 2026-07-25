@@ -7,7 +7,7 @@ import { LoginResponseDTO } from '@/features/auth/types/Login';
 export default function LoginPage() {
     const router = useRouter(); 
     function handleLoginSuccess(response: LoginResponseDTO) {
-      router.push("/");
+      router.push("/veiculos");
     }
 
     return <LoginFlow onLoginSuccess={handleLoginSuccess}/>

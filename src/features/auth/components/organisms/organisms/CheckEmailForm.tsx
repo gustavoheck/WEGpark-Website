@@ -1,6 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { FieldGroup } from '@/components/ui/field';
@@ -63,6 +64,22 @@ export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
                     registration={register("email")}
                     error={errors.email}
                 />
+
+                <Link
+                  href="/esqueceu-senha"
+                  className="w-fit text-sm text-primary hover:text-primary hover:underline"
+                >
+                    Esqueceu a senha?
+                </Link>
+                <p className="text-sm text-sm text-muted-foreground">
+                    Ainda não possui uma conta?{" "}
+                    <Link
+                        href={"/cadastro"}
+                        className="text-sm text-primary hover:text-primary hover:underline"
+                    >
+                        Cadastre-se aqui
+                    </Link>
+                </p>
 
                 {error ? (
                 <p className="text-sm text-destructive">
