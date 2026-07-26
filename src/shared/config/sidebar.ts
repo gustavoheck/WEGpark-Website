@@ -22,7 +22,7 @@ const ALL_MENU_ITEMS: Record<string, SidebarItem & { roles: string[] }> = {
   },
   profile: {
     title: "dados perfil",
-    href: "/profile",
+    href: "/perfil",
     icon: User,
     roles: ["parkuser", "guard", "rh"]
   },

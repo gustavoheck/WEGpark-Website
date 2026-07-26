@@ -87,7 +87,6 @@ export default function RequestCard({ request }: RequestCardProps) {
                 onOpenChange={setIsOpenInformative}
                 title="Usuário Vinculado"
                 description="O usuário foi vinculado com sucesso a seu veículo"
-
             />
         </Card>
     )
