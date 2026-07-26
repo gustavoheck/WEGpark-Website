@@ -71,7 +71,7 @@ export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
                 >
                     Esqueceu a senha?
                 </Link>
-                <p className="text-sm text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                     Ainda não possui uma conta?{" "}
                     <Link
                         href={"/cadastro"}
