@@ -16,7 +16,7 @@ const ALL_MENU_ITEMS: Record<string, SidebarItem & { roles: string[] }> = {
   },
   notifications: {
     title: "notificações",
-    href: "/notifications",
+    href: "/notificacoes",
     icon: Bell,
     roles: ["parkuser", "guard"]
   },
