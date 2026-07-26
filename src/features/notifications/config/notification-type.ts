@@ -1,0 +1,4 @@
+export const NOTIFICATION_TYPE_CONFIG = {
+    REQUEST : "REQUEST",
+    OCCURRENCE : "OCCURRENCE"
+} as const
