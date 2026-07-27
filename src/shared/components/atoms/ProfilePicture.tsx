@@ -17,13 +17,14 @@ const buttonVariants = cva(
 )
 
 interface ProfilePictureProps {
-    name : string,
-    variant? : "default" | "secondary"
+    name : string;
+    variant? : "default" | "secondary";
+    className?: string;
 }
 
-export default function ProfilePicture({name, variant} : ProfilePictureProps) {
+export default function ProfilePicture({name, variant, className} : ProfilePictureProps) {
     return (
-        <div className={cn(buttonVariants({variant}))}>
+        <div className={cn(buttonVariants({variant}), className)}>
             {name.charAt(0)}
         </div>
     )

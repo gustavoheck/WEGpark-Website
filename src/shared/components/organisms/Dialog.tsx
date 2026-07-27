@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 interface DialogProps {
     open : boolean
     onOpenChange : Dispatch<SetStateAction<boolean>>
-    title : string,
+    title : string
     description : string
 }
 

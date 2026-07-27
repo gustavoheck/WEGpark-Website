@@ -1,8 +1,8 @@
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenuButton} from "../../../components/ui/sidebar";
 import SidebarItem from "@/shared/types/SidebarItem";
-import Link from "next/link";
 import UserMock from "@/shared/mocks/UserMock";
 import Profile from "../molecules/Profile";
+import Link from "next/link";
 
 interface AppSidebarProps {
   menuItems: SidebarItem[]
@@ -16,7 +16,7 @@ export function AppSidebar({ menuItems }: AppSidebarProps) {
     <Sidebar>
       <SidebarContent>
         <SidebarHeader>
-          <Profile username={username} />
+          <Profile username={username}/>
         </SidebarHeader>
         {menuItems.map((item) => {
           return (
