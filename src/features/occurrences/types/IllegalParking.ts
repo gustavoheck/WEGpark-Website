@@ -1,5 +1,9 @@
+import { ParkingSpaceType } from "../enums/parking-space-map";
 import { DefaultOccurence } from "./DefaultOccurence";
-import { ParkingSpaceDetails } from "./ParkingSpaceType";
+
+export interface ParkingSpaceDetails {
+  parkingSpaceType: ParkingSpaceType;
+}
 
 export interface IllegalParking {
   uuid: string;

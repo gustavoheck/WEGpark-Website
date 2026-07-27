@@ -1,5 +1,10 @@
+import { WarningType } from "../enums/warning-type"
 import { DefaultOccurence } from "./DefaultOccurence"
-import { WarningTypeDetails } from "./WarningType"
+
+export interface WarningTypeDetails {
+    warningType : WarningType
+}
+
 
 export interface BaseWarning {
     uuid : string
