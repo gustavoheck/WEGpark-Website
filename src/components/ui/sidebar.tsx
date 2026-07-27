@@ -10,6 +10,7 @@ import { cn } from "@/shared/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+import { Slot } from "@radix-ui/react-slot"
 import {
   Sheet,
   SheetContent,
@@ -190,7 +191,7 @@ function Sidebar({
           className="p-0 bg-primary text-sidebar-foreground [&>button]:hidden"
           style={
             {
-              width : SIDEBAR_WIDTH_MOBILE,
+              width: SIDEBAR_WIDTH_MOBILE,
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
             } as React.CSSProperties
           }
@@ -499,19 +500,25 @@ const sidebarMenuButtonVariants = cva(
 )
 
 function SidebarMenuButton({
+  asChild = false,
   render,
   isActive = false,
   variant = "default",
   size = "default",
   tooltip,
   className,
+  children,
   ...props
 }: useRender.ComponentProps<"button"> &
   React.ComponentProps<"button"> & {
+    asChild?: boolean
     isActive?: boolean
     tooltip?: string | React.ComponentProps<typeof TooltipContent>
   } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const { isMobile, state } = useSidebar()
+
+  const renderElement = asChild && React.isValidElement(children) ? children : render
+
   const comp = useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
@@ -520,7 +527,7 @@ function SidebarMenuButton({
       },
       props
     ),
-    render: !tooltip ? render : <TooltipTrigger render={render} />,
+    render: !tooltip ? renderElement : <TooltipTrigger render={render} />,
     state: {
       slot: "sidebar-menu-button",
       sidebar: "menu-button",
