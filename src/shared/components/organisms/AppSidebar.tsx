@@ -35,6 +35,7 @@ export function AppSidebar({ menuItems }: AppSidebarProps) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        
       </SidebarContent>
     </Sidebar>
   )
