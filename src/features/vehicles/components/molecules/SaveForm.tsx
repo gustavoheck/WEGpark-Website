@@ -10,48 +10,55 @@ import FormButton from "@/shared/components/atoms/FormButton";
 import { useState } from "react";
 import { useSave } from "../../hooks/useSave";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
-import DialogComponent from "@/shared/components/organisms/Dialog";
+import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/toast";
 
-export default function SaveForn() {
-    const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
-    const [isOpenInformative, setIsOpenInformative] = useState(false)
+export default function SaveForm() {
+    const router = useRouter();
+    const [isOpenConfirmationNormal, setIsOpenConfirmationNormal] = useState(false);
+    const [isOpenConfirmationLink, setIsOpenConfirmationLink] = useState(false);
+    const { mutate: saveVehicle } = useSave();
 
     const { register, handleSubmit, formState: { errors, isValid } } = useForm<VehicleFormData>({
         resolver: zodResolver(vehicleSchema),
         mode: "onChange"
     });
 
-    const { mutate: saveVehicle, isPending: isSaving } = useSave();
 
-    function onSubmit(data: VehicleFormData){
+    function onSubmit(data: VehicleFormData) {
+        setIsOpenConfirmationNormal(false)
         saveVehicle(
-            { vehicleData : data },
+            { data },
             {
                 onSuccess: () => {
-                    setIsOpenInformative(true)
+                    toast.add({type : "success" , description : "Veículo cadastrado com sucesso!"})
+                    router.push("/veiculos")
                 },
-                onError: (error : any) => {
-                    if (error?.response?.status === 404){
-                        setIsOpenInformative(true)
+                onError: (error: any) => {
+                    if (error?.response?.status === 409) {
+                        setIsOpenConfirmationLink(true)
                     }
-                    // Erro de conflito, que acionará o dialog de confirmação
-                    if (error?.response?.status === 409){
-                        setIsOpenConfirmation(true)
+                    else {
+                        toast.add({type : "error" , description : "Erro ao cadastrar veículo. Tente novamente."})
                     }
                 }
             }
         )
     }
 
-    function handleRequestOwnership () {
-        // Service que notificará o proprietário
-        setIsOpenConfirmation(false)
+    function handleOpenConfirmation () {
+        setIsOpenConfirmationNormal(true)
+    }
+
+    function handleRequestOwnership() {
+        setIsOpenConfirmationLink(false)
+        toast.add({type : "info", description : "Propretário notificado. Aguarde a resposta."})
     }
 
     return (
         <Card>
             <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(handleOpenConfirmation)}>
                     <FieldGroup className="gap-4 mb-6">
                         <FormField
                             text="placa"
@@ -79,24 +86,24 @@ export default function SaveForn() {
                         />
                     </FieldGroup>
                     <FormButton
-                        text="salvar veículo"
-                        disabled={!isValid || isSaving}
+                        text="cadastrar veículo"
+                        disabled={!isValid}
                     />
                     <AlertDialogComponent
-                        open={isOpenConfirmation}
-                        onOpenChange={setIsOpenConfirmation}
+                        open={isOpenConfirmationNormal}
+                        onOpenChange={setIsOpenConfirmationNormal}
+                        title="Cadastrar Veículo"
+                        description="Você realmente deseja cadastrar este veículo?"
+                        onClick={handleSubmit(onSubmit)}
+                        confirmText="Cadastrar"
+                    />
+                    <AlertDialogComponent
+                        open={isOpenConfirmationLink}
+                        onOpenChange={setIsOpenConfirmationLink}
                         title="Veículo já Existente"
                         description="Esse veículo já está cadastrado no sistema, deseja mandar uma notificação ao proprietário para se tornar um usuário?"
                         onClick={handleRequestOwnership}
                         confirmText="Solicitar"
-                    />
-
-                    <DialogComponent
-                        open={isOpenInformative}
-                        onOpenChange={setIsOpenInformative}
-                        title="Veículo Cadastrado"
-                        description="Veículo cadastrado com você de proprietário com sucesso!"
-                    
                     />
                 </form>
             </CardContent>

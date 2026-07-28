@@ -4,5 +4,6 @@ export default interface Vehicle {
     brand : string,
     model : string,
     color : string,
-    ownerId : number,
+    ownerId : string,
+    isOwner? : boolean
 }

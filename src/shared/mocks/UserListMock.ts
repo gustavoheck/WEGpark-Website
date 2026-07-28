@@ -2,20 +2,24 @@ import User from "@/shared/types/User";
 
 const UserMockList: User[] = [
   {
-    id: 1,
+    uuid: "1",
     name: "John Smith",
+    role : "PARKUSER"
   },
   {
-    id: 2,
+    uuid: "2",
     name: "Mark Smith",
+    role : "PARKUSER"
   },
   {
-    id: 3,
-    name: "Andrew Smith",
+    uuid: "3",
+    name: "William Smith",
+    role : "GUARD"
   },
   {
-    id: 4,
-    name: "Paul Smith",
+    uuid: "4",
+    name: "John Smith",
+    role : "PARKUSER"
   },
 ];
 

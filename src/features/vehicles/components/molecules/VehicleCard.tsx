@@ -9,9 +9,9 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import VehicleCardButton from "../atoms/VehicleCardButton";
 import { buttonVariants } from "@/components/ui/button"
 import AlertDialog from "@/shared/components/organisms/AlertDialog";
-import { useDelete } from "../../hooks/useDelete";
-import Dialog from "@/shared/components/organisms/Dialog";
 import VehicleName from "@/shared/components/atoms/VehicleName";
+import { useVehiclePermissions } from "../../hooks/useVehiclePermissions";
+import { useVehicleCardActions } from "../../hooks/useVehicleCardActions";
 
 interface VehicleCardProps {
     vehicle: Vehicle
@@ -20,49 +20,12 @@ interface VehicleCardProps {
 
 export default function VehicleCard({ vehicle }: VehicleCardProps) {
 
-    const { uuid, plate, brand, model, color, ownerId } = vehicle
-
+    const { uuid, plate, brand, model, color} = vehicle
     const [isExpanded, setIsExpanded] = useState(false)
-    const [isOpenDeleteConfirmation, setIsOpenDeleteConfirmation] = useState(false)
-    const [isOpenDeleteInformative, setIsOpenDeleteInformative] = useState(false)
-    const [isOpenUnlinkConfirmation, setIsOpenUnlinkConfirmation] = useState(false)
-    const [isOpenUnlinkInformative, setIsOpenUnlinkInformative] = useState(false)
 
-    const { mutate: deleteVehicle } = useDelete()
+    const { canEdit, canDelete, canUnlink, isOwner} = useVehiclePermissions(vehicle)
 
-    function onSubmit(type: string) {
-        type === "delete" ? (
-            deleteVehicle(
-                { uuid },
-                {
-                    onSuccess: () => {
-                        setIsOpenDeleteConfirmation(false)
-                        setIsOpenDeleteInformative(true)
-                    },
-                    onError: () => {
-                        setIsOpenDeleteConfirmation(false)
-                        setIsOpenDeleteInformative(true)
-                    }
-                }
-            )
-        ) : (
-            deleteVehicle(
-                { uuid },
-                {
-                    onSuccess: () => {
-                        setIsOpenUnlinkConfirmation(false)
-                        setIsOpenUnlinkInformative(true)
-                    },
-                    onError: () => {
-                        setIsOpenUnlinkConfirmation(false)
-                        setIsOpenUnlinkInformative(true)
-                    }
-                }
-            )
-        )
-    }
-
-    const isOwner = ownerId === 1
+    const { activeDialog, openDeleteDialog, openUnlinkDialog, closeDialog, actions} = useVehicleCardActions(uuid)
 
     return (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
@@ -85,7 +48,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                         </div>
                         <div className="flex items-center justify-between">
                             <VehicleName brand={brand} model={model} />
-                            {ownerId === 1 && (
+                            {isOwner && (
                                 <Badge className="flex items-center gap-1 text-md">
                                     <Check className="size-8 text-white" />
                                     Proprietário
@@ -100,17 +63,15 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                         <div className="grid grid-cols-2 gap-3 w-full">
                             <VehicleCardButton title="ver ocorrências" Icon={Eye} href="/ocorrencias" />
                             <VehicleCardButton title="ver usuarios" Icon={Users} href={`/veiculos/${uuid}/usuarios`} />
-                            {isOwner ? (
-                                <>
-                                    <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${uuid}/editar`} />
-                                    <VehicleCardButton title="excluir" Icon={Trash2} destructive onClick={() => setIsOpenDeleteConfirmation(true)} />
-                                </>
-                            ) : (
-                                <VehicleCardButton title="desvincular" Icon={Unlink} destructive onClick={() => setIsOpenUnlinkConfirmation(true)} variant="last" />
-                            )
-
-                            }
-
+                            { canEdit && (
+                                <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${uuid}/editar`} variant="last"/>
+                            )}
+                            { canDelete && (
+                                <VehicleCardButton title="excluir" Icon={Trash2} destructive onClick={openDeleteDialog} />
+                            )}
+                            { canUnlink && (
+                                <VehicleCardButton title="desvincular" Icon={Unlink} destructive onClick={openUnlinkDialog} variant="last" />
+                            )}
                         </div>
                     </CardContent>
                 </CollapsibleContent>
@@ -127,35 +88,21 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                 </CardFooter>
 
                 <AlertDialog
-                    open={isOpenDeleteConfirmation}
-                    onOpenChange={setIsOpenDeleteConfirmation}
+                    open={activeDialog === "delete"}
+                    onOpenChange={(open) => !open && closeDialog()}
                     title="Excluir Veículo"
                     description="Você realmente deseja exluir esse veículo? Esta ação removerá seu vinculo, e os vinculos de todos os usuários com esse veículo."
-                    onClick={() => { onSubmit("delete") }}
+                    onClick={actions.handleDelete}
                     confirmText="Excluir"
                 />
 
-                <Dialog
-                    open={isOpenDeleteInformative}
-                    onOpenChange={setIsOpenDeleteInformative}
-                    title="Veículo Excluído"
-                    description="Veículo e vínculos relacionados a ele excluidos com sucesso"
-                />
-
                 <AlertDialog
-                    open={isOpenUnlinkConfirmation}
-                    onOpenChange={setIsOpenUnlinkConfirmation}
+                    open={activeDialog === "unlink"}
+                    onOpenChange={(open) => !open && closeDialog()}
                     title="Desvincular Veículo"
                     description="Você realmente deseja se desvincular desse veículo? Esta ação removerá seu vinculo, e você apenas o recupera-la ao pedir permissão novamente."
-                    onClick={() => { onSubmit("unlink") }}
+                    onClick={actions.handleUnlink}
                     confirmText="Desvincular"
-                />
-
-                <Dialog
-                    open={isOpenUnlinkInformative}
-                    onOpenChange={setIsOpenUnlinkConfirmation}
-                    title="Veículo Desvinculado"
-                    description="Veículo desvinculado de vossa pessoa."
                 />
             </Card>
         </Collapsible>
