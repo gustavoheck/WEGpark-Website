@@ -6,7 +6,7 @@ const VehicleListMock: Vehicle[] = [
     plate: "AQK1010",
     model: "Beetle",
     brand: "Volkswagen",
-    ownerId: 1,
+    ownerId: "1",
     color: "Branco",
   },
   {
@@ -14,7 +14,7 @@ const VehicleListMock: Vehicle[] = [
     plate: "BQK1010",
     model: "Touro",
     brand: "Fiat",
-    ownerId: 2,
+    ownerId: "2",
     color: "Preto",
   },
   {
@@ -22,7 +22,7 @@ const VehicleListMock: Vehicle[] = [
     plate: "CQK1010",
     model: "Prisma",
     brand: "Chevrolet",
-    ownerId: 3,
+    ownerId: "3",
     color: "Branco",
   },
   {
@@ -30,7 +30,7 @@ const VehicleListMock: Vehicle[] = [
     plate: "DQK1010",
     model: "Uno",
     brand: "Fiat",
-    ownerId: 1,
+    ownerId: "1",
     color: "Prata",
   },
 ];

@@ -3,5 +3,7 @@ export default interface Vehicle {
     plate : string,
     brand : string,
     model : string,
-    isOwner : boolean
+    color : string,
+    ownerId : string,
+    isOwner? : boolean
 }

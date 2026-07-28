@@ -15,9 +15,9 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 export function AuthProvider({ children }: { children: ReactNode }) {
   // Exemplo de usuário mockado inicial
   const [user, setUser] = useState<User | null>({
-    uuid: '123-abc',
+    uuid: "1",
     name: 'João Silva',
-    role: UserRole.GUARD,
+    role: UserRole.PARKUSER,
   });
 
   return (
