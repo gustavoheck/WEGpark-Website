@@ -1,4 +1,6 @@
+import { UserRoleType } from "../enum/UserRole"
 export default interface User {
-    id : number
+    uuid : string
     name : string
+    role : UserRoleType
 }

@@ -1,0 +1,28 @@
+import { useAuth } from '@/shared/context/AuthContext';
+import { UserRole } from '@/shared/enum/UserRole';
+import Vehicle from '@/shared/types/Vehicle';
+
+export function useVehiclePermissions (vehicle?: Vehicle) {
+    const { user } = useAuth();
+
+    if (!user){
+        return
+    }
+
+    const isGuard = user.role === UserRole.GUARD
+    const isParkUser = user.role === UserRole.PARKUSER
+
+    const isOwner = isParkUser && Boolean(
+        vehicle?.isOwner
+    )
+
+    return {
+        canAdd: isParkUser,
+        canEdit: isGuard || isOwner,
+        canDelete : isOwner,
+        canUnlink : isParkUser && !isOwner,
+        isGuard,
+        isOwner
+
+    }
+}
