@@ -12,7 +12,7 @@ import { useSave } from "../../hooks/useSave";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
 import DialogComponent from "@/shared/components/organisms/Dialog";
 
-export default function SaveForn() {
+export default function SaveForm() {
     const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
     const [isOpenInformative, setIsOpenInformative] = useState(false)
 

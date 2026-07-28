@@ -11,56 +11,58 @@ import FormField from "../../../../shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 import { useState } from "react";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
-import DialogComponent from "@/shared/components/organisms/Dialog";
+import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/toast";
 
 interface EditFormProps {
     vehicle: Vehicle
 }
 
 export default function EditForm({ vehicle }: EditFormProps) {
-    const [isOpenConfirmation, setIsOpenConfirmation] = useState(false)
-    const [isOpenInformative, setIsOpenInformative] = useState(false)
-
-    const { uuid, plate, brand, model, color } = vehicle
+    const router = useRouter();
+    const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
+    const { mutate: editVehicle } = useEdit();
 
     const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm<VehicleFormData>({
         resolver: zodResolver(vehicleSchema),
         mode: "onChange",
         defaultValues: {
-            plate,
-            brand,
-            model,
-            color
+            plate: vehicle.plate,
+            brand: vehicle.brand,
+            model: vehicle.model,
+            color: vehicle.color
         }
     });
 
-     const { mutate : editVehicle, isPending } = useEdit();
+    function onSubmit(data: VehicleFormData) {
+        setIsOpenConfirmation(false);
 
-    function onSubmit(data: VehicleFormData){
         editVehicle(
-            { uuid, vehicleData : data },
+            { uuid: vehicle.uuid, data },
             {
                 onSuccess: () => {
-                    setIsOpenConfirmation(false)
-                    setIsOpenInformative(true)
+                    toast.add({ type: "success", description: "Veículo atualizado com sucesso!" })
+                    router.push("/veiculos")
                 },
-                // Função provisória para funcionar corretamente sem uma API
-                onError: (error) => {
-                    setIsOpenConfirmation(false)
-                    alert("Erro!")
+                onError: (error: any) => {
+                    if (error?.response?.status === 409) {
+                        toast.add({ type: "error", description: "Já existe outro veículo cadastrado com esta placa." });
+                        return;
+                    }
+                    toast.add({ type: "error", description: "Erro ao atualizar o veículo. Tente novamente." });
                 }
             }
         )
     }
 
-    function handleConfirmateEdit() {
+    function handleOpenConfirmation() {
         setIsOpenConfirmation(true);
-    };
+    }
 
     return (
         <Card>
             <CardContent>
-                <form onSubmit={handleSubmit(handleConfirmateEdit)}>
+                <form onSubmit={handleSubmit(handleOpenConfirmation)}>
                     <FieldGroup className="gap-4 mb-6">
                         <FormField
                             text="placa"
@@ -99,15 +101,6 @@ export default function EditForm({ vehicle }: EditFormProps) {
                         description="Você deseja salvar as alterações feitas sobre esse veículo?"
                         onClick={handleSubmit(onSubmit)}
                         confirmText="Salvar"
-                    
-                    />
-
-                    <DialogComponent
-                        open={isOpenInformative}
-                        onOpenChange={setIsOpenInformative}
-                        title="Alterações Salvas"
-                        description="Os dados editados sobre o veículo foram salvos com sucesso!"
-                    
                     />
                 </form>
             </CardContent>
