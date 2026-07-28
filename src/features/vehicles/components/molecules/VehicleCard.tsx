@@ -64,7 +64,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                             <VehicleCardButton title="ver ocorrências" Icon={Eye} href="/ocorrencias" />
                             <VehicleCardButton title="ver usuarios" Icon={Users} href={`/veiculos/${uuid}/usuarios`} />
                             { canEdit && (
-                                <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${uuid}/editar`} />
+                                <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${uuid}/editar`} variant="last"/>
                             )}
                             { canDelete && (
                                 <VehicleCardButton title="excluir" Icon={Trash2} destructive onClick={openDeleteDialog} />
