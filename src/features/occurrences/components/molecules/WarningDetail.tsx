@@ -1,6 +1,6 @@
 import { BaseWarning } from "../../types/BaseWarning";
-import { getWarningTypeLabel } from "../../utils/get-warning-type-label";
 import DetailOccurrenceInformation from "./DetailOccurrenceInformation";
+import { WARNING_TYPE_MAP } from "../../enums/warning-type";
 
 interface WarningDetailProps {
     occurrence : BaseWarning
@@ -8,13 +8,11 @@ interface WarningDetailProps {
 
 export default function WarningDetail ({occurrence} : WarningDetailProps) {
 
-    const {description, warningType} = occurrence
-
     return (
         <div className="px-4">
-            <DetailOccurrenceInformation label="Tipo do Aviso" data={getWarningTypeLabel(warningType.warning_type)} />
-            { description && (
-                <DetailOccurrenceInformation label="Descrição" data={description} />
+            <DetailOccurrenceInformation label="Tipo do Aviso" data={WARNING_TYPE_MAP[occurrence.warningType]} />
+            { occurrence.description && (
+                <DetailOccurrenceInformation label="Descrição" data={occurrence.description} />
             )}
         </div>
     )

@@ -12,9 +12,7 @@ const OccurrencesListMock: Occurrence[] = [
       vehicle: VehicleListMock[0],
     },
     description: "",
-    warningType: {
-      warning_type: "HEADLIGHT_ON",
-    },
+    warningType: "HEADLIGHT_ON"
   },
   {
     uuid: "123-def",
@@ -26,9 +24,7 @@ const OccurrencesListMock: Occurrence[] = [
       vehicle: VehicleListMock[2],
     },
     description: "",
-    parkingSpaceType: {
-      parking_space_type: "COMMON",
-    },
+    parkingSpaceType: "COMMON"
   },
   {
     uuid: "123-ghi",
