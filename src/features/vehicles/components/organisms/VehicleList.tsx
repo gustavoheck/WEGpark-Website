@@ -17,7 +17,6 @@ export default function VehicleList({ vehicles }: VehicleListProps) {
                     )
                 })}
             </div>
-
         </section>
 
     )

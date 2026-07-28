@@ -13,7 +13,6 @@ export function useEdit() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    // Passa 'vehicleData: data' para bater com a interface EditServiceParams
     mutationFn: ({ uuid, data }: UpdateVehicleParams) => 
       editService({ uuid, vehicleData: data }), 
       

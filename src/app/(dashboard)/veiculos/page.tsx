@@ -14,7 +14,7 @@ export default function Vehicles() {
             <Link href="/veiculos/adicionar">
                 <Button className="fixed bottom-4 left-4 right-4 text-xl rounded-sm py-6 font-bold z-50">
                     <Plus className="size-7" />
-                    Adicionar Veículo
+                    Cadastrar Veículo
                 </Button>
             </Link>
         </>
