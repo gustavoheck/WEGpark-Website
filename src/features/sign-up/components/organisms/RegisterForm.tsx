@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FieldErrors, useForm, UseFormRegister } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { FieldGroup } from "@/components/ui/field";
@@ -9,7 +9,7 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardHeader
+    CardHeader,
 } from "@/components/ui/card";
 
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
@@ -18,15 +18,15 @@ import FormButton from "@/shared/components/atoms/FormButton";
 
 import { useRegister } from "../../hooks/useRegister";
 import { UserTypeSelector } from "../molecules/UserTypeSelector";
-import { EmployeeFields } from "../molecules/EmployeeFields";
+import { EmployeeFields } from "../molecules/CollaboratorFields";
 import { VisitorFields } from "../molecules/VisitorFields";
 import {
     registerSchema,
     RegisterFormValues,
-    EmployeeFormValues,
-    VisitorFormValues,
 } from "../../schemas/register-schema";
-import { RegisterRequestDTO, UserType } from "../../types/Register";
+import { UserType } from "../../enums/UserType";
+import { RegisterRequest } from "../../types/registerRequest";
+import { toast } from "@/components/ui/toast";
 
 interface RegisterFormProps {
     onRegistered: (email: string) => void;
@@ -36,29 +36,63 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
     const [userType, setUserType] = useState<UserType | null>(null);
     const { mutate: register, isPending, error } = useRegister();
 
+    const methods = useForm<RegisterFormValues>({
+        resolver: zodResolver(registerSchema),
+    });
+
     const {
         register: registerField,
         handleSubmit,
         setValue,
-        formState: {errors},
-    } = useForm<RegisterFormValues>({
-        resolver: zodResolver(registerSchema),
-        defaultValues: {
-            email: "",
-            password: "",
-            confirmPassword: "",
-        },
-    });
+        watch,
+        formState: { errors },
+    } = methods;
+
+    const currentType = watch("type");
 
     function handleSelectType(type: UserType) {
         setUserType(type);
-        setValue("type", type, { shouldValidate: true });
+        setValue("type", type as any, { shouldValidate: true });
     }
-    
+
     function onSubmit(values: RegisterFormValues) {
-        register(values as RegisterRequestDTO, {
-            onSuccess: () => onRegistered(values.email),
-        });
+        if (!userType) return;
+
+        let payload: RegisterRequest;
+
+        const defaults = { email: values.email, password: values.password };
+        const parkUserDefault = { name: values.name, telephone: values.telephone };
+
+        if (values.type === "COLLABORATOR") {
+            payload = {
+                defaults,
+                parkUserDefault,
+                badgeNumber: values.badgeNumber,
+                location: values.location,
+            };
+        } else {
+            payload = {
+                defaults,
+                parkUserDefault,
+                company: values.company,
+                cpf: values.cpf,
+            };
+        }
+
+        console.log(payload)
+
+        register(
+            { payload, userType },
+            {
+                onSuccess: () => {
+                    onRegistered(values.email);
+                    toast.add({ type: "success", description: "Cadastro realizado com sucesso!" });
+                },
+                onError: () => {
+                    toast.add({ type: "error", description: "Erro ao realizar cadastro." });
+                },
+            }
+        );
     }
 
     return (
@@ -70,60 +104,64 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <FieldGroup>
+                <FormProvider {...methods}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <FieldGroup>
+                            <FormField
+                                text="nome completo"
+                                id="name"
+                                registration={registerField("name")}
+                                error={errors.name}
+                            />
 
-                        <FormField 
-                            text="email"
-                            id="email"
-                            registration={registerField("email")}
-                            error={errors.email}
-                        />
+                            <FormField
+                                text="telefone"
+                                id="telephone"
+                                registration={registerField("telephone")}
+                                error={errors.telephone}
+                            />
 
-                        <FormField 
-                            text="senha"
-                            id="password"
-                            type="password"
-                            registration={registerField("password")}
-                            error={errors.password}
-                        />
+                            <FormField
+                                text="email"
+                                id="email"
+                                registration={registerField("email")}
+                                error={errors.email}
+                            />
 
-                        <FormField 
-                            text="confirmar senha"
-                            id="confirm-password"
-                            type="password"
-                            registration={registerField("confirmPassword")}
-                            error={errors.confirmPassword}
-                        />
+                            <FormField
+                                text="senha"
+                                id="password"
+                                type="password"
+                                registration={registerField("password")}
+                                error={errors.password}
+                            />
 
-                        <UserTypeSelector value={userType} onChange={handleSelectType}/>
+                            <FormField
+                                text="confirmar senha"
+                                id="confirm-password"
+                                type="password"
+                                registration={registerField("confirmPassword")}
+                                error={errors.confirmPassword}
+                            />
 
-                        {userType === "COLABORADOR" ? (
-                            <>
-                                <EmployeeFields 
-                                    register={registerField as unknown as UseFormRegister<EmployeeFormValues>}
-                                    errors={errors as unknown as FieldErrors<EmployeeFormValues>}
-                                />
-                            </>
-                        ) : null}
+                            <UserTypeSelector value={userType} onChange={handleSelectType} />
 
-                        {userType === "VISITANTE" ? (
-                            <>
-                                <VisitorFields 
-                                    register={registerField as unknown as UseFormRegister<VisitorFormValues>}
-                                    errors={errors as unknown as FieldErrors<VisitorFormValues>}
-                                />
-                            </>
-                        ) : null}
+                            {currentType === "COLLABORATOR" && <EmployeeFields />}
 
-                        {error ? (
-                            <p className="text-sm text-destructive">
-                                Não foi possível concluir o cadastro. Tente novamente.
-                            </p>
-                        ) : null}
-                        <FormButton disabled={!userType || isPending} text={isPending ? "Enviando..." : "Cadastrar"} />
-                    </FieldGroup>
-                </form>
+                            {currentType === "VISITOR" && <VisitorFields />}
+
+                            {error && (
+                                <p className="text-sm text-destructive">
+                                    Não foi possível concluir o cadastro. Tente novamente.
+                                </p>
+                            )}
+                            <FormButton
+                                disabled={!userType || isPending}
+                                text={isPending ? "Enviando..." : "Cadastrar"}
+                            />
+                        </FieldGroup>
+                    </form>
+                </FormProvider>
             </CardContent>
         </Card>
     );

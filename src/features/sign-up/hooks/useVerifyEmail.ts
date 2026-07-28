@@ -1,9 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { verifyEmailCode, resendVerificationCode } from "../services/register-service";
-import { VerifyEmailRequestDTO, VerifyEmailResponseDTO } from "../types/Register";
+import { resendVerificationCode } from "../services/resendVerificationService";
+import VerifyEmailResponse from "../types/verifyEmailResponse";
+import VerifyEmailRequest from "../types/verifyEmailRequest";
+import { verifyEmailCode } from "../services/verifyEmailService";
 
 export function useVerifyEmail() {
-    return useMutation<VerifyEmailResponseDTO, Error, VerifyEmailRequestDTO>({
+    return useMutation<VerifyEmailResponse, Error, VerifyEmailRequest>({
         mutationFn: verifyEmailCode,
     });
 }
