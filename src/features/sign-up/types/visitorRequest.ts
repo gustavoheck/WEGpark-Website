@@ -3,7 +3,7 @@ import UserBase from "./userBase";
 
 export default interface VisitorRequest {
   defaults: BaseRequest;
-  parkUserDefault: UserBase;
+  parkUserDefaults: UserBase;
   company: string;
   cpf: string;
 }

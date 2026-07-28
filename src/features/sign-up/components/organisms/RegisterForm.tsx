@@ -61,19 +61,19 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         let payload: RegisterRequest;
 
         const defaults = { email: values.email, password: values.password };
-        const parkUserDefault = { name: values.name, telephone: values.telephone };
+        const parkUserDefaults = { name: values.name, telephone: values.telephone };
 
         if (values.type === "COLLABORATOR") {
             payload = {
                 defaults,
-                parkUserDefault,
+                parkUserDefaults,
                 badgeNumber: values.badgeNumber,
                 location: values.location,
             };
         } else {
             payload = {
                 defaults,
-                parkUserDefault,
+                parkUserDefaults,
                 company: values.company,
                 cpf: values.cpf,
             };
