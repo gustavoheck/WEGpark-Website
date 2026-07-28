@@ -13,7 +13,7 @@ const baseFields = z.object({
     confirmPassword: z.string().min(8, "Confirme a senha"),
 });
 
-const colaboradorFields = z.object({
+const employeeFields = z.object({
     role: z.literal("COLABORADOR"),
     badgeNumber: z.string().min(1, "Informe o número de crachá"),
     department: z.string().min(1, "Informe o departamento"),
@@ -37,21 +37,21 @@ const visitorFields = z.object({
     cpf: z.string().regex(cpfRegex, "CPF inválido"),
 });
 
-const colaboradorSchema = baseFields.merge(colaboradorFields);
-const guaritaSchema = baseFields.merge(guaritaFields);
-const rhSchema = baseFields.merge(rhFields);
+const employeeSchema = baseFields.merge(employeeFields);
+const guardSchema = baseFields.merge(guaritaFields);
+const hrSchema = baseFields.merge(rhFields);
 const visitorSchema = baseFields.merge(visitorFields);
 
-export type CreateColaboradorFormValues = z.infer<typeof colaboradorSchema>;
-export type CreateGuaritaFormValues = z.infer<typeof guaritaSchema>;
-export type CreateRHFormValues = z.infer<typeof rhSchema>;
+export type CreateEmployeeFormValues = z.infer<typeof employeeSchema>;
+export type CreateGuardFormValues = z.infer<typeof guardSchema>;
+export type CreateHRFormValues = z.infer<typeof hrSchema>;
 export type CreateVisitorFormValues = z.infer<typeof visitorSchema>;
 
 export const createUserSchema = z
     .discriminatedUnion("role", [
-        colaboradorSchema,
-        guaritaSchema,
-        rhSchema,
+        employeeSchema,
+        guardSchema,
+        hrSchema,
         visitorSchema,
     ])
     .refine((data) => data.password === data.confirmPassword, {

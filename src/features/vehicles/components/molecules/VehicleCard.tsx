@@ -106,6 +106,5 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                 />
             </Card>
         </Collapsible>
-
     )
 }

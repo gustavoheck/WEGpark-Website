@@ -1,5 +1,3 @@
-// features/hr-user-management/types/User.ts
-
 export type UserRole = "COLABORADOR" | "VISITANTE" | "RH" | "GUARITA";
 
 export interface UserListItem {
