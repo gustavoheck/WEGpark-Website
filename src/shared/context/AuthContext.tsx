@@ -69,7 +69,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(newToken);
       setUser(parsedUser);
 
-      // Salva nos Cookies por 7 dias
       Cookies.set('auth_token', newToken, { expires: 7, secure: true, sameSite: 'strict' });
       Cookies.set('auth_role', selectedRole, { expires: 7, secure: true, sameSite: 'strict' });
     }
