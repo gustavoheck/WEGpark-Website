@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
-import { registerUser } from "../services/register-service";
-import { RegisterRequestDTO, RegisterResponseDTO } from "../types/Register";
+import { registerUser, registerUserProps } from "../services/registerService";
+import { RegisterResponse } from "../types/registerResponse";
 
 export function useRegister() {
-    return useMutation<RegisterResponseDTO, Error, RegisterRequestDTO>({
-        mutationFn: registerUser
-    });
+  return useMutation<RegisterResponse, Error, registerUserProps>({
+    mutationFn: registerUser
+  });
 }

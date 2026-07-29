@@ -1,7 +1,7 @@
 import { cn } from "@/shared/lib/utils";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { UserType } from "../../types/Register";
+import { UserType } from "../../enums/UserType";
 
 interface UserTypeSelectorProps {
     value: UserType | null;
@@ -16,14 +16,14 @@ export function UserTypeSelector({ value, onChange }: UserTypeSelectorProps) {
             className="grid grid-cols-1 gap-4 md:grid-cols-2"
         >
             <Label
-                htmlFor="type-colaborador"
+                htmlFor="type-collaborator"
                 className={cn(
                     "flex cursor-pointer flex-col gap-1 rounded-lg border p-4 transition-colors",
-                    value === "COLABORADOR" ? "border-primary bg-primary/5" : "border-input",
+                    value === "COLLABORATOR" ? "border-primary bg-primary/5" : "border-input"
                 )}
             >
                 <div className="flex items-center gap-2">
-                    <RadioGroupItem value="COLABORADOR" id="type-colaborador" />
+                    <RadioGroupItem value="COLLABORATOR" id="type-collaborator" />
                     <span className="font-medium">Colaboradores</span>
                 </div>
                 <span className="text-sm text-muted-foreground">
@@ -32,14 +32,14 @@ export function UserTypeSelector({ value, onChange }: UserTypeSelectorProps) {
             </Label>
 
             <Label
-                htmlFor="type-visitante"
+                htmlFor="type-visitor"
                 className={cn(
                     "flex cursor-pointer flex-col gap-1 rounded-lg border p-4 transition-colors",
-                    value === "VISITANTE" ? "border-primary bg-primary/5" : "border-input",
+                    value === "VISITOR" ? "border-primary bg-primary/5" : "border-input"
                 )}
             >
                 <div className="flex items-center gap-2">
-                    <RadioGroupItem value="VISITANTE" id="type-visitante" />
+                    <RadioGroupItem value="VISITOR" id="type-visitor" />
                     <span className="font-medium">Visitantes</span>
                 </div>
                 <span className="text-sm text-muted-foreground">

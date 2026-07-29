@@ -1,22 +1,24 @@
-import { UseFormRegister, FieldErrors } from "react-hook-form";
+"use client";
+
+import { useFormContext } from "react-hook-form";
 import FormField from "@/shared/components/atoms/FormField";
-import { VisitorFormValues } from "../../schemas/register-schema";
+import { visitorFormValues } from "../../schemas/visitorSchema";
 
-interface VisitorFieldsProps {
-    register: UseFormRegister<VisitorFormValues>;
-    errors: FieldErrors<VisitorFormValues>;
-}
+export function VisitorFields() {
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<visitorFormValues>();
 
-export function VisitorFields({ register, errors }: VisitorFieldsProps) {
     return (
         <>
-            <FormField 
+            <FormField
                 text="empresa"
                 id="company"
                 registration={register("company")}
                 error={errors.company}
             />
-            <FormField 
+            <FormField
                 text="CPF"
                 id="cpf"
                 registration={register("cpf")}
