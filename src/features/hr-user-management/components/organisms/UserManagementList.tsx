@@ -67,7 +67,7 @@ export function UserManagementList() {
             </Card>
 
             {!isPending && data && data.totalPages > 1 ? (
-                <Pagination className="mt-4">
+                <Pagination className="mt-6 pb-4 color-primary">
                     <PaginationContent>
                         <PaginationItem>
                             <PaginationPrevious
