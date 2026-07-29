@@ -1,9 +1,20 @@
 "use client";
+import { AdminPageHeader } from "@/features/admin/components/molecules/AdminPageHeader";
+import { AdminUserForm } from "@/features/admin/components/molecules/AdminUserForm";
+import { adminUsers } from "@/features/admin/mocks/adminUsers";
+
 
 import Link from "next/link";
 import { ArrowLeft, Save, User } from "lucide-react";
 
 export default function EditarUsuarioPage() {
+  return (
+    <section>
+      <AdminPageHeader title={"editar usu\u00e1rio"} showBackButton />
+      <AdminUserForm mode="edit" user={adminUsers[0]} />
+    </section>
+  );
+
   return (
     <main className="mx-auto max-w-5xl space-y-6 py-8">
 

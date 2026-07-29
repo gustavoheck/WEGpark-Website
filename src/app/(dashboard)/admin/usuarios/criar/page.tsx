@@ -1,9 +1,19 @@
 "use client";
+import { AdminPageHeader } from "@/features/admin/components/molecules/AdminPageHeader";
+import { AdminUserForm } from "@/features/admin/components/molecules/AdminUserForm";
+
 
 import Link from "next/link";
 import { ArrowLeft, Save } from "lucide-react";
 
 export default function CriarUsuarioPage() {
+  return (
+    <section>
+      <AdminPageHeader title={"cadastrar usuario"} showBackButton />
+      <AdminUserForm mode="create" />
+    </section>
+  );
+
   return (
     <main className="mx-auto max-w-5xl p-6">
 
