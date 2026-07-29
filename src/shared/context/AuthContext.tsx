@@ -1,27 +1,97 @@
- // src/shared/context/AuthContext.tsx
+// src/shared/context/AuthContext.tsx
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
-import User from '@/shared/types/User';
-import { UserRole } from '@/shared/enum/UserRole';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { UserRoleType } from '@/shared/enum/UserRole';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
+import { JWTPayload } from '../types/JWTPayload';
+
+interface AuthUser {
+  uuid: string;
+  email: string;
+  roles: string[];
+  currentRole: UserRoleType;
+}
 
 interface AuthContextType {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  token: string | null;
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+  login: (token: string, selectedRole: UserRoleType) => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // Exemplo de usuário mockado inicial
-  const [user, setUser] = useState<User | null>({
-    uuid: "1",
-    name: 'João Silva',
-    role: UserRole.PARKUSER,
-  });
+  const [token, setToken] = useState<string | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
+
+  const processToken = (jwtToken: string, activeRole: UserRoleType): AuthUser | null => {
+    try {
+      const decoded = jwtDecode<JWTPayload>(jwtToken);
+
+      if (decoded.exp * 1000 < Date.now()) {
+        return null;
+      }
+
+      return {
+        uuid: decoded.uuid,
+        email: decoded.sub,
+        roles: decoded.roles,
+        currentRole: activeRole,
+      };
+    } catch {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const savedToken = Cookies.get('auth_token');
+    const savedRole = Cookies.get('auth_role') as UserRoleType;
+
+    if (savedToken && savedRole) {
+      const parsedUser = processToken(savedToken, savedRole);
+      if (parsedUser) {
+        setToken(savedToken);
+        setUser(parsedUser);
+      } else {
+        logout();
+      }
+    }
+  }, []);
+
+  const login = (newToken: string, selectedRole: UserRoleType) => {
+    const parsedUser = processToken(newToken, selectedRole);
+
+    if (parsedUser) {
+      setToken(newToken);
+      setUser(parsedUser);
+
+      // Salva nos Cookies por 7 dias
+      Cookies.set('auth_token', newToken, { expires: 7, secure: true, sameSite: 'strict' });
+      Cookies.set('auth_role', selectedRole, { expires: 7, secure: true, sameSite: 'strict' });
+    }
+  };
+
+  const logout = () => {
+    setToken(null);
+    setUser(null);
+    Cookies.remove('auth_token');
+    Cookies.remove('auth_role');
+  };
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        user,
+        isAuthenticated: !!token,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

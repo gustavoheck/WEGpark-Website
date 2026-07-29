@@ -1,4 +1,6 @@
 export const UserRole = {
+    COLLABORATOR : "COLLABORATOR",
+    VISITOR : "VISITOR",
     PARKUSER : "PARKUSER",
     GUARD : "GUARD",
     ADMIN : "ADMIN",
