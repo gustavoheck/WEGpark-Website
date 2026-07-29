@@ -1,7 +1,7 @@
 import { api } from "@/shared/lib/api";
 import { Occurrence } from "../types/Occurrence";
 
-interface getServiceProps {
+export interface getServiceProps {
   category?: string;
   value?: string;
 }

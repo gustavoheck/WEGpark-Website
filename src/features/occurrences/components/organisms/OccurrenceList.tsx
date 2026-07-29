@@ -1,72 +1,34 @@
 "use client"
 
-import SectionTitle from "@/shared/components/atoms/SectionTitle"
 import OccurrenceCard from "../molecules/OccurrenceCard"
 import { Occurrence } from "../../types/Occurrence"
-import Filter, { FilterParams } from "@/shared/components/molecules/Filter"
-import { useGet } from "../../hooks/useGet"
-import FilterCategory from "@/shared/types/FilterCategory"
-import { useState } from "react"
-
 
 interface OccurrenceListProps {
     occurrences: Occurrence[]
+    isLoading : boolean
 }
 
-const filtersObject: FilterCategory[] = [
-    {
-        text: "Placa",
-        value: "plate"
-    },
-    {
-        text: "Data",
-        value: "yearMonth"
-    },
-    {
-        text: "Portaria",
-        value: "gate"
-    },
-    {
-        text: "Tipo",
-        value: "occurrenceType"
-    },
-    {
-        text: "Local",
-        value: "location"
-    },
-    
-]
+export default function OccurrenceList({ occurrences, isLoading }: OccurrenceListProps) {
 
-export default function OccurrenceList({ occurrences : initialOccurrences }: OccurrenceListProps) {
+    if (isLoading) {
+        return (
+            <p className="text-center py-8 text-muted-foreground">Carregando ocorrências...</p>
+        )
+    }
 
-    const [occurrencesList, setOccurrencesList] = useState<Occurrence[]>(initialOccurrences)
-    const { mutate: getOccurrence } = useGet()
-
-    function onSubmit(params : FilterParams) {
-        getOccurrence(
-            params,
-            {
-                onSuccess: (data) => {
-                    setOccurrencesList(data)
-                },
-                onError: () => {
-                    alert("Erro")
-                }
-            }
+    if (!occurrences || occurrences.length === 0) {
+        return (
+            <p className="text-center py-8 text-muted-foreground">Nenhuma ocorrência encontrada.</p>
         )
     }
 
     return (
-        <section>
-            <SectionTitle text="ocorrências" />
-            <Filter filters={filtersObject} onSubmit={onSubmit} />
-            <div className="flex flex-col gap-4">
-                {occurrencesList.map((occurrence) => {
-                    return (
-                        <OccurrenceCard key={occurrence.uuid} occurrence={occurrence} />
-                    )
-                })}
-            </div>
-        </section>
+        <div>
+            {occurrences.map((o) => {
+                return (
+                    <OccurrenceCard key={o.uuid} occurrence={o} />
+                )
+            })}
+        </div>
     )
 }

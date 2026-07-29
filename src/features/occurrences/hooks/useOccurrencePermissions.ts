@@ -12,6 +12,8 @@ export function useOccurrencePermissions () {
     const isGuard = user.currentRole === "GUARD"
 
     return {
+        canAdd : isGuard,
+        canEdit : isGuard,
         isGuard 
     }
 }
