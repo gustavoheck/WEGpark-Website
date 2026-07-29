@@ -9,10 +9,10 @@ interface UserTypeSelectorProps {
 }
 
 const roleOptions: { value: UserRole; label: string; description: string }[] = [
-    { value: "COLABORADOR", label: "Colaborador", description: "Cadastro com e-mail corporativo WEG" },
-    { value: "VISITANTE", label: "Visitante", description: "Cadastro com e-mail de sua preferência" },
-    { value: "RH", label: "RH", description: "Acesso à gestão de usuários" },
-    { value: "GUARITA", label: "Guarita", description: "Acesso ao controle de portaria" },
+    { value: "EMPLOYEE", label: "Colaborador", description: "Cadastro com e-mail corporativo WEG" },
+    { value: "VISITOR", label: "Visitante", description: "Cadastro com e-mail de sua preferência" },
+    { value: "HR", label: "RH", description: "Acesso à gestão de usuários" },
+    { value: "GUARD", label: "Guarita", description: "Acesso ao controle de portaria" },
 ];
 
 export function UserTypeSelector({ value, onChange }: UserTypeSelectorProps) {

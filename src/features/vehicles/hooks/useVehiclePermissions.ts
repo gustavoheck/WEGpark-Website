@@ -16,8 +16,8 @@ export function useVehiclePermissions(vehicle?: Vehicle) {
         };
     }
 
-    const isGuard = user.role === UserRole.GUARD
-    const isParkUser = user.role === UserRole.PARKUSER
+    const isGuard = user.currentRole === UserRole.ROLE_GUARD
+    const isParkUser = user.currentRole === UserRole.ROLE_PARK
 
     const isOwner = isParkUser && Boolean(
         vehicle?.isOwner || user.uuid === vehicle?.ownerId

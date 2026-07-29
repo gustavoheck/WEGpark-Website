@@ -1,4 +1,6 @@
-import { z } from "zod";
+import { email, z } from "zod";
+
+const CORPORATE_EMAIL_DOMAIN = "@weg.net";
 
 const baseSchema = z.object({
   name: z.string().min(1, "Informe o nome"),
@@ -9,7 +11,11 @@ const employeeFields = z.object({
   department: z.string().min(1, "Informe o setor"),
   badgeNumber: z.string()
     .min(1, "Informe o número do crachá")
-    .max(6, "O crachá não pode possuir mais de 6 dígitos")
+    .max(6, "O crachá não pode possuir mais de 6 dígitos"),
+
+  email: z.string()
+    .email("Informe um Email válido!")
+    .endsWith(CORPORATE_EMAIL_DOMAIN, "O Email deve ser corporativo.")
 });
 
 const visitorFields = z.object({

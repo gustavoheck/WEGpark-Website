@@ -20,13 +20,13 @@ import {
     CreateGuardFormValues,
     CreateHRFormValues,
     CreateVisitorFormValues,
-} from "../../schemas/CreateUserSchema";
+} from "../../schemas/create/CreateUserSchema";
 import { UserRole, CreateUserRequestDTO } from "../../types/User";
 import { UserTypeSelector } from "../molecules/UserTypeSelector";
-import { EmployeeFields } from "../molecules/EmployeeFields";
-import { GuardFields } from "../molecules/GuardFields";
-import { HRFields } from "../molecules/HRFields";
-import { VisitorFields } from "../molecules/VisitorFields";
+import { EmployeeFields } from "../molecules/fields/create/EmployeeFields";
+import { GuardFields } from "../molecules/fields/create/GuardFields";
+import { HRFields } from "../molecules/fields/create/HRFields";
+import { VisitorFields } from "../molecules/fields/create/VisitorFields";
 
 export function CreateUserForm() {
     const router = useRouter();
@@ -89,28 +89,28 @@ export function CreateUserForm() {
 
                         <UserTypeSelector value={selectedRole} onChange={handleSelectRole} />
 
-                        {selectedRole === "COLABORADOR" ? (
+                        {selectedRole === "EMPLOYEE" ? (
                             <EmployeeFields
                                 register={register as unknown as UseFormRegister<CreateEmployeeFormValues>}
                                 errors={errors as unknown as FieldErrors<CreateEmployeeFormValues>}
                             />
                         ) : null}
 
-                        {selectedRole === "GUARITA" ? (
+                        {selectedRole === "GUARD" ? (
                             <GuardFields
                                 register={register as unknown as UseFormRegister<CreateGuardFormValues>}
                                 errors={errors as unknown as FieldErrors<CreateGuardFormValues>}
                             />
                         ) : null}
 
-                        {selectedRole === "RH" ? (
+                        {selectedRole === "HR" ? (
                             <HRFields
                                 register={register as unknown as UseFormRegister<CreateHRFormValues>}
                                 errors={errors as unknown as FieldErrors<CreateHRFormValues>}
                             />
                         ) : null}
 
-                        {selectedRole === "VISITANTE" ? (
+                        {selectedRole === "VISITOR" ? (
                             <VisitorFields
                                 register={register as unknown as UseFormRegister<CreateVisitorFormValues>}
                                 errors={errors as unknown as FieldErrors<CreateVisitorFormValues>}
