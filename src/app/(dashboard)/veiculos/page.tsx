@@ -12,6 +12,8 @@ import Vehicle from "@/shared/types/Vehicle";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useSidebar } from "@/components/ui/sidebar";
+import { cn } from "@/shared/lib/utils";
 
 const filterCategories: FilterCategory[] = [
   { text: "Placa", value: "plate" },
@@ -24,7 +26,7 @@ const vehicles: Vehicle[] = VehicleListMock
 
 export default function VehiclePage() {
     const { canAdd, isGuard } = useVehiclePermissions()
-
+    const { open } = useSidebar();
     const [filterParams, setFilterParams] = useState<FilterParams>()
     const { data: vehicles = [], isLoading } = useVehicles(filterParams);
 
@@ -44,9 +46,9 @@ export default function VehiclePage() {
 
             {canAdd && (
                 <Link href="/veiculos/adicionar">
-                    <Button className="fixed bottom-4 left-4 right-4 text-xl rounded-sm py-6 font-bold z-50">
+                    <Button className={cn("fixed bottom-4 right-4 text-xl rounded-sm py-6 font-bold z-50", open ? "left-68" : "left-4")} variant="default">
                         <Plus className="size-7" />
-                        Cadastrar Veículo
+                        Cadastrar Usuário
                     </Button>
                 </Link>
             )}

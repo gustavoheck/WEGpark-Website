@@ -1,0 +1,24 @@
+import { useAuth } from "@/shared/context/AuthContext";
+import { UserRole } from "@/shared/enum/UserRole";
+
+export function useUserManagementPermissions() {
+    const { user } = useAuth();
+
+    if (!user) {
+        return {
+            canAdd: false,
+            canEdit: false,
+            canDelete: false,
+            canView: false,
+        };
+    }
+
+    const isHR = user.role === UserRole.HR;
+
+    return {
+        canAdd: isHR,
+        canEdit: isHR,
+        canDelete: isHR,
+        canView: isHR,
+    };
+}
