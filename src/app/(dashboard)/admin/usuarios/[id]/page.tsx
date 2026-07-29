@@ -1,4 +1,8 @@
 "use client";
+import { AdminPageHeader } from "@/features/admin/components/molecules/AdminPageHeader";
+import { AdminUserDetails } from "@/features/admin/components/organisms/AdminUserDetails";
+import { adminUsers } from "@/features/admin/mocks/adminUsers";
+
 
 import Link from "next/link";
 import {
@@ -15,7 +19,13 @@ import {
 } from "lucide-react";
 
 export default function UsuarioDetalhesPage() {
-  // Depois esses dados virão da API
+  return (
+    <section>
+      <AdminPageHeader title={"detalhes do usuário"} showBackButton />
+      <AdminUserDetails user={adminUsers[0]} />
+    </section>
+  );
+
   const usuario = {
     id: 1,
     nome: "João Silva",

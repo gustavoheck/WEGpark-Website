@@ -1,4 +1,7 @@
-"use client"
+"use client";
+import { AdminPageHeader } from "@/features/admin/components/molecules/AdminPageHeader";
+import { AdminUserList } from "@/features/admin/components/organisms/AdminUserList";
+
 
 import { useState } from "react";
 import {
@@ -46,6 +49,13 @@ const usuarios: Usuario[] = [
 ];
 
 export default function UsuariosPage() {
+  return (
+    <section>
+      <AdminPageHeader title={"gest\u00e3o de usu\u00e1rios"} />
+      <AdminUserList />
+    </section>
+  );
+
   const [aberto, setAberto] = useState<number | null>(null);
 
   function toggleCard(id: number) {
@@ -72,7 +82,7 @@ export default function UsuariosPage() {
         </div>
       </div>
 
-      {/* Pesquisa + botão */}
+
       <div className="flex items-center justify-between">
         <input
           type="text"
@@ -89,14 +99,13 @@ export default function UsuariosPage() {
         </Link>
       </div>
 
-      {/* Lista de usuários */}
       <div className="space-y-5">
         {usuarios.map((usuario) => (
           <div
             key={usuario.id}
             className="overflow-hidden rounded-xl border bg-white shadow-sm"
           >
-            {/* Cabeçalho do card */}
+    
             <div className="flex items-center justify-between p-5">
               <div className="flex items-center gap-4">
                 <div className="rounded-xl bg-blue-700 p-4">
@@ -135,7 +144,7 @@ export default function UsuariosPage() {
               </div>
             </div>
 
-            {/* Ações expandidas */}
+      
             {aberto === usuario.id && (
               <>
                 <hr />
@@ -173,7 +182,6 @@ export default function UsuariosPage() {
               </>
             )}
 
-            {/* Botão expandir */}
             <button
               onClick={() => toggleCard(usuario.id)}
               className="flex w-full items-center justify-center gap-2 border-t p-4 text-lg font-semibold text-blue-700 transition hover:bg-gray-50"

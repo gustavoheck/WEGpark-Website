@@ -1,9 +1,19 @@
 "use client";
+import { AdminPageHeader } from "@/features/admin/components/molecules/AdminPageHeader";
+import { DeactivateUserCard } from "@/features/admin/components/organisms/DeactivateUserCard";
+
 
 import Link from "next/link";
 import { ArrowLeft, Ban } from "lucide-react";
 
 export default function DesativarUsuarioPage() {
+  return (
+    <section>
+      <AdminPageHeader title={"desativar usu\u00e1rio"} showBackButton />
+      <DeactivateUserCard />
+    </section>
+  );
+
   return (
     <main className="space-y-6">
       <div className="flex items-center gap-4">
