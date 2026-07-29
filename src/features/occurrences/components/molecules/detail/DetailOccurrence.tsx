@@ -1,10 +1,10 @@
 "use client"
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Occurrence } from "../../types/Occurrence";
+import { Occurrence } from "../../../types/Occurrence";
 import DateHour from "@/shared/components/atoms/DateHour";
-import { getOccurrenceConfig } from "../../utils/occurence-helpers";
-import OccurrenceDetailsLabel from "../atoms/OccurrenceDetailsLabel";
+import { getOccurrenceConfig } from "../../../utils/occurence-helpers";
+import OccurrenceDetailsLabel from "../../atoms/OccurrenceDetailsLabel";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";

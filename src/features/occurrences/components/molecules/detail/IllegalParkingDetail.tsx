@@ -1,6 +1,6 @@
-import { IllegalParking } from "../../types/IllegalParking";
+import { IllegalParking } from "../../../types/IllegalParking";
 import DetailOccurrenceInformation from "./DetailOccurrenceInformation";
-import { PARKING_SPACE_MAP } from "../../enums/parking-space-map";
+import { PARKING_SPACE_MAP } from "../../../enums/parking-space-map";
 
 interface IllegalParkingDetailProps {
     occurrence : IllegalParking

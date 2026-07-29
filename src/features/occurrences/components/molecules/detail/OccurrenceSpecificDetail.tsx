@@ -1,5 +1,5 @@
-import { Occurrence } from "../../types/Occurrence";
-import { isIllegalParking, isWarning } from "../../utils/occurrence-guards";
+import { Occurrence } from "../../../types/Occurrence";
+import { isIllegalParking, isWarning } from "../../../utils/occurrence-guards";
 import IllegalParkingDetail from "./IllegalParkingDetail";
 import TraficAccidentDetail from "./TrafficAccidentDetail";
 import WarningDetail from "./WarningDetail";

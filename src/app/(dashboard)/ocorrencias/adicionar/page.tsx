@@ -8,7 +8,7 @@ export default async function Adicionar() {
         <section>
             <div className="flex items-center w-full pt-8 pb-10 gap-3 relative justify-center">
                 <BackButton />
-                <SectionTitle text="cadastrar veículo" className="py-0"/>
+                <SectionTitle text="cadastrar ocorrencia" className="py-0" />
             </div>
             <SaveForm />
         </section>

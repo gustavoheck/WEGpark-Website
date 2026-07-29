@@ -1,6 +1,6 @@
-import { BaseWarning } from "../../types/BaseWarning";
+import { BaseWarning } from "../../../types/BaseWarning";
 import DetailOccurrenceInformation from "./DetailOccurrenceInformation";
-import { WARNING_TYPE_MAP } from "../../enums/warning-type";
+import { WARNING_TYPE_MAP } from "../../../enums/warning-type";
 
 interface WarningDetailProps {
     occurrence : BaseWarning

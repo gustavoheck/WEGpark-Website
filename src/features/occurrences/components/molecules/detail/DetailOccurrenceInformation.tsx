@@ -1,4 +1,4 @@
-import OccurrenceDetailsLabel from "../atoms/OccurrenceDetailsLabel"
+import OccurrenceDetailsLabel from "../../atoms/OccurrenceDetailsLabel"
 
 interface DetailOccurrenceInformationPorps {
     label: string

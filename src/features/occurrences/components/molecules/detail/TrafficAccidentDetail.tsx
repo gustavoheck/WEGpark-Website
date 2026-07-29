@@ -1,7 +1,7 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { TrafficAccident } from "../../types/TrafficAccident";
+import { TrafficAccident } from "../../../types/TrafficAccident";
 import DetailOccurrenceInformation from "./DetailOccurrenceInformation";
-import OccurrenceDetailsLabel from "../atoms/OccurrenceDetailsLabel";
+import OccurrenceDetailsLabel from "../../atoms/OccurrenceDetailsLabel";
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 
