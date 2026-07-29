@@ -14,9 +14,12 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useSidebar } from "@/components/ui/sidebar";
 
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import { Plus } from "lucide-react";
+import { useUserManagementPermissions } from "../../hooks/useUserManagementPermissions";
+import { cn } from "@/shared/lib/utils";
 
 import { useUsersList } from "../../hooks/useUserManagement";
 import UserManagementCard from "../molecules/UserManagementCard";
@@ -26,7 +29,8 @@ const MAX_VISIBLE_PAGES = 5;
 export function UserManagementList() {
     const [page, setPage] = useState(1);
     const { data, isPending, isError } = useUsersList(page);
-
+    const { canAdd } = useUserManagementPermissions(); 
+    const { open } = useSidebar();
     const totalPages = data?.totalPages ?? 1;
     const windowStart = Math.max(1, Math.min(page - 2, totalPages - MAX_VISIBLE_PAGES + 1));
     const windowEnd = Math.min(totalPages, windowStart + MAX_VISIBLE_PAGES - 1);
@@ -37,7 +41,7 @@ export function UserManagementList() {
 
     return (
         <section>
-            <SectionTitle text="gestao usuários" />
+            <SectionTitle text="gestão usuários" />
             <Card>
                 <CardContent className="flex flex-col gap-3">
                     {isPending ? (
@@ -94,10 +98,10 @@ export function UserManagementList() {
                 </Pagination>
             ) : null}
             {canAdd && (
-                <Link href="/veiculos/adicionar">
-                    <Button className="fixed bottom-4 left-4 right-4 text-xl rounded-sm py-6 font-bold z-50">
+                <Link href="/gestao-usuarios/cadastrar">
+                    <Button className={cn("fixed bottom-4 right-4 text-xl rounded-sm py-6 font-bold z-50", open ? "left-68" : "left-4")} variant="default">
                         <Plus className="size-7" />
-                        Cadastrar Veículo
+                        Cadastrar Usuário
                     </Button>
                 </Link>
             )}

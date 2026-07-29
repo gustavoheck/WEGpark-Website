@@ -9,7 +9,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
-import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
 import DialogComponent from "@/shared/components/organisms/Dialog";
 
@@ -43,6 +42,7 @@ export function CreateUserForm() {
     } = useForm<CreateUserFormValues>({
         resolver: zodResolver(createUserSchema),
         mode: "onChange",
+        shouldUnregister: true,
         defaultValues: { email: "", password: "", confirmPassword: "", name: "", phone: "" },
     });
 
@@ -77,76 +77,72 @@ export function CreateUserForm() {
     }
 
     return (
-        <section>
-            <SectionTitle text="Cadastrar Usuário" />
+        <Card>
+            <CardContent>
+                <form onSubmit={handleSubmit(handleConfirm)}>
+                    <FieldGroup className="gap-4 mb-6">
+                        <FormField text="nome" id="name" registration={register("name")} error={errors.name} />
+                        <FormField text="email" id="email" type="email" registration={register("email")} error={errors.email} />
+                        <FormField text="telefone" id="phone" registration={register("phone")} error={errors.phone} />
+                        <FormField text="senha" id="password" type="password" registration={register("password")} error={errors.password} />
+                        <FormField text="confirmar senha" id="confirmPassword" type="password" registration={register("confirmPassword")} error={errors.confirmPassword} />
 
-            <Card>
-                <CardContent>
-                    <form onSubmit={handleSubmit(handleConfirm)}>
-                        <FieldGroup className="gap-4 mb-6">
-                            <FormField text="nome" id="name" registration={register("name")} error={errors.name} />
-                            <FormField text="email" id="email" type="email" registration={register("email")} error={errors.email} />
-                            <FormField text="telefone" id="phone" registration={register("phone")} error={errors.phone} />
-                            <FormField text="senha" id="password" type="password" registration={register("password")} error={errors.password} />
-                            <FormField text="confirmar senha" id="confirmPassword" type="password" registration={register("confirmPassword")} error={errors.confirmPassword} />
+                        <UserTypeSelector value={selectedRole} onChange={handleSelectRole} />
 
-                            <UserTypeSelector value={selectedRole} onChange={handleSelectRole} />
-
-                            {selectedRole === "COLABORADOR" ? (
-                                <EmployeeFields
-                                    register={register as unknown as UseFormRegister<CreateEmployeeFormValues>}
-                                    errors={errors as unknown as FieldErrors<CreateEmployeeFormValues>}
-                                />
-                            ) : null}
-
-                            {selectedRole === "GUARITA" ? (
-                                <GuardFields
-                                    register={register as unknown as UseFormRegister<CreateGuardFormValues>}
-                                    errors={errors as unknown as FieldErrors<CreateGuardFormValues>}
-                                />
-                            ) : null}
-
-                            {selectedRole === "RH" ? (
-                                <HRFields
-                                    register={register as unknown as UseFormRegister<CreateHRFormValues>}
-                                    errors={errors as unknown as FieldErrors<CreateHRFormValues>}
-                                />
-                            ) : null}
-
-                            {selectedRole === "VISITANTE" ? (
-                                <VisitorFields
-                                    register={register as unknown as UseFormRegister<CreateVisitorFormValues>}
-                                    errors={errors as unknown as FieldErrors<CreateVisitorFormValues>}
-                                />
-                            ) : null}
-                        </FieldGroup>
-
-                        {error ? (
-                            <p className="text-sm text-destructive mb-4">
-                                Não foi possível criar o usuário. Verifique os dados e tente novamente.
-                            </p>
+                        {selectedRole === "COLABORADOR" ? (
+                            <EmployeeFields
+                                register={register as unknown as UseFormRegister<CreateEmployeeFormValues>}
+                                errors={errors as unknown as FieldErrors<CreateEmployeeFormValues>}
+                            />
                         ) : null}
 
-                        <FormButton text={isPending ? "cadastrando..." : "cadastrar usuário"} disabled={!selectedRole || !isValid} />
+                        {selectedRole === "GUARITA" ? (
+                            <GuardFields
+                                register={register as unknown as UseFormRegister<CreateGuardFormValues>}
+                                errors={errors as unknown as FieldErrors<CreateGuardFormValues>}
+                            />
+                        ) : null}
 
-                        <AlertDialogComponent
-                            open={isOpenConfirmation}
-                            onOpenChange={setIsOpenConfirmation}
-                            title="Cadastrar Usuário"
-                            description="Confirma a criação desse usuário com os dados informados?"
-                            onClick={handleSubmit(onSubmit)}
-                            confirmText="Cadastrar"
-                        />
+                        {selectedRole === "RH" ? (
+                            <HRFields
+                                register={register as unknown as UseFormRegister<CreateHRFormValues>}
+                                errors={errors as unknown as FieldErrors<CreateHRFormValues>}
+                            />
+                        ) : null}
 
-                        <DialogComponent
-                            open={isOpenSuccess}
-                            onOpenChange={handleSuccessClose}
-                            title="Usuário Criado"
-                            description="O usuário foi cadastrado com sucesso!"
-                        />
-                    </form>
-                </CardContent>
-            </Card>
-        </section>
+                        {selectedRole === "VISITANTE" ? (
+                            <VisitorFields
+                                register={register as unknown as UseFormRegister<CreateVisitorFormValues>}
+                                errors={errors as unknown as FieldErrors<CreateVisitorFormValues>}
+                            />
+                        ) : null}
+                    </FieldGroup>
+
+                    {error ? (
+                        <p className="text-sm text-destructive mb-4">
+                            Não foi possível criar o usuário. Verifique os dados e tente novamente.
+                        </p>
+                    ) : null}
+
+                    <FormButton text={isPending ? "cadastrando..." : "cadastrar usuário"} disabled={!selectedRole || !isValid} />
+
+                    <AlertDialogComponent
+                        open={isOpenConfirmation}
+                        onOpenChange={setIsOpenConfirmation}
+                        title="Cadastrar Usuário"
+                        description="Confirma a criação desse usuário com os dados informados?"
+                        onClick={handleSubmit(onSubmit)}
+                        confirmText="Cadastrar"
+                    />
+
+                    <DialogComponent
+                        open={isOpenSuccess}
+                        onOpenChange={handleSuccessClose}
+                        title="Usuário Criado"
+                        description="O usuário foi cadastrado com sucesso!"
+                    />
+                </form>
+            </CardContent>
+        </Card>
     );
 }

@@ -17,7 +17,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>({
     uuid: "1",
     name: 'João Silva',
-    role: UserRole.PARKUSER,
+    role: UserRole.HR,
   });
 
   return (
