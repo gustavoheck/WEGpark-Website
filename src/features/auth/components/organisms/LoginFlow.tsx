@@ -19,7 +19,7 @@ export function LoginFlow({ onLoginSuccess }: LoginFlowProps) {
   const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>([]);
   const [selectedRole, setSelectedRole] = useState<UserRoleType | null>(null);
 
-  function handleEmailChecked(checkedEmail: string, roles: UserRoleType[]) {
+  function handleEmailChecked(checkedEmail: string, roles: UserRoleType[] = []) {
     setEmail(checkedEmail);
     setAvailableRoles(roles);
 

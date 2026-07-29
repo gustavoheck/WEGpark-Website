@@ -11,7 +11,7 @@ import { UserRoleType }  from "@/shared/enum/UserRole"
 const roleLabels: Record<UserRoleType, string> = {
   PARKUSER: "Usuario",
   ADMIN: "Administrador",
-  RH: "RH",
+  HR: "Recursos Humanos",
   GUARD: "Guarita",
   COLLABORATOR: "Colaborador",
   VISITOR: "Visitante"

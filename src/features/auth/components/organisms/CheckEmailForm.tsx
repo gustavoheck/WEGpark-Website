@@ -19,6 +19,7 @@ import {
 import { useCheckEmail } from '@/features/auth/hooks/useCheckEmail';
 import { checkEmailSchema, CheckEmailFormValues } from '@/features/auth/schemas/LoginSchema';
 import { UserRoleType } from '@/shared/enum/UserRole';
+import { CheckEmailResponse } from '../../types/checkEmailResponse';
 
 interface CheckEmailFormProps {
   onEmailChecked: (email: string, roles: UserRoleType[]) => void;
@@ -40,11 +41,13 @@ export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
     checkEmail(
       { email: values.email },
       {
-        onSuccess: (response) => onEmailChecked(values.email, response.roles),
+        onSuccess: (data) => {
+          const rolesList = data.map((item) => item.role);
+          onEmailChecked(values.email, rolesList);
+        }
       },
     );
   }
-  console.log(process.env.NEXT_PUBLIC_USE_MOCKS);
   return (
 
     <Card className="w-full max-w-sm">

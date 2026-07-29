@@ -1,10 +1,12 @@
-import { useMutation } from '@tanstack/react-query';
-import { CheckEmailResponse } from '../types/checkEmailResponse';
-import { CheckEmailRequest } from '../types/checkEmailRequest';
-import { checkRolesService } from '../services/checkRolesService';
+"use client";
+
+import { useMutation } from "@tanstack/react-query";
+import { checkRolesService } from "../services/checkRolesService";
+import { CheckEmailRequest } from "../types/checkEmailRequest";
+import { CheckEmailResponse } from "../types/checkEmailResponse";
 
 export function useCheckEmail() {
   return useMutation<CheckEmailResponse, Error, CheckEmailRequest>({
-    mutationFn: checkRolesService,
+    mutationFn: (params: CheckEmailRequest) => checkRolesService(params),
   });
 }
