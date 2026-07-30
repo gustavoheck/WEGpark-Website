@@ -1,4 +1,4 @@
-export type UserRole = "COLABORADOR" | "VISITANTE" | "RH" | "GUARITA";
+export type UserRole = "EMPLOYEE" | "VISITOR" | "HR" | "GUARD";
 
 export interface UserListItem {
     id: string;
@@ -22,35 +22,35 @@ interface BaseCreateUserRequest {
 }
 
 
-export interface CreateColaboradorUserRequest extends BaseCreateUserRequest {
-    role: "COLABORADOR";
+export interface CreateEmployeeUserRequest extends BaseCreateUserRequest {
+    role: "EMPLOYEE";
     badgeNumber: string; 
     department: string; 
 }
 
 
-export interface CreateGuaritaUserRequest extends BaseCreateUserRequest {
-    role: "GUARITA";
+export interface CreateGuardUserRequest extends BaseCreateUserRequest {
+    role: "GUARD";
     badgeNumber: string; 
     department: string; 
     chefe: string;
 }
 
-export interface CreateRHUserRequest extends BaseCreateUserRequest {
-    role: "RH";
+export interface CreateHRUserRequest extends BaseCreateUserRequest {
+    role: "HR";
     badgeNumber: string; 
 }
 
 export interface CreateVisitorUserRequest extends BaseCreateUserRequest {
-    role: "VISITANTE";
+    role: "VISITOR";
     companyName: string;
     cpf: string;
 }
 
 export type CreateUserRequestDTO =
-    | CreateColaboradorUserRequest
-    | CreateGuaritaUserRequest
-    | CreateRHUserRequest
+    | CreateEmployeeUserRequest
+    | CreateGuardUserRequest
+    | CreateHRUserRequest
     | CreateVisitorUserRequest;
 
 export interface CreateUserResponseDTO {
@@ -59,3 +59,15 @@ export interface CreateUserResponseDTO {
     role: UserRole;
     createdAt: string;
 }
+
+export type UserDetailDTO =
+    | (Omit<CreateEmployeeUserRequest, "password"> & { id: string })
+    | (Omit<CreateGuardUserRequest, "password"> & { id: string })
+    | (Omit<CreateHRUserRequest, "password"> & { id: string })
+    | (Omit<CreateVisitorUserRequest, "password"> & { id: string });
+
+export type UpdateUserRequestDTO =
+    | Omit<CreateEmployeeUserRequest, "password">
+    | Omit<CreateGuardUserRequest, "password">
+    | Omit<CreateHRUserRequest, "password">
+    | Omit<CreateVisitorUserRequest, "password">;

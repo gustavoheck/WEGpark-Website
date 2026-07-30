@@ -1,11 +1,10 @@
-// src/shared/context/AuthContext.tsx
-'use client';
+"use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { UserRoleType } from '@/shared/enum/UserRole';
-import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
-import { JWTPayload } from '../types/JWTPayload';
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { UserRoleType } from "@/shared/enum/UserRole";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { JWTPayload } from "../types/JWTPayload";
 
 interface AuthUser {
   uuid: string;
@@ -48,8 +47,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    const savedToken = Cookies.get('auth_token');
-    const savedRole = Cookies.get('auth_role') as UserRoleType;
+    const savedToken = Cookies.get("auth_token");
+    const savedRole = Cookies.get("auth_role") as UserRoleType;
 
     if (savedToken && savedRole) {
       const parsedUser = processToken(savedToken, savedRole);
@@ -70,16 +69,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(parsedUser);
 
       // Salva nos Cookies por 7 dias
-      Cookies.set('auth_token', newToken, { expires: 7, secure: true, sameSite: 'strict' });
-      Cookies.set('auth_role', selectedRole, { expires: 7, secure: true, sameSite: 'strict' });
+      Cookies.set("auth_token", newToken, { expires: 7, secure: true, sameSite: "strict" });
+      Cookies.set("auth_role", selectedRole, { expires: 7, secure: true, sameSite: "strict" });
     }
   };
 
   const logout = () => {
     setToken(null);
     setUser(null);
-    Cookies.remove('auth_token');
-    Cookies.remove('auth_role');
+    Cookies.remove("auth_token");
+    Cookies.remove("auth_role");
   };
 
   return (
@@ -100,7 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
   }
   return context;
 };

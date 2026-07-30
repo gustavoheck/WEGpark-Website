@@ -5,6 +5,7 @@ import {
     CreateUserResponseDTO,
     PaginatedUsersResponseDTO,
 } from "../types/User";
+import { UserDetailDTO, UpdateUserRequestDTO } from "../types/User";
 import * as mockService from "./userManagementService.mock";
 
 const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
@@ -20,6 +21,18 @@ export async function listUsers(page: number): Promise<PaginatedUsersResponseDTO
     if (USE_MOCKS) return mockService.listUsers(page);
 
     const { data } = await api.get<PaginatedUsersResponseDTO>("/rh/usuarios", { params: { page } });
+    return data;
+}
+
+export async function getUserById(id: string): Promise<UserDetailDTO> {
+    if (USE_MOCKS) return mockService.getUserById(id);
+    const { data } = await api.get<UserDetailDTO>(`/rh/usuarios/${id}`);
+    return data;
+}
+
+export async function updateUser(id: string, payload: UpdateUserRequestDTO): Promise<UserDetailDTO> {
+    if (USE_MOCKS) return mockService.getUserById(id);
+    const { data } = await api.put<UserDetailDTO>(`/rh/usuarios/${id}`, payload);
     return data;
 }
 

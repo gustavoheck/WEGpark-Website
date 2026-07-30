@@ -13,7 +13,7 @@ export function useUserManagementPermissions() {
         };
     }
 
-    const isHR = user.role === UserRole.HR;
+    const isHR = user.currentRole === UserRole.ROLE_RH;
 
     return {
         canAdd: isHR,

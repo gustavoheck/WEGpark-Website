@@ -5,10 +5,10 @@ interface UserListCardProps {
 }
 
 const roleLabels: Record<UserListItem["role"], string> = {
-    COLABORADOR: "Colaborador",
-    VISITANTE: "Visitante",
-    RH: "RH",
-    GUARITA: "Guarita",
+    EMPLOYEE: "Colaborador",
+    VISITOR: "Visitante",
+    HR: "RH",
+    GUARD: "Guarita",
 };
 
 export function UserListCard({ user }: UserListCardProps) {

@@ -1,6 +1,6 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import FormField from "@/shared/components/atoms/FormField";
-import { CreateHRFormValues } from "../../schemas/CreateUserSchema";
+import { CreateHRFormValues } from "../../../../schemas/create/CreateUserSchema";
 
 interface HRFieldsProps {
     register: UseFormRegister<CreateHRFormValues>;
