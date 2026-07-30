@@ -38,13 +38,15 @@ export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
 
   function onSubmit(values: CheckEmailFormValues) {
     checkEmail(
-      { email: values.email },
+      values.email,
       {
-        onSuccess: (response) => onEmailChecked(values.email, response.roles),
+        onSuccess: (response) => {
+          const roles = response.map((item) => item.role);
+          onEmailChecked(values.email, roles);
+        }
       },
     );
   }
-  console.log(process.env.NEXT_PUBLIC_USE_MOCKS);
   return (
 
     <Card className="w-full max-w-sm">

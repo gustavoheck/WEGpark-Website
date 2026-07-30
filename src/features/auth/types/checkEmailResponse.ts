@@ -1,5 +1,7 @@
 import { UserRoleType } from "@/shared/enum/UserRole";
 
-export interface CheckEmailResponse {
-  roles: UserRoleType[];
+export interface SelectAccountResponse {
+  role: UserRoleType;
 }
+
+export type CheckEmailResponse = SelectAccountResponse[];

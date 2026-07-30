@@ -6,23 +6,24 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { UserRoleType }  from "@/shared/enum/UserRole"
+import { UserRoleType } from "@/shared/enum/UserRole";
 
 const roleLabels: Record<UserRoleType, string> = {
-  PARKUSER: "Usuario",
-  ADMIN: "Administrador",
-  RH: "RH",
-  GUARD: "Guarita",
-  COLLABORATOR: "Colaborador",
-  VISITOR: "Visitante"
+  ROLE_PARK: "Usuário",
+  ROLE_ADMIN: "Administrador",
+  ROLE_RH: "RH",
+  ROLE_GUARD: "Guarita",
+  ROLE_COLLABORATOR: "Colaborador",
+  ROLE_VISITOR: "Visitante",
 };
+
 interface SelectRoleDialogProps {
   open: boolean;
   roles: UserRoleType[];
   onSelect: (role: UserRoleType) => void;
 }
 
-export function SelectRoleDialog({ open, roles, onSelect }: SelectRoleDialogProps) {
+export function SelectRoleDialog({ open, roles = [], onSelect }: SelectRoleDialogProps) {
   return (
     <Dialog open={open}>
       <DialogContent>
