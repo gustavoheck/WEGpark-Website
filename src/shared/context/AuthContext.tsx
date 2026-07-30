@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
 import { UserRoleType } from "@/shared/enum/UserRole";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
@@ -24,24 +24,35 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null)
-  const [user, setUser] = useState<AuthUser | null>(null)
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+
+  const logout = useCallback(() => {
+    setToken(null);
+    setUser(null);
+    Cookies.remove("auth_token");
+    Cookies.remove("auth_role");
+  }, []);
 
   const processToken = (jwtToken: string, activeRole: UserRoleType): AuthUser | null => {
     try {
       const decoded = jwtDecode<JWTPayload>(jwtToken);
 
-      if (decoded.exp * 1000 < Date.now()) {
+      console.log("Token decodificado:", decoded);
+
+      if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+        console.warn("Token JWT expirado");
         return null;
       }
 
       return {
-        uuid: decoded.uuid,
-        email: decoded.sub,
-        roles: decoded.roles,
+        uuid: decoded.uuid || "",
+        email: decoded.sub || "",
+        roles: decoded.roles || [],
         currentRole: activeRole,
       };
-    } catch {
+    } catch (error) {
+      console.error("Erro ao decodificar o token JWT:", error);
       return null;
     }
   };
@@ -59,26 +70,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout();
       }
     }
-  }, []);
+  }, [logout]);
 
   const login = (newToken: string, selectedRole: UserRoleType) => {
+    if (!newToken) {
+      console.error("Tentativa de login sem token válido.");
+      return;
+    }
+
     const parsedUser = processToken(newToken, selectedRole);
 
     if (parsedUser) {
       setToken(newToken);
       setUser(parsedUser);
 
-      // Salva nos Cookies por 7 dias
-      Cookies.set("auth_token", newToken, { expires: 7, secure: true, sameSite: "strict" });
-      Cookies.set("auth_role", selectedRole, { expires: 7, secure: true, sameSite: "strict" });
-    }
-  };
+      const cookieOptions = {
+        expires: 7,
+        sameSite: "lax" as const,
+        secure: process.env.NODE_ENV === "production",
+      };
 
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    Cookies.remove("auth_token");
-    Cookies.remove("auth_role");
+      Cookies.set("auth_token", newToken, cookieOptions);
+      Cookies.set("auth_role", selectedRole, cookieOptions);
+
+      console.log("Cookies salvos com sucesso!");
+    } else {
+      console.error("Falha ao processar o usuário do token. Os cookies não foram gravados.");
+    }
   };
 
   return (
