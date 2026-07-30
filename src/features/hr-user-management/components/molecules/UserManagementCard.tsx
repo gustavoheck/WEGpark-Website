@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { UserRound, ChevronDown, Eye, Pencil, Trash2 } from "lucide-react";
+import { UserRound, ChevronDown, Eye, Pencil, UserX, UserCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -11,6 +11,7 @@ import AlertDialog from "@/shared/components/organisms/AlertDialog";
 import UserCardButton from "../atoms/UserCardButton";
 import { useUserCardActions } from "../../hooks/useUserCardActions";
 import { UserListItem } from "../../types/User";
+
 
 interface UserManagementCardProps {
     user: UserListItem;
@@ -24,10 +25,10 @@ const roleLabels: Record<UserListItem["role"], string> = {
 };
 
 export default function UserManagementCard({ user }: UserManagementCardProps) {
-    const { id, name, email, role } = user;
+    const { id, name, email, role, active } = user;
     const [isExpanded, setIsExpanded] = useState(false);
+    const { activeDialog, openActivateDialog, openDeactivateDialog, closeDialog, actions } = useUserCardActions(id);
 
-    const { activeDialog, openDeleteDialog, closeDialog, handleDelete } = useUserCardActions(id);
 
     return (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
@@ -44,6 +45,11 @@ export default function UserManagementCard({ user }: UserManagementCardProps) {
                             </Badge>
                         </div>
                         <span className="text-sm text-muted-foreground">{email}</span>
+                        {!active && (
+                            <Badge variant="destructive" className="text-md">
+                                Inativo
+                            </Badge>
+                        )}
                     </div>
                 </CardHeader>
 
@@ -52,7 +58,8 @@ export default function UserManagementCard({ user }: UserManagementCardProps) {
                         <div className="grid grid-cols-2 gap-3 w-full">
                             <UserCardButton title="ver usuário" Icon={Eye} href={`/gestao-usuarios/${id}`} />
                             <UserCardButton title="editar usuário" Icon={Pencil} href={`/gestao-usuarios/${id}/editar`} />
-                            <UserCardButton title="excluir usuário" Icon={Trash2} destructive onClick={openDeleteDialog} variant="last" />
+                            <UserCardButton title="desativar" Icon={UserX} tone="destructive" onClick={openDeactivateDialog} disabled={!active}/>
+                            <UserCardButton title="ativar" Icon={UserCheck} tone="primary" onClick={openActivateDialog} disabled={active}/>
                         </div>
                     </CardContent>
                 </CollapsibleContent>
@@ -70,12 +77,21 @@ export default function UserManagementCard({ user }: UserManagementCardProps) {
                 </CardFooter>
 
                 <AlertDialog
-                    open={activeDialog === "delete"}
+                    open={activeDialog === "deactivate"}
                     onOpenChange={(open) => !open && closeDialog()}
-                    title="Excluir Usuário"
-                    description="Você realmente deseja excluir esse usuário? Esta ação não pode ser desfeita."
-                    onClick={handleDelete}
-                    confirmText="Excluir"
+                    title="Desativar Usuário"
+                    description="Você realmente deseja desativar esse usuário? Esta ação não pode ser desfeita."
+                    onClick={actions.handleDeactivate}
+                    confirmText="Desativar"
+                />
+
+                <AlertDialog
+                    open={activeDialog === "activate"}
+                    onOpenChange={(open) => !open && closeDialog()}
+                    title="Ativar Usuário"
+                    description="Você realmente deseja ativar esse usuário? Esta ação não pode ser desfeita."
+                    onClick={actions.handleActivate}
+                    confirmText="Ativar"
                 />
             </Card>
         </Collapsible>

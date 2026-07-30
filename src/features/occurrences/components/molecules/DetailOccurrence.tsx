@@ -26,7 +26,7 @@ export default function DetailOccurence({ occurrence }: DetailOccurence) {
     return (
         <Card className="mb-8">
             <CardHeader>
-                <h2 className="font-bold text-2xl text-center text-primary">{label}</h2>
+                <h2 className="font-medium text-2xl text-center text-primary">{label}</h2>
             </CardHeader>
             <CardContent className="flex flex-col gap-2 px-0">
                 <div className="px-4 flex flex-col gap-2">

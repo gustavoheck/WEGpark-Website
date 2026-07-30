@@ -38,12 +38,26 @@ const ALL_MENU_ITEMS: Record<string, SidebarItem & { roles: string[] }> = {
     icon: PenBox,
     roles: ["parkuser"],
   },
+
+  logout: {
+    title: "Sair",
+    href: "/logout",
+    icon: LogOut,
+    roles: ["parkuser", "guard", "rh"]
+  },
+
+  user_management: {
+    title: "Gestão de Usuários",
+    href: "/gestao-usuarios",
+    icon: Users,
+    roles: ["rh"]
+  }
 };
 
 const ADMIN_MENU: SidebarItem[] = [
   {
     title: "Gestão de Usuários",
-    href: "/admin/usuarios",
+    href: "/gestao-usuarios",
     icon: Users,
   },
   {

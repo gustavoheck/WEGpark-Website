@@ -5,6 +5,7 @@ export interface UserListItem {
     name: string;
     email: string;
     role: UserRole;
+    active: boolean;
 }
 
 export interface PaginatedUsersResponseDTO {
@@ -19,6 +20,7 @@ interface BaseCreateUserRequest {
     email: string;
     phone: string;
     password: string;
+    active: boolean;
 }
 
 

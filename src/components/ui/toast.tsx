@@ -86,9 +86,15 @@ function ToastDescription({
 }: ToastPrimitive.Description.Props) {
   return (
     <ToastPrimitive.Description
-      data-slot="toast-description"
-      className={cn("text-sm text-muted-foreground", className)}
-      {...props}
+        data-slot="toast-description"
+        className={cn(
+          "text-sm",
+          "group-data-[type=error]/toast:text-destructive",
+          "group-data-[type=success]/toast:text-primary",
+          "group-data-[type=warning]/toast:text-yellow-600",
+          "group-data-[type=info]/toast:text-primary",
+        className
+      )}
     />
   )
 }
@@ -120,7 +126,7 @@ function ToastClose({
       aria-label="Close toast"
       render={render}
       className={cn(
-        "relative shrink-0 text-muted-foreground after:absolute after:-inset-2 after:content-[''] hover:text-foreground",
+        "relative shrink-0 text-primary after:absolute after:-inset-2 after:content-[''] hover:primary",
         className
       )}
       {...props}
@@ -137,25 +143,25 @@ function ToastIcon({ type }: { type: string | undefined }) {
 
   if (type === "success") {
     icon = (
-      <CircleCheckIcon aria-hidden="true" />
+      <CircleCheckIcon aria-hidden="true" className="text-primary" />
     )
   }
 
   if (type === "info") {
     icon = (
-      <InfoIcon aria-hidden="true" />
+      <InfoIcon aria-hidden="true" className="text-primary"/>
     )
   }
 
   if (type === "warning") {
     icon = (
-      <TriangleAlertIcon aria-hidden="true" />
+      <TriangleAlertIcon aria-hidden="true" className="text-[#EFC906]"/>
     )
   }
 
   if (type === "error") {
     icon = (
-      <OctagonXIcon className="text-destructive" aria-hidden="true" />
+      <OctagonXIcon className="text-destructive" aria-hidden="true"/>
     )
   }
 

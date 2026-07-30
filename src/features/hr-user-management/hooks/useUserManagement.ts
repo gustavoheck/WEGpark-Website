@@ -3,9 +3,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createUser, listUsers } from "../services/userManagementService";
 import { CreateUserRequestDTO } from "../types/User";
-import { deleteUser } from "../services/userManagementService";
+import { deactivateUser } from "../services/userManagementService";
 import { UpdateUserRequestDTO } from "../types/User";
-import { getUserById, updateUser } from "../services/userManagementService";
+import { getUserById, updateUser, activateUser } from "../services/userManagementService";
 
 export function useUsersList(page: number) {
     return useQuery({
@@ -50,11 +50,22 @@ export function useUpdateUser() {
     });
 }
 
-export function useDeleteUser() {
+export function useDeactivateUser() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: string) => deleteUser(id),
+        mutationFn: (id: string) => deactivateUser(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+        },
+    });
+}
+
+export function useActivateUser() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: string) => activateUser(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["users"] });
         },
