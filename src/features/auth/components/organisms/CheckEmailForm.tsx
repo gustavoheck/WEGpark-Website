@@ -41,7 +41,6 @@ export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
       values.email,
       {
         onSuccess: (response) => {
-          // 1. Veja no console do navegador o que o backend realmente respondeu
           console.log("Resposta que chegou do backend:", response);
 
           if (!Array.isArray(response)) {
@@ -53,7 +52,6 @@ export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
           onEmailChecked(values.email, roles);
         },
         onError: (err) => {
-          // 2. Veja o erro exato retornado pelo Axios / React Query
           console.error("Erro na requisição / mutation:", err);
         }
       },
