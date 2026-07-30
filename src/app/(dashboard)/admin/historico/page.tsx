@@ -1,7 +1,7 @@
 "use client";
 
-import { AdminPageHeader } from "@/features/admin/components/molecules/AdminPageHeader";
-import { AdminOccurrenceHistory } from "@/features/admin/components/organisms/AdminOccurrenceHistory";
+import { AdminPageHeader } from "@/features/admin-user-management/components/molecules/AdminPageHeader";
+import { AdminOccurrenceHistory } from "@/features/admin-user-management/components/organisms/AdminOccurrenceHistory";
 import { useState } from "react";
 
 interface Ocorrencia {

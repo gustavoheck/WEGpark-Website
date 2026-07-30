@@ -5,8 +5,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 
-import { useUser } from "@/features/admin/hooks/useUserManagement";
-import DetailUser from "@/features/admin/components/organisms/DetailUser";
+import { useUser } from "@/features/admin-user-management/hooks/useUserManagement";
+import DetailUser from "@/features/admin-user-management/components/organisms/DetailUser";
 
 export default function VisualizarUsuarioPage() {
     const { id } = useParams<{ id: string }>();
