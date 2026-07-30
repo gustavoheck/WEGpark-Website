@@ -4,11 +4,11 @@ O WEGpark foi desenvolvido para centralizar a gestão do estacionamento em uma �
 
 ## Integrantes da equipe
 
-**Nome 1**: Adriane Victória Cardoso Czycza -[Gestão e Frontend] [Scrum Master]
-**Nome 2**:Cássio Stein Paulus -[Equipe de Backend] 
-**Nome 2**:David Hillesheim -[Equipe de Frontend]
-**Nome 2**:Gustavo Henrique Heck -[Equipe de Backend] [Product Owner]
-**Nome 2**:Matheus de Oliveira -[Equipe de Frontend]
+- **Adriane Victória Cardoso Czycza** — Gestão e Frontend / Scrum Master
+- **Cássio Stein Paulus** — Equipe de Backend
+- **David Hillesheim** — Equipe de Frontend
+- **Gustavo Henrique Heck** — Equipe de Backend / Product Owner
+- **Matheus de Oliveira** — Equipe de Frontend
 
 ## Descrição do problema
 
@@ -35,27 +35,15 @@ Empresas com estacionamento corporativo frequentemente realizam o controle de ve
 
 ## Tecnologias utilizadas
 
-- [Next.js ](https://nextjs.org/) (App Router)
-- [React](https://react.dev/) + TypeScript
-- [Tailwind CSS ](https://tailwindcss.com/)
-- [shadcn/ui](https://ui.shadcn.com/) e [Base UI](https://base-ui.com/) como base de componentes
-- [TanStack Query](https://tanstack.com/query) para gerenciamento de estado assíncrono e cache de requisições
-- [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) para formulários e validação
-- [Axios](https://axios-http.com/) para consumo da API
-- [js-cookie](https://github.com/js-cookie/js-cookie) e [jwt-decode](https://github.com/auth0/jwt-decode) para autenticação via JWT
-- [Lucide React](https://lucide.dev/) para ícones
-
-## Tecnologias utilizadas (resumo)
-
-| Categoria         | Tecnologia                          |
-|-------------------|--------------------------------------|
-| Framework         | Next.js (App Router) + TypeScript    |
-| Estilização       | Tailwind CSS, shadcn/ui, Base UI     |
-| Estado do servidor| TanStack Query                       |
-| Formulários       | React Hook Form + Zod                |
-| HTTP Client       | Axios                                |
-| Autenticação      | JWT (cookies + localStorage)         |
-| Ícones            | Lucide React                         |
+| Categoria          | Tecnologia                                                              |
+|--------------------|--------------------------------------------------------------------------|
+| Framework          | [Next.js](https://nextjs.org/) (App Router) + [React](https://react.dev/) + TypeScript |
+| Estilização        | [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/), [Base UI](https://base-ui.com/) |
+| Estado do servidor | [TanStack Query](https://tanstack.com/query)                             |
+| Formulários        | [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) |
+| HTTP Client        | [Axios](https://axios-http.com/)                                        |
+| Autenticação       | JWT via cookies e localStorage ([js-cookie](https://github.com/js-cookie/js-cookie) + [jwt-decode](https://github.com/auth0/jwt-decode)) |
+| Ícones             | [Lucide React](https://lucide.dev/)                                     |
 
 ## Instruções para instalação
 
@@ -63,8 +51,8 @@ Pré-requisitos: Node.js 18+ e um gerenciador de pacotes (npm, yarn ou pnpm).
 
 ```bash
 # Clonar o repositório
-git clone <gh repo clone gustavoheck/WEGpark-Website>
-cd wegpark
+git clone https://github.com/gustavoheck/WEGpark-Website.git
+cd WEGpark-Website
 
 # Instalar as dependências
 npm install
@@ -79,6 +67,8 @@ Crie um arquivo `.env.local` na raiz do projeto com base no exemplo abaixo:
 NEXT_PUBLIC_API_URL=http://localhost:3333
 
 # Habilita o uso de dados mockados quando a API não está disponível (true/false)
+# Quando true, a aplicação utiliza dados fictícios pré-definidos no lugar
+# das chamadas à API, permitindo desenvolver o frontend sem o backend em execução.
 NEXT_PUBLIC_USE_MOCKS=false
 ```
 
@@ -99,35 +89,35 @@ A aplicação estará disponível em `http://localhost:3000`.
 
 ## Endereço / documentação da API
 
-A aplicação consome a API RESTful do WEGpark, cuja URL é configurada pela variável `NEXT_PUBLIC_API_URL`. Consulte a documentação da API disponibilizada pela equipe de Back-End para o detalhamento completo dos endpoints.
+A aplicação consome a API RESTful do WEGpark, cuja URL é configurada pela variável `NEXT_PUBLIC_API_URL`. Consulte a documentação da API disponibilizada pela equipe de Back-End (repositório e/ou coleção de endpoints) para o detalhamento completo dos endpoints.
 
 ## Estrutura resumida de pastas
 
 ```
 src/
 ├── app/                     # Rotas (App Router)
-│   ├── (auth)/              # Login, cadastro, recuperação de senha
-│   └── (dashboard)/         # Áreas autenticadas (veículos, ocorrências, admin, etc.)
+│   ├── (auth)/                 # Login, cadastro, recuperação de senha
+│   └── (dashboard)/            # Áreas autenticadas (veículos, ocorrências, admin, etc.)
 ├── components/ui/           # Componentes de UI reutilizáveis (shadcn/ui)
 ├── features/                # Regras de negócio organizadas por domínio
-│   ├── auth/                 # Login e autenticação
-│   ├── sign-up/               # Cadastro de usuários
-│   ├── reset-pass/             # Recuperação de senha
+│   ├── auth/                   # Login e autenticação
+│   ├── sign-up/                 # Cadastro de usuários
+│   ├── reset-pass/              # Recuperação de senha
 │   ├── profile/                 # Perfil do usuário
-│   ├── vehicles/                 # CRUD de veículos
-│   ├── occurrences/                # Ocorrências dos veículos
-│   ├── notifications/               # Notificações
-│   ├── requests/                     # Solicitações
-│   ├── hr-user-management/            # Gestão de usuários pelo RH
-│   └── admin/                          # Gestão administrativa
+│   ├── vehicles/                # CRUD de veículos
+│   ├── occurrences/             # Ocorrências dos veículos
+│   ├── notifications/           # Notificações
+│   ├── requests/                # Solicitações
+│   ├── hr-user-management/      # Gestão de usuários pelo RH
+│   └── admin/                   # Gestão administrativa
 ├── shared/                  # Recursos compartilhados entre features
-│   ├── components/           # Componentes globais (Header, Sidebar, etc.)
-│   ├── context/                # Contexto de autenticação (AuthContext)
+│   ├── components/              # Componentes globais (Header, Sidebar, etc.)
+│   ├── context/                 # Contexto de autenticação (AuthContext)
 │   ├── lib/                     # Cliente HTTP (axios) e utilitários
 │   ├── providers/                # Provider do TanStack Query
-│   ├── types/                     # Tipos globais
-│   └── enum/                       # Enumerações (papéis de usuário, etc.)
-└── hooks/                    # Hooks globais (ex: detecção de mobile)
+│   ├── types/                    # Tipos globais
+│   └── enum/                     # Enumerações (papéis de usuário, etc.)
+└── hooks/                   # Hooks globais (ex: detecção de mobile)
 ```
 
 Cada feature segue o padrão atômico (`atoms`, `molecules`, `organisms`) para componentes, além de possuir suas próprias `hooks`, `schemas` (validação Zod), `services` (consumo da API) e `types`.
@@ -135,7 +125,7 @@ Cada feature segue o padrão atômico (`atoms`, `molecules`, `organisms`) para c
 ## Principais funcionalidades
 
 - Autenticação com login, cadastro, verificação de e-mail e recuperação de senha
-- Seleção de papel de acesso (colaborador, visitante, guarita, RH, secretaria, administrador)
+- Seleção de papel de acesso (colaborador, visitante, guarita, RH e administrador)
 - Cadastro, edição e exclusão de veículos
 - Registro e histórico de ocorrências (janela aberta, luz acesa, alarme, acidente de trânsito, estacionamento irregular)
 - Central de notificações
@@ -143,7 +133,35 @@ Cada feature segue o padrão atômico (`atoms`, `molecules`, `organisms`) para c
 - Sidebar dinâmica de navegação, adaptada conforme o papel do usuário logado
 - Feedback visual de carregamento, sucesso e erro nas operações com a API
 
-## Boas práticas de segurança adotadas
+## Boas Práticas de Segurança Adotadas
+
+- **Autenticação com JWT**
+  - O acesso ao sistema é realizado por meio de login, com emissão de um **JSON Web Token (JWT)** pela API após a autenticação do usuário.
+
+- **Validação da sessão**
+  - Antes de restaurar a sessão do usuário, o cliente verifica se o **token JWT** ainda é válido, evitando o uso de credenciais expiradas.
+
+- **Autorização nas requisições**
+  - Todas as chamadas autenticadas à API enviam o token no cabeçalho **`Authorization: Bearer <token>`**, garantindo que apenas usuários autenticados possam acessar recursos protegidos.
+
+- **Tratamento de sessões expiradas**
+  - Quando a API retorna o código **401 (Unauthorized)**, o usuário é automaticamente redirecionado para a tela de login, impedindo o acesso com sessões inválidas.
+
+- **Uso seguro de cookies**
+  - A aplicação utiliza cookies com o atributo **`SameSite=Lax`** para reduzir riscos de ataques CSRF.
+  - Em ambiente de produção, também é utilizado o atributo **`Secure`**, permitindo o envio do cookie apenas por conexões HTTPS.
+
+- **Validação de formulários**
+  - Os dados informados pelos usuários são validados utilizando **React Hook Form** em conjunto com **Zod**, reduzindo o envio de informações inválidas para a API.
+
+- **Controle de acesso por perfil**
+  - Funcionalidades, páginas e itens de navegação são exibidos conforme o perfil do usuário autenticado, restringindo o acesso a recursos não autorizados.
+
+- **Configuração por variáveis de ambiente**
+  - A URL da API é definida por meio da variável **`NEXT_PUBLIC_API_URL`**, evitando que informações específicas do ambiente fiquem fixas no código-fonte.
+
+- **Proteção contra XSS**
+  - A interface é desenvolvida com **React**, que realiza o escape automático de conteúdo interpolado por padrão, contribuindo para mitigar ataques de **Cross-Site Scripting (XSS)**.
 
 ## Procedimento utilizado para realização dos testes
 
