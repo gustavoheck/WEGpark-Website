@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm, UseFormRegister, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 
 import { FieldGroup } from "@/components/ui/field";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,7 +27,7 @@ import { HRUpdateFields } from "../molecules/fields/update/HRUpdateFields";
 import { VisitorUpdateFields } from "../molecules/fields/update/VisitorUpdateFields";
 import { FieldError } from "react-hook-form";
 import { AxiosError } from "axios";
-import DialogComponent from "@/shared/components/organisms/Dialog";
+import { useRouter } from "next/navigation";
 
 interface EditUserFormProps {
     user: UserDetailDTO; 
@@ -62,8 +61,9 @@ export default function EditUserForm({ user }: EditUserFormProps) {
             { id: user.id, data: data as UpdateUserRequestDTO },
             {
                 onSuccess: () => {
-                    toast.add({ type: "success", description: "Usuário atualizado com sucesso!" });
+                    toast.add({ type: "success", description: "Usuário atualizado com sucesso!"});
                     setIsOpenSuccess(true);
+                    router.push("/gestao-usuarios");
                 },
                 onError: (error: unknown) => {
                     if(error instanceof AxiosError){
@@ -76,13 +76,6 @@ export default function EditUserForm({ user }: EditUserFormProps) {
                 },
             },
         );
-    }
-
-    function handleSuccessClose(open: boolean) {
-        setIsOpenSuccess(false);
-        if (!open) {
-            router.push("/gestao-usuarios");
-        }
     }
 
     return (
@@ -134,13 +127,6 @@ export default function EditUserForm({ user }: EditUserFormProps) {
                         description="Você deseja salvar as alterações feitas nesse usuário?"
                         onClick={handleSubmit(onSubmit)}
                         confirmText="Salvar"
-                    />
-
-                    <DialogComponent
-                        open={isOpenSuccess}
-                        onOpenChange={handleSuccessClose}
-                        title="Usuário Editado"
-                        description="O usuário foi editado com sucesso!"
                     />
                 </form>
             </CardContent>

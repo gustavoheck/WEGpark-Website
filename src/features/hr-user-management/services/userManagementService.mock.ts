@@ -10,28 +10,28 @@ import {
 const PAGE_SIZE = 15;
 
 let mockUsers: UserListItem[] = [
-    { id: "1", name: "João Silva", email: "joao.silva@weg.net", role: "EMPLOYEE" },
-    { id: "2", name: "Maria Souza", email: "maria.souza@exemplo.com", role: "VISITOR" },
-    { id: "3", name: "Carlos Pereira", email: "carlos.pereira@weg.net", role: "HR" },
-    { id: "4", name: "Ana Costa", email: "ana.costa@weg.net", role: "GUARD" },
-    { id: "5", name: "Pedro Santos", email: "pedro.santos@weg.net", role: "EMPLOYEE" },
-    { id: "6", name: "Juliana Lima", email: "juliana.lima@exemplo.com", role: "VISITOR" },
-    { id: "7", name: "Rafael Alves", email: "rafael.alves@weg.net", role: "GUARD" },
-    { id: "8", name: "Fernanda Rocha", email: "fernanda.rocha@weg.net", role: "HR" },
-    { id: "9", name: "Bruno Martins", email: "bruno.martins@weg.net", role: "EMPLOYEE" },
-    { id: "10", name: "Camila Ferreira", email: "camila.ferreira@exemplo.com", role: "VISITOR" },
-    { id: "11", name: "Diego Barbosa", email: "diego.barbosa@weg.net", role: "EMPLOYEE" },
-    { id: "12", name: "Larissa Gomes", email: "larissa.gomes@weg.net", role: "GUARD" },
-    { id: "13", name: "Thiago Cardoso", email: "thiago.cardoso@weg.net", role: "EMPLOYEE" },
-    { id: "14", name: "Patrícia Dias", email: "patricia.dias@weg.net", role: "HR" },
-    { id: "15", name: "Lucas Ribeiro", email: "lucas.ribeiro@weg.net", role: "EMPLOYEE" },
-    { id: "16", name: "Beatriz Nunes", email: "beatriz.nunes@exemplo.com", role: "VISITOR" },
-    { id: "17", name: "Gustavo Teixeira", email: "gustavo.teixeira@weg.net", role: "GUARD" },
-    { id: "18", name: "Vanessa Moreira", email: "vanessa.moreira@weg.net", role: "EMPLOYEE" },
-    { id: "19", name: "Felipe Araújo", email: "felipe.araujo@weg.net", role: "HR" },
-    { id: "20", name: "Isabela Correia", email: "isabela.correia@exemplo.com", role: "VISITOR" },
-    { id: "21", name: "Rodrigo Batista", email: "rodrigo.batista@weg.net", role: "EMPLOYEE" },
-    { id: "22", name: "Amanda Freitas", email: "amanda.freitas@weg.net", role: "GUARD" },
+    { id: "1", name: "João Silva", email: "joao.silva@weg.net", role: "EMPLOYEE", active: true},
+    { id: "2", name: "Maria Souza", email: "maria.souza@exemplo.com", role: "VISITOR", active: true },
+    { id: "3", name: "Carlos Pereira", email: "carlos.pereira@weg.net", role: "HR", active: true },
+    { id: "4", name: "Ana Costa", email: "ana.costa@weg.net", role: "GUARD", active: true },
+    { id: "5", name: "Pedro Santos", email: "pedro.santos@weg.net", role: "EMPLOYEE", active: true },
+    { id: "6", name: "Juliana Lima", email: "juliana.lima@exemplo.com", role: "VISITOR", active: true },
+    { id: "7", name: "Rafael Alves", email: "rafael.alves@weg.net", role: "GUARD", active: true },
+    { id: "8", name: "Fernanda Rocha", email: "fernanda.rocha@weg.net", role: "HR", active: true },
+    { id: "9", name: "Bruno Martins", email: "bruno.martins@weg.net", role: "EMPLOYEE", active: true },
+    { id: "10", name: "Camila Ferreira", email: "camila.ferreira@exemplo.com", role: "VISITOR", active: true },
+    { id: "11", name: "Diego Barbosa", email: "diego.barbosa@weg.net", role: "EMPLOYEE", active: true },
+    { id: "12", name: "Larissa Gomes", email: "larissa.gomes@weg.net", role: "GUARD", active: true },
+    { id: "13", name: "Thiago Cardoso", email: "thiago.cardoso@weg.net", role: "EMPLOYEE", active: true },
+    { id: "14", name: "Patrícia Dias", email: "patricia.dias@weg.net", role: "HR", active: true },
+    { id: "15", name: "Lucas Ribeiro", email: "lucas.ribeiro@weg.net", role: "EMPLOYEE", active: true },
+    { id: "16", name: "Beatriz Nunes", email: "beatriz.nunes@exemplo.com", role: "VISITOR", active: true },
+    { id: "17", name: "Gustavo Teixeira", email: "gustavo.teixeira@weg.net", role: "GUARD", active: true },
+    { id: "18", name: "Vanessa Moreira", email: "vanessa.moreira@weg.net", role: "EMPLOYEE", active: true },
+    { id: "19", name: "Felipe Araújo", email: "felipe.araujo@weg.net", role: "HR", active: true },
+    { id: "20", name: "Isabela Correia", email: "isabela.correia@exemplo.com", role: "VISITOR", active: true },
+    { id: "21", name: "Rodrigo Batista", email: "rodrigo.batista@weg.net", role: "EMPLOYEE", active: true },
+    { id: "22", name: "Amanda Freitas", email: "amanda.freitas@weg.net", role: "GUARD", active: true },
 ];
 
 const mockUserDetails: Record<string, Partial<UserDetailDTO>> = {
@@ -61,6 +61,7 @@ export async function createUser(payload: CreateUserRequestDTO): Promise<CreateU
         name: payload.name,
         email: payload.email,
         role: payload.role,
+        active: payload.active
     };
 
     mockUsers = [newUser, ...mockUsers]; 
@@ -143,7 +144,16 @@ export async function listUsers(page: number): Promise<PaginatedUsersResponseDTO
     };
 }
 
-export async function deleteUser(id: string): Promise<void> {
+export async function deactivateUser(id: string): Promise<void> {
     await delay(500);
-    mockUsers = mockUsers.filter((existingUser) => existingUser.id !== id);
+    const index = mockUsers.findIndex((existingUser) => existingUser.id === id);
+    if (index === -1) throw new Error("Usuário não encontrado");
+    mockUsers[index] = { ...mockUsers[index], active: false };
+}
+
+export async function activateUser(id: string): Promise<void> {
+    await delay(500);
+    const index = mockUsers.findIndex((existingUser) => existingUser.id === id);
+    if (index === -1) throw new Error("Usuário não encontrado");
+    mockUsers[index] = { ...mockUsers[index], active: true };
 }

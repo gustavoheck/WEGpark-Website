@@ -36,8 +36,12 @@ export async function updateUser(id: string, payload: UpdateUserRequestDTO): Pro
     return data;
 }
 
-export async function deleteUser(id: string): Promise<void> {
-    if (USE_MOCKS) return mockService.deleteUser(id);
+export async function deactivateUser(id: string): Promise<void> {
+    if (USE_MOCKS) return mockService.deactivateUser(id);
+    await api.patch(`/rh/usuarios/${id}/desativar`);
+}
 
-    await api.delete(`/rh/usuarios/${id}`);
+export async function activateUser(id: string): Promise<void> {
+    if (USE_MOCKS) return mockService.activateUser(id);
+    await api.patch(`/rh/usuarios/${id}/ativar`);
 }
