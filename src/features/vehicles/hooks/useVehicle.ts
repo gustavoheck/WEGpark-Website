@@ -1,33 +1,15 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   deleteVehicle,
-  getVehicle,
-  getVehicleByPlate,
   saveVehicle,
   updateVehicle,
 } from "../services/vehicleService";
-import { GetServiceProps } from "@/shared/types/GetServiceProps";
 import { VehicleRequest } from "../types/vehicle";
 
 export function useVehicle() {
   const queryClient = useQueryClient();
-
-  const useGet = (params: GetServiceProps) => {
-    return useQuery({
-      queryKey: ["vehicle", params],
-      queryFn: () => getVehicle(params),
-    });
-  };
-
-  const useGetByPlate = (plate?: string) => {
-    return useQuery({
-      queryKey: ["vehicle", plate],
-      queryFn: () => getVehicleByPlate(plate!),
-      enabled: !!plate,
-    });
-  };
 
   const createMutation = useMutation({
     mutationFn: (request: VehicleRequest) => saveVehicle(request),
@@ -57,8 +39,6 @@ export function useVehicle() {
   });
 
   return {
-    useGet,
-    useGetByPlate,
     createVehicle: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
     updateVehicle: updateMutation.mutateAsync,
