@@ -4,8 +4,8 @@ import { useState } from "react";
 import { CheckEmailForm } from "./CheckEmailForm";
 import { SelectRoleDialog } from "../molecules/SelectRoleDialog";
 import { PasswordForm } from "./PasswordForm";
-import { LoginResponse } from "@/features/auth/types/loginResponse";
 import { UserRoleType } from "@/shared/enum/UserRole";
+import { LoginResponse } from "../../types/login";
 
 type Step = "EMAIL" | "SELECT_ROLE" | "PASSWORD";
 
