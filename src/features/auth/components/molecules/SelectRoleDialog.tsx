@@ -9,13 +9,14 @@ import { Button } from "@/components/ui/button";
 import { UserRoleType }  from "@/shared/enum/UserRole"
 
 const roleLabels: Record<UserRoleType, string> = {
-  PARKUSER: "Usuario",
-  ADMIN: "Administrador",
-  HR: "Recursos Humanos",
-  GUARD: "Guarita",
-  COLLABORATOR: "Colaborador",
-  VISITOR: "Visitante"
+  ROLE_PARK: "Usuário",
+  ROLE_ADMIN: "Administrador",
+  ROLE_RH: "RH",
+  ROLE_GUARD: "Guarita",
+  ROLE_COLLABORATOR: "Colaborador",
+  ROLE_VISITOR: "Visitante",
 };
+
 interface SelectRoleDialogProps {
   open: boolean;
   roles: UserRoleType[];

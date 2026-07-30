@@ -19,7 +19,6 @@ import {
 import { useCheckEmail } from '@/features/auth/hooks/useCheckEmail';
 import { checkEmailSchema, CheckEmailFormValues } from '@/features/auth/schemas/LoginSchema';
 import { UserRoleType } from '@/shared/enum/UserRole';
-import { CheckEmailResponse } from '../../types/checkEmailResponse';
 
 interface CheckEmailFormProps {
   onEmailChecked: (email: string, roles: UserRoleType[]) => void;
@@ -39,11 +38,23 @@ export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
 
   function onSubmit(values: CheckEmailFormValues) {
     checkEmail(
-      { email: values.email },
+      values.email,
       {
-        onSuccess: (data) => {
-          const rolesList = data.map((item) => item.role);
-          onEmailChecked(values.email, rolesList);
+        onSuccess: (response) => {
+          // 1. Veja no console do navegador o que o backend realmente respondeu
+          console.log("Resposta que chegou do backend:", response);
+
+          if (!Array.isArray(response)) {
+            console.error("A resposta NÃO é um array:", response);
+            return;
+          }
+
+          const roles = response.map((item) => item.role);
+          onEmailChecked(values.email, roles);
+        },
+        onError: (err) => {
+          // 2. Veja o erro exato retornado pelo Axios / React Query
+          console.error("Erro na requisição / mutation:", err);
         }
       },
     );
@@ -58,7 +69,7 @@ export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, (invalidErrors) => console.log("Erros de Validação:", invalidErrors))}>
           <FieldGroup>
 
             <FormField

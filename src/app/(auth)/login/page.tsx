@@ -2,13 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { LoginFlow } from "@/features/auth/components/organisms/LoginFlow";
-import { LoginResponse } from "@/features/auth/types/loginResponse";
 import { useAuth } from "@/shared/context/AuthContext";
 import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -16,8 +15,7 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, router]);
 
-  function handleLoginSuccess(response: LoginResponse) {
-    login(response.token, response.role)
+  function handleLoginSuccess() {
     router.push("/veiculos");
   }
 
@@ -25,8 +23,5 @@ export default function LoginPage() {
     return null;
   }
 
-  return (
-    <LoginFlow onLoginSuccess={handleLoginSuccess} />
-  ) 
-
+  return <LoginFlow onLoginSuccess={handleLoginSuccess} />;
 }
