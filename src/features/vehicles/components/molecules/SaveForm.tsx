@@ -8,33 +8,37 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FormField from "../../../../shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 import { useState } from "react";
-import { useSave } from "../../hooks/useSave";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
+import { useVehicle } from "../../hooks/useVehicle";
+import { mapFormDataToVehicleRequest } from "../../mappers/vehicleMapper";
 
 export default function SaveForm() {
     const router = useRouter();
     const [isOpenConfirmationNormal, setIsOpenConfirmationNormal] = useState(false);
     const [isOpenConfirmationLink, setIsOpenConfirmationLink] = useState(false);
-    const { mutate: saveVehicle } = useSave();
+    const { createVehicle, isCreating } = useVehicle();
 
     const { register, handleSubmit, formState: { errors, isValid } } = useForm<VehicleFormData>({
         resolver: zodResolver(vehicleSchema),
         mode: "onChange"
     });
 
-
     function onSubmit(data: VehicleFormData) {
-        setIsOpenConfirmationNormal(false)
-        saveVehicle(
-            { data },
+
+        const request = mapFormDataToVehicleRequest(data)
+
+        createVehicle(
+            request,
             {
                 onSuccess: () => {
+                    setIsOpenConfirmationNormal(false)
                     toast.add({type : "success" , description : "Veículo cadastrado com sucesso!"})
                     router.push("/veiculos")
                 },
                 onError: (error: any) => {
+                    setIsOpenConfirmationNormal(false)
                     if (error?.response?.status === 409) {
                         setIsOpenConfirmationLink(true)
                     }
@@ -96,6 +100,7 @@ export default function SaveForm() {
                         description="Você realmente deseja cadastrar este veículo?"
                         onClick={handleSubmit(onSubmit)}
                         confirmText="Cadastrar"
+                        pending={isCreating}
                     />
                     <AlertDialogComponent
                         open={isOpenConfirmationLink}

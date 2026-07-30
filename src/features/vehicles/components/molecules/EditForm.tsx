@@ -6,13 +6,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { VehicleFormData, vehicleSchema } from "../../schemas/VehicleSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEdit } from "../../hooks/useEdit";
 import FormField from "../../../../shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 import { useState } from "react";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
+import { useVehicle } from "../../hooks/useVehicle";
+import { mapFormDataToVehicleRequest } from "../../mappers/vehicleMapper";
 
 interface EditFormProps {
     vehicle: Vehicle
@@ -21,7 +22,7 @@ interface EditFormProps {
 export default function EditForm({ vehicle }: EditFormProps) {
     const router = useRouter();
     const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
-    const { mutate: editVehicle } = useEdit();
+    const { updateVehicle, isUpdating } = useVehicle();
 
     const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm<VehicleFormData>({
         resolver: zodResolver(vehicleSchema),
@@ -35,16 +36,19 @@ export default function EditForm({ vehicle }: EditFormProps) {
     });
 
     function onSubmit(data: VehicleFormData) {
-        setIsOpenConfirmation(false);
 
-        editVehicle(
-            { uuid: vehicle.uuid, data },
+        const request = mapFormDataToVehicleRequest(data)
+
+        updateVehicle(
+            { uuid: vehicle.uuid, request },
             {
                 onSuccess: () => {
+                    setIsOpenConfirmation(false)
                     toast.add({ type: "success", description: "Veículo atualizado com sucesso!" })
                     router.push("/veiculos")
                 },
                 onError: (error: any) => {
+                    setIsOpenConfirmation(false)
                     if (error?.response?.status === 409) {
                         toast.add({ type: "error", description: "Já existe outro veículo cadastrado com esta placa." });
                         return;
@@ -101,6 +105,7 @@ export default function EditForm({ vehicle }: EditFormProps) {
                         description="Você deseja salvar as alterações feitas sobre esse veículo?"
                         onClick={handleSubmit(onSubmit)}
                         confirmText="Salvar"
+                        pending={isUpdating}
                     />
                 </form>
             </CardContent>
