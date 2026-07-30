@@ -25,7 +25,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
 
     const { canEdit, canDelete, canUnlink, isOwner} = useVehiclePermissions(vehicle)
 
-    const { activeDialog, openDeleteDialog, openUnlinkDialog, closeDialog, actions} = useVehicleCardActions(uuid)
+    const { activeDialog, openDeleteDialog, openUnlinkDialog, closeDialog, actions, isDeleting} = useVehicleCardActions(uuid)
 
     return (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
@@ -67,10 +67,10 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                                 <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${uuid}/editar`} variant="last"/>
                             )}
                             { canDelete && (
-                                <VehicleCardButton title="excluir" Icon={Trash2} destructive onClick={openDeleteDialog} />
+                                <VehicleCardButton title="excluir" Icon={Trash2} destructive onClick={openDeleteDialog} pending={isDeleting}/>
                             )}
                             { canUnlink && (
-                                <VehicleCardButton title="desvincular" Icon={Unlink} destructive onClick={openUnlinkDialog} variant="last" />
+                                <VehicleCardButton title="desvincular" Icon={Unlink} destructive onClick={openUnlinkDialog} variant="last" pending={isDeleting} />
                             )}
                         </div>
                     </CardContent>

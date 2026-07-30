@@ -11,7 +11,7 @@ import {
 import { GetServiceProps } from "@/shared/types/GetServiceProps";
 import { VehicleRequest } from "../types/vehicle";
 
-export function useVehicles() {
+export function useVehicle() {
   const queryClient = useQueryClient();
 
   const useGet = (params: GetServiceProps) => {

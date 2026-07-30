@@ -8,9 +8,10 @@ interface AlertDialogProps {
     title : string,
     description : string,
     confirmText : string
+    pending? : boolean
 }
 
-export default function AlertDialogComponent({open, onOpenChange, onClick, title, description, confirmText} : AlertDialogProps) {
+export default function AlertDialogComponent({open, onOpenChange, onClick, title, description, confirmText, pending = false} : AlertDialogProps) {
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
@@ -26,7 +27,8 @@ export default function AlertDialogComponent({open, onOpenChange, onClick, title
                     <AlertDialogCancel className="py-5 text-lg font-semibold">Cancelar</AlertDialogCancel>
                     <AlertDialogAction
                         onClick={onClick}
-                        className="py-5 text-lg font-semibold"
+                        className="py-5 text-lg font-semibold disabled:bg-muted"
+                        disabled={pending}
                     >
                         {confirmText}
                     </AlertDialogAction>

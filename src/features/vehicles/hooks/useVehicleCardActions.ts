@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useDelete } from "./useDelete";
 import { toast } from "@/components/ui/toast"
+import { useVehicle } from "./useVehicle";
 
 type ActiveDialog = "delete" | "unlink" | null
 
@@ -8,12 +8,12 @@ export function useVehicleCardActions(vehicleUuid: string) {
 
     const [activeDialog, setActiveDialog] = useState<ActiveDialog>(null);
 
-    const { mutate: deleteVehicle, isPending } = useDelete();
+    const { deleteVehicle, isDeleting } = useVehicle();
 
 
     const handleDelete = () => {
         deleteVehicle(
-            { uuid: vehicleUuid },
+            vehicleUuid,
             {
                 onSuccess: () => {
                     setActiveDialog(null);
@@ -29,7 +29,7 @@ export function useVehicleCardActions(vehicleUuid: string) {
 
     const handleUnlink = () => {
         deleteVehicle(
-            { uuid: vehicleUuid },
+            vehicleUuid,
             {
                 onSuccess: () => {
                     setActiveDialog(null);
@@ -48,7 +48,7 @@ export function useVehicleCardActions(vehicleUuid: string) {
         openDeleteDialog: () => setActiveDialog('delete'),
         openUnlinkDialog: () => setActiveDialog('unlink'),
         closeDialog: () => setActiveDialog(null),
-        isPending,
+        isDeleting,
         actions: {
             handleDelete,
             handleUnlink,
