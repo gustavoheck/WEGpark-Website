@@ -51,7 +51,7 @@ export function VerifyEmailForm({ email, onVerified }: VerifyEmailFormProps) {
 
     function onSubmit(values: VerifyEmailFormValues) {
         verifyEmail(
-            { email, code: values.code },
+            { email },
             { onSuccess: () => onVerified() }
         );
     }
