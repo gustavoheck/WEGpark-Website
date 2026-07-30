@@ -3,14 +3,6 @@
 import { AdminPageHeader } from "@/features/admin/components/molecules/AdminPageHeader";
 import { AdminOccurrenceHistory } from "@/features/admin/components/organisms/AdminOccurrenceHistory";
 import { useState } from "react";
-import {
-  Search,
-  TriangleAlert,
-  ChevronDown,
-  ChevronUp,
-  FileDown,
-  Filter,
-} from "lucide-react";
 
 interface Ocorrencia {
   id: number;
@@ -72,10 +64,8 @@ export default function HistoricoOcorrenciasPage() {
   const [anoSelecionado, setAnoSelecionado] = useState<string>("todos");
   const [aberto, setAberto] = useState<number | null>(null);
 
-  // Anos disponíveis para o relatório anual
   const anosDisponiveis = [2026, 2025, 2024];
-
-  // Alterna a sanfona de detalhes
+  
   function toggleCard(id: number) {
     setAberto(aberto === id ? null : id);
   }

@@ -57,7 +57,7 @@ const ALL_MENU_ITEMS: Record<string, SidebarItem & { roles: string[] }> = {
 const ADMIN_MENU: SidebarItem[] = [
   {
     title: "Gestão de Usuários",
-    href: "/gestao-usuarios",
+    href: "/admin/gestao-usuarios",
     icon: Users,
   },
   {
