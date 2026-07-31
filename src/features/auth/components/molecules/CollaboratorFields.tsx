@@ -2,13 +2,13 @@
 
 import { useFormContext } from "react-hook-form";
 import FormField from "@/shared/components/atoms/FormField";
-import { collaboratorFormValues } from "../../schemas/collaboratorSchema";
+import { CollaboratorFormValues } from "../../schemas/auth.schema";
 
 export function EmployeeFields() {
     const {
         register,
         formState: { errors },
-    } = useFormContext<collaboratorFormValues>();
+    } = useFormContext<CollaboratorFormValues>();
 
     return (
         <>

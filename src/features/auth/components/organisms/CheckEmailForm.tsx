@@ -16,16 +16,16 @@ import {
   CardHeader
 } from "@/components/ui/card";
 
-import { useCheckEmail } from '@/features/auth/hooks/useCheckEmail';
-import { checkEmailSchema, CheckEmailFormValues } from '@/features/auth/schemas/LoginSchema';
 import { UserRoleType } from '@/shared/enum/UserRole';
+import { CheckEmailFormValues, checkEmailSchema } from '../../schemas/auth.schema';
+import { useAuthAccountRoles } from '../../hooks/auth.mutations';
 
 interface CheckEmailFormProps {
   onEmailChecked: (email: string, roles: UserRoleType[]) => void;
 }
 
-export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
-  const { mutate: checkEmail, isPending, error } = useCheckEmail();
+export function AccountRoles({ onEmailChecked }: CheckEmailFormProps) {
+  const { mutate: accountRoles, isPending, error } = useAuthAccountRoles();
 
   const {
     register,
@@ -37,22 +37,12 @@ export function CheckEmailForm({ onEmailChecked }: CheckEmailFormProps) {
   });
 
   function onSubmit(values: CheckEmailFormValues) {
-    checkEmail(
+    accountRoles(
       values.email,
       {
         onSuccess: (response) => {
-          console.log("Resposta que chegou do backend:", response);
-
-          if (!Array.isArray(response)) {
-            console.error("A resposta NÃO é um array:", response);
-            return;
-          }
-
           const roles = response.map((item) => item.role);
           onEmailChecked(values.email, roles);
-        },
-        onError: (err) => {
-          console.error("Erro na requisição / mutation:", err);
         }
       },
     );

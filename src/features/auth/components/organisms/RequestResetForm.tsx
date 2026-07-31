@@ -16,7 +16,6 @@ import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 
 import { useRequestResetCode } from "../../hooks/useResetPassword";
-import { requestResetSchema, RequestResetFormValues } from "../../schemas/ResetPasswordSchema";
 
 interface RequestResetFormProps {
     onCodeRequested: (email: string) => void;

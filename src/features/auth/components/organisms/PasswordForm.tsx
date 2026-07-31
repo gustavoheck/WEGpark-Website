@@ -12,10 +12,10 @@ import SectionTitle from '@/shared/components/atoms/SectionTitle';
 import { Card, CardHeader, CardDescription, CardContent } from '@/components/ui/card';
 
 import { useLogin } from '@/features/auth/hooks/useLogin';
-import { loginPasswordSchema, LoginPasswordFormValues } from '@/features/auth/schemas/LoginSchema';
 import { UserRoleType } from '@/shared/enum/UserRole';
 import { useAuth } from '@/shared/context/AuthContext';
-import { LoginResponse } from '../../types/login';
+import { LoginResponse } from '../../types/auth.type';
+import { LoginPasswordFormValues, loginPasswordSchema } from '../../schemas/auth.schema';
 
 interface PasswordFormProps {
   email: string;

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -16,24 +15,20 @@ import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 
-import { useRegister } from "../../hooks/useRegister";
-import { UserTypeSelector } from "../molecules/UserTypeSelector";
-import { EmployeeFields } from "../molecules/CollaboratorFields";
-import { VisitorFields } from "../molecules/VisitorFields";
-import {
-    registerSchema,
-    RegisterFormValues,
-} from "../../schemas/register-schema";
+import { UserTypeSelector } from "../../../auth/components/molecules/UserTypeSelector";
+import { EmployeeFields } from "../../../auth/components/molecules/CollaboratorFields";
+import { VisitorFields } from "../../../auth/components/molecules/VisitorFields";
 import { UserType } from "../../enums/UserType";
 import { toast } from "@/components/ui/toast";
-import { RegisterRequest } from "../../types/register";
+import { useRegister } from "../../hooks/auth.mutations";
+import { RegisterFormValues, registerSchema } from "../../schemas/auth.schema";
+import { RegisterRequest } from "../../types/auth.type";
 
 interface RegisterFormProps {
     onRegistered: (email: string) => void;
 }
 
 export function RegisterForm({ onRegistered }: RegisterFormProps) {
-    const [userType, setUserType] = useState<UserType | null>(null);
     const { mutate: register, isPending, error } = useRegister();
 
     const methods = useForm<RegisterFormValues>({
@@ -48,30 +43,29 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         formState: { errors },
     } = methods;
 
-    const currentType = watch("type");
+    const userType = watch("type") as UserType | undefined;
 
     function handleSelectType(type: UserType) {
-        setUserType(type);
         setValue("type", type as any, { shouldValidate: true });
     }
 
     function onSubmit(values: RegisterFormValues) {
-        if (!userType) return;
+        if (!values.type) return;
 
-        let payload: RegisterRequest;
+        let request: RegisterRequest;
 
         const defaults = { email: values.email, password: values.password };
         const parkUserDefaults = { name: values.name, telephone: values.telephone };
 
         if (values.type === "COLLABORATOR") {
-            payload = {
+            request = {
                 defaults,
                 parkUserDefaults,
                 badgeNumber: values.badgeNumber,
                 location: values.location,
             };
         } else {
-            payload = {
+            request = {
                 defaults,
                 parkUserDefaults,
                 company: values.company,
@@ -79,10 +73,8 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
             };
         }
 
-        console.log(payload)
-
         register(
-            { payload, userType },
+            { request, userType: values.type as UserType },
             {
                 onSuccess: () => {
                     onRegistered(values.email);
@@ -144,11 +136,11 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
                                 error={errors.confirmPassword}
                             />
 
-                            <UserTypeSelector value={userType} onChange={handleSelectType} />
+                            <UserTypeSelector value={userType || null} onChange={handleSelectType} />
 
-                            {currentType === "COLLABORATOR" && <EmployeeFields />}
+                            {userType === "COLLABORATOR" && <EmployeeFields />}
 
-                            {currentType === "VISITOR" && <VisitorFields />}
+                            {userType === "VISITOR" && <VisitorFields />}
 
                             {error && (
                                 <p className="text-sm text-destructive">

@@ -5,7 +5,7 @@ import { CheckEmailForm } from "./CheckEmailForm";
 import { SelectRoleDialog } from "../molecules/SelectRoleDialog";
 import { PasswordForm } from "./PasswordForm";
 import { UserRoleType } from "@/shared/enum/UserRole";
-import { LoginResponse } from "../../types/login";
+import { LoginResponse } from "../../types/auth.type";
 
 type Step = "EMAIL" | "SELECT_ROLE" | "PASSWORD";
 

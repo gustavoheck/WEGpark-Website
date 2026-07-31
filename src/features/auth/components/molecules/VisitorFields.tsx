@@ -2,13 +2,13 @@
 
 import { useFormContext } from "react-hook-form";
 import FormField from "@/shared/components/atoms/FormField";
-import { visitorFormValues } from "../../schemas/visitorSchema";
+import { VisitorFormValues } from "../../schemas/auth.schema";
 
 export function VisitorFields() {
     const {
         register,
         formState: { errors },
-    } = useFormContext<visitorFormValues>();
+    } = useFormContext<VisitorFormValues>();
 
     return (
         <>

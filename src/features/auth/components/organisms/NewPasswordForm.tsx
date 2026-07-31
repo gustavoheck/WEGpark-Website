@@ -10,8 +10,7 @@ import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 
-import { useResetPassword } from "../../hooks/useResetPassword";
-import { newPasswordSchema, NewPasswordFormValues } from "../../schemas/ResetPasswordSchema";
+import { NewPasswordFormValues, newPasswordSchema } from "../../schemas/auth.schema";
 
 interface NewPasswordFormProps {
     resetToken: string;
