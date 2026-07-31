@@ -1,3 +1,5 @@
+import { GetServiceProps } from "@/shared/types/GetServiceProps";
+
 import {
     CreateUserRequestDTO,
     CreateUserResponseDTO,
@@ -9,12 +11,14 @@ import {
 
 const PAGE_SIZE = 15;
 
+// Apenas os três possuem badgeNumber pois foi utilizado para teste nos filtros
+
 let mockUsers: UserListItem[] = [
-    { id: "1", name: "João Silva", email: "joao.silva@weg.net", role: "EMPLOYEE", active: true},
+    { id: "1", name: "João Silva", email: "joao.silva@weg.net", role: "EMPLOYEE", active: true, badgeNumber: "0001"},
     { id: "2", name: "Maria Souza", email: "maria.souza@exemplo.com", role: "VISITOR", active: true },
-    { id: "3", name: "Carlos Pereira", email: "carlos.pereira@weg.net", role: "HR", active: true },
+    { id: "3", name: "Carlos Pereira", email: "carlos.pereira@weg.net", role: "HR", active: true, badgeNumber: "0002" },
     { id: "4", name: "Ana Costa", email: "ana.costa@weg.net", role: "GUARD", active: true },
-    { id: "5", name: "Pedro Santos", email: "pedro.santos@weg.net", role: "EMPLOYEE", active: true },
+    { id: "5", name: "Pedro Santos", email: "pedro.santos@weg.net", role: "EMPLOYEE", active: true, badgeNumber: "0003"},
     { id: "6", name: "Juliana Lima", email: "juliana.lima@exemplo.com", role: "VISITOR", active: true },
     { id: "7", name: "Rafael Alves", email: "rafael.alves@weg.net", role: "GUARD", active: true },
     { id: "8", name: "Fernanda Rocha", email: "fernanda.rocha@weg.net", role: "HR", active: true },
@@ -130,17 +134,29 @@ export async function updateUser(
     } as UserDetailDTO;
 }
 
-export async function listUsers(page: number): Promise<PaginatedUsersResponseDTO> {
+export async function listUsers(
+    page: number,
+    filters: GetServiceProps = {},
+): Promise<PaginatedUsersResponseDTO> {
     await delay(500);
 
+    const { category, value } = filters;
+    const normalizedValue = value?.trim().toLocaleLowerCase("pt-BR") ?? "";
+    const filteredUsers = category && normalizedValue
+        ? mockUsers.filter((user) => {
+            const fieldValue = user[category as keyof UserListItem];
+            return typeof fieldValue === "string"
+                && fieldValue.toLocaleLowerCase("pt-BR").includes(normalizedValue);
+        })
+        : mockUsers;
     const startIndex = (page - 1) * PAGE_SIZE;
-    const paginatedUsers = mockUsers.slice(startIndex, startIndex + PAGE_SIZE);
+    const paginatedUsers = filteredUsers.slice(startIndex, startIndex + PAGE_SIZE);
 
     return {
         users: paginatedUsers,
         currentPage: page,
-        totalPages: Math.ceil(mockUsers.length / PAGE_SIZE),
-        totalItems: mockUsers.length,
+        totalPages: Math.ceil(filteredUsers.length / PAGE_SIZE),
+        totalItems: filteredUsers.length,
     };
 }
 
