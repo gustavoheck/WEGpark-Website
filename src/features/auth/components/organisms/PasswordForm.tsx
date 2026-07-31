@@ -13,9 +13,9 @@ import { Card, CardHeader, CardDescription, CardContent } from '@/components/ui/
 
 import { useLogin } from '@/features/auth/hooks/useLogin';
 import { loginPasswordSchema, LoginPasswordFormValues } from '@/features/auth/schemas/LoginSchema';
-import { LoginResponse } from '@/features/auth/types/loginResponse';
 import { UserRoleType } from '@/shared/enum/UserRole';
 import { useAuth } from '@/shared/context/AuthContext';
+import { LoginResponse } from '../../types/login';
 
 interface PasswordFormProps {
   email: string;
@@ -42,7 +42,7 @@ export function PasswordForm({ email, role, onLoginSuccess }: PasswordFormProps)
       { email, password: values.password, role },
       {
         onSuccess: (response: any) => {
-          console.log("Resposta recebida do backend:", response);
+          console.log("Resposta recebida do backend:", response); // Ambiente de teste
 
           const jwtToken = response.token;
 

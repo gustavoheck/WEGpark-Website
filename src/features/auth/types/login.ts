@@ -5,3 +5,9 @@ export interface LoginRequest {
   password: string;
   role: UserRoleType;
 }
+
+export interface LoginResponse {
+  authenticated: boolean;
+  message: string;
+  token: string;
+}

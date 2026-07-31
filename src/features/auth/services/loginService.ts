@@ -1,6 +1,5 @@
   import { api } from "@/shared/lib/api";
-  import { LoginRequest } from "../types/loginRequest";
-  import { LoginResponse } from "../types/loginResponse";
+import { LoginRequest, LoginResponse } from "../types/login";
 
   export async function loginUser(
       payload: LoginRequest
