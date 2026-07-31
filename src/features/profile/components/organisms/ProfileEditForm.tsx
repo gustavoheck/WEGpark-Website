@@ -27,6 +27,8 @@ export function ProfileEditForm() {
     const { data: profile, isPending: isLoadingProfile } = useProfile();
     const { mutate: updateProfile, isPending: isSaving } = useUpdateProfile();
 
+    const isVisitor = profile?.role === "VISITOR";
+
     const {
         register,
         handleSubmit,
@@ -35,9 +37,18 @@ export function ProfileEditForm() {
         resolver: zodResolver(profileSchema),
         mode: "onChange",
         values: profile
-            ? profile.role === "VISITANTE"
-                ? { role: "VISITANTE", name: profile.name, companyName: profile.companyName }
-                : { role: "COLABORADOR", name: profile.name, department: profile.department, badgeNumber: profile.badgeNumber }
+            ? isVisitor
+                ? ({
+                      role: "VISITANTE",
+                      name: profile.name ?? "",
+                      companyName: (profile as Record<string, any>).companyName ?? "",
+                  } as ProfileFormValues)
+                : ({
+                      role: "COLABORADOR",
+                      name: profile.name ?? "",
+                      department: (profile as Record<string, any>).department ?? "",
+                      badgeNumber: (profile as Record<string, any>).badgeNumber ?? "",
+                  } as ProfileFormValues)
             : undefined,
     });
 
@@ -47,14 +58,14 @@ export function ProfileEditForm() {
 
     function onSubmit(data: ProfileFormValues) {
         const { role, ...updateData } = data;
-        updateProfile(updateData, {
+        updateProfile(updateData as any, {
             onSuccess: () => {
                 setIsOpenConfirmation(false);
                 setIsOpenInformative(true);
             },
             onError: () => {
                 setIsOpenConfirmation(false);
-                alert("Erro!");
+                alert("Erro ao salvar alterações!");
             },
         });
     }
@@ -75,11 +86,11 @@ export function ProfileEditForm() {
                         <FieldGroup className="gap-4 mb-6">
                             <FormField text="nome" id="name" registration={register("name")} error={errors.name} />
 
-                            {profile.role === "VISITANTE" ? (
+                            {isVisitor ? (
                                 <VisitorProfileFields
                                     register={register as unknown as UseFormRegister<VisitorProfileFormValues>}
                                     errors={errors as unknown as FieldErrors<VisitorProfileFormValues>}
-                                    cpf={profile.cpf}
+                                    cpf={(profile as Record<string, any>).cpf ?? ""}
                                 />
                             ) : (
                                 <EmployeeProfileFields
@@ -89,7 +100,7 @@ export function ProfileEditForm() {
                             )}
                         </FieldGroup>
 
-                        <FormButton text="salvar alterações" disabled={!isDirty || !isValid} />
+                        <FormButton text="salvar alterações" disabled={!isDirty || !isValid || isSaving} />
 
                         <AlertDialogComponent
                             open={isOpenConfirmation}

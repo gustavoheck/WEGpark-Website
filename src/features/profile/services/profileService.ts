@@ -1,9 +1,9 @@
-// features/profile/services/profileService.ts
+
 import { api } from "@/shared/lib/api";
 import { UserProfileDTO, UpdateProfileRequestDTO } from "../types/User";
 import * as mockService from "./profileService.mock";
 
-const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
+const USE_MOCKS = true;
 
 export async function getProfile(): Promise<UserProfileDTO> {
     if (USE_MOCKS) return mockService.getProfile();
