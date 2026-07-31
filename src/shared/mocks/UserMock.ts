@@ -1,8 +1,9 @@
 import User from "@/shared/types/User";
 
 const UserMock: User = {
-    id: 1,
-    name: "John Smith"
+    uuid: "1",
+    name: "John Smith",
+    role: "ROLE_RH"
 }
 
 export default UserMock;

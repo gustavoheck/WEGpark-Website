@@ -14,25 +14,27 @@ const baseFields = z.object({
 });
 
 const employeeFields = z.object({
-    role: z.literal("COLABORADOR"),
-    badgeNumber: z.string().min(1, "Informe o número de crachá"),
+    role: z.literal("EMPLOYEE"),
+    badgeNumber: z.string()
+        .min(1, "Informe o número de crachá")
+        .max(6, "O número do crachá não pode ultrapassar 6 dígitos"),
     department: z.string().min(1, "Informe o departamento"),
 });
 
 const guaritaFields = z.object({
-    role: z.literal("GUARITA"),
+    role: z.literal("GUARD"),
     badgeNumber: z.string().min(1, "Informe o número de crachá"),
     department: z.string().min(1, "Informe o departamento"),
     chefe: z.string().min(1, "Informe o chefe responsável"),
 });
 
 const rhFields = z.object({
-    role: z.literal("RH"),
+    role: z.literal("HR"),
     badgeNumber: z.string().min(1, "Informe o número de crachá"),
 });
 
 const visitorFields = z.object({
-    role: z.literal("VISITANTE"),
+    role: z.literal("VISITOR"),
     companyName: z.string().min(1, "Informe o nome da empresa"),
     cpf: z.string().regex(cpfRegex, "CPF inválido"),
 });
@@ -60,7 +62,7 @@ export const createUserSchema = z
     })
     .refine(
         (data) =>
-            data.role !== "VISITANTE"
+            data.role !== "VISITOR"
                 ? data.email.toLowerCase().endsWith(CORPORATE_EMAIL_DOMAIN)
                 : true,
         {

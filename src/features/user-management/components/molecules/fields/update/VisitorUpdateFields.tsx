@@ -1,6 +1,6 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import FormField from "@/shared/components/atoms/FormField";
-import { UpdateVisitorFormValues } from "@/features/hr-user-management/schemas/update/UpdateUserSchema";
+import { UpdateVisitorFormValues } from "@/features/user-management/schemas/update/UpdateUserSchema";
 
 interface VisitorUpdateFieldsProps {
     register: UseFormRegister<UpdateVisitorFormValues>;
