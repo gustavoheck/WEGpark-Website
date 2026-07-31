@@ -1,7 +1,7 @@
 
 interface VehicleNameProps {
-    brand: string
-    model: string
+    brand: string;
+    model: string;
 }
 
 export default function VehicleName({ brand, model }: VehicleNameProps) {
