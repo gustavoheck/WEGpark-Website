@@ -47,7 +47,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                             </div>
                         </div>
                         <div className="flex items-center justify-between">
-                            <VehicleName brand={brand} model={model} />
+                            <VehicleName brand={brand} model={model}/>
                             {isOwner && (
                                 <Badge className="flex items-center gap-1 text-md">
                                     <Check className="size-8 text-white" />
