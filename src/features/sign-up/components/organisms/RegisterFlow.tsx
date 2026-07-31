@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { RegisterForm } from "./RegisterForm";
 import { useRouter } from "next/navigation";
-import { VerifyEmailForm } from "./VerifyEmailForm";
+import { VerifyEmailCard } from "./VerifyEmailCard";
 
 type Step = "REGISTER" | "VERIFY" | "DONE";
 
@@ -42,7 +42,7 @@ export function RegisterFlow() {
             ) : null}
             
             {step === "VERIFY" ? (
-                <VerifyEmailForm email={email} onVerified={handleVerified} />
+                <VerifyEmailCard email={email} />
             ) : null}
 
             {step === "DONE" ? (
