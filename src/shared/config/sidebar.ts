@@ -1,4 +1,4 @@
-import {Bell,CarFront,History,LogOut,Newspaper,PenBox, User, Users,
+import {Bell,CarFront,LogOut,Newspaper,PenBox, User, Users,
 } from "lucide-react";
 
 import SidebarItem from "@/shared/types/SidebarItem";
@@ -43,40 +43,18 @@ const ALL_MENU_ITEMS: Record<string, SidebarItem & { roles: string[] }> = {
     title: "Sair",
     href: "/logout",
     icon: LogOut,
-    roles: ["parkuser", "guard", "rh"]
+    roles: ["parkuser", "guard", "rh", "admin"]
   },
 
   user_management: {
     title: "Gestão de Usuários",
     href: "/gestao-usuarios",
     icon: Users,
-    roles: ["rh"]
+    roles: ["rh", "admin"]
   }
 };
 
-const ADMIN_MENU: SidebarItem[] = [
-  {
-    title: "Gestão de Usuários",
-    href: "/admin/gestao-usuarios",
-    icon: Users,
-  },
-  {
-    title: "Histórico Ocorrências",
-    href: "/admin/historico",
-    icon: History,
-  },
-  {
-    title: "Sair",
-    href: "/logout",
-    icon: LogOut,
-  },
-];
-
 export function getSidebarItems(userRole: string): SidebarItem[] {
-
-  if (userRole === "admin") {
-    return ADMIN_MENU;
-  }
 
   return Object.values(ALL_MENU_ITEMS)
     .filter((item) => item.roles.includes(userRole))

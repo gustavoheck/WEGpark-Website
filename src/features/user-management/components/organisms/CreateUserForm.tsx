@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, UseFormRegister, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,6 @@ import { FieldGroup } from "@/components/ui/field";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
-import DialogComponent from "@/shared/components/organisms/Dialog";
 
 import { useCreateUser } from "../../hooks/useUserManagement";
 import {
@@ -27,6 +26,7 @@ import { EmployeeFields } from "../molecules/fields/create/EmployeeFields";
 import { GuardFields } from "../molecules/fields/create/GuardFields";
 import { HRFields } from "../molecules/fields/create/HRFields";
 import { VisitorFields } from "../molecules/fields/create/VisitorFields";
+import { toast } from "@/components/ui/toast";
 
 export function CreateUserForm() {
     const router = useRouter();
@@ -38,10 +38,11 @@ export function CreateUserForm() {
         register,
         handleSubmit,
         setValue,
-        formState: { errors, isValid },
+        trigger,
+        formState: { errors },
     } = useForm<CreateUserFormValues>({
         resolver: zodResolver(createUserSchema),
-        mode: "onChange",
+        mode: "all",
         shouldUnregister: true,
         defaultValues: { email: "", password: "", confirmPassword: "", name: "", phone: "" },
     });
@@ -49,31 +50,39 @@ export function CreateUserForm() {
     const { mutate: createUser, isPending, error } = useCreateUser();
 
     function handleSelectRole(role: UserRole) {
+        setValue("role", role, { shouldDirty: true });
         setSelectedRole(role);
-        setValue("role", role, { shouldValidate: true });
     }
+
+    useEffect(() => {
+      if (selectedRole) {
+        void trigger();
+      }
+    }, [selectedRole, trigger]);
 
     function handleConfirm() {
         setIsOpenConfirmation(true);
     }
 
     function onSubmit(data: CreateUserFormValues) {
-        const { ...payload } = data;
+        const { ...userData } = data;
 
-        createUser(payload as CreateUserRequestDTO, {
+        createUser(
+            {
+                ...userData,
+                active: true
+            } as CreateUserRequestDTO, {
             onSuccess: () => {
                 setIsOpenConfirmation(false);
                 setIsOpenSuccess(true);
+                toast.add({type : "success" , description : "Usuário cadastrado com sucesso!"})
+                router.push("/gestao-usuarios");
             },
             onError: () => {
                 setIsOpenConfirmation(false);
+                toast.add({type : "error" , description : "Erro ao cadastrar usuário. Tente novamente."})
             },
-        });
-    }
-
-    function handleSuccessClose() {
-        setIsOpenSuccess(false);
-        router.push("/admin/gestao-usuarios");
+        });  
     }
 
     return (
@@ -86,7 +95,8 @@ export function CreateUserForm() {
                         <FormField text="telefone" id="phone" registration={register("phone")} error={errors.phone} />
                         <FormField text="senha" id="password" type="password" registration={register("password")} error={errors.password} />
                         <FormField text="confirmar senha" id="confirmPassword" type="password" registration={register("confirmPassword")} error={errors.confirmPassword} />
-
+                        
+                        <input type="hidden" {...register("role")} />
                         <UserTypeSelector value={selectedRole} onChange={handleSelectRole} />
 
                         {selectedRole === "EMPLOYEE" ? (
@@ -123,8 +133,8 @@ export function CreateUserForm() {
                             Não foi possível criar o usuário. Verifique os dados e tente novamente.
                         </p>
                     ) : null}
-
-                    <FormButton text={isPending ? "cadastrando..." : "cadastrar usuário"} disabled={!selectedRole || !isValid} />
+                    
+                    <FormButton text={isPending ? "cadastrando..." : "cadastrar usuário"} disabled={!selectedRole || isPending} />
 
                     <AlertDialogComponent
                         open={isOpenConfirmation}
@@ -133,13 +143,6 @@ export function CreateUserForm() {
                         description="Confirma a criação desse usuário com os dados informados?"
                         onClick={handleSubmit(onSubmit)}
                         confirmText="Cadastrar"
-                    />
-
-                    <DialogComponent
-                        open={isOpenSuccess}
-                        onOpenChange={handleSuccessClose}
-                        title="Usuário Criado"
-                        description="O usuário foi cadastrado com sucesso!"
                     />
                 </form>
             </CardContent>

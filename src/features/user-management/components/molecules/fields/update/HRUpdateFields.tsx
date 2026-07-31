@@ -1,6 +1,6 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import FormField from "@/shared/components/atoms/FormField";
-import { UpdateHRFormValues } from "@/features/hr-user-management/schemas/update/UpdateUserSchema";
+import { UpdateHRFormValues } from "@/features/user-management/schemas/update/UpdateUserSchema";
 
 interface HRUpdateFieldsProps {
     register: UseFormRegister<UpdateHRFormValues>;

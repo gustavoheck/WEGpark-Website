@@ -6,8 +6,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 
-import { useUser } from "@/features/hr-user-management/hooks/useUserManagement";
-import EditUserForm from "@/features/hr-user-management/components/organisms/EditUserForm";
+import { useUser } from "@/features/user-management/hooks/useUserManagement";
+import EditUserForm from "@/features/user-management/components/organisms/EditUserForm";
 
 export default function EditarUsuarioPage() {
     const { id } = useParams<{ id: string }>();
