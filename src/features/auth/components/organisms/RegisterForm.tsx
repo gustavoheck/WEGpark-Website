@@ -25,8 +25,8 @@ import {
     RegisterFormValues,
 } from "../../schemas/register-schema";
 import { UserType } from "../../enums/UserType";
-import { RegisterRequest } from "../../types/registerRequest";
 import { toast } from "@/components/ui/toast";
+import { RegisterRequest } from "../../types/register";
 
 interface RegisterFormProps {
     onRegistered: (email: string) => void;
