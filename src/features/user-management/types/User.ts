@@ -6,6 +6,7 @@ export interface UserListItem {
     email: string;
     role: UserRole;
     active: boolean;
+    badgeNumber?: string;
 }
 
 export interface PaginatedUsersResponseDTO {

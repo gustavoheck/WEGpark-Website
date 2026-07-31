@@ -20,6 +20,8 @@ import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import { Plus } from "lucide-react";
 import { useUserManagementPermissions } from "../../hooks/useUserManagementPermissions";
 import { cn } from "@/shared/lib/utils";
+import Filter, { FilterParams } from "@/shared/components/molecules/Filter";
+import { USER_CATEGORIES } from "../../constants/userFilters";
 
 import { useUsersList } from "../../hooks/useUserManagement";
 import UserManagementCard from "../molecules/UserManagementCard";
@@ -28,7 +30,8 @@ const MAX_VISIBLE_PAGES = 5;
 
 export function UserManagementList() {
     const [page, setPage] = useState(1);
-    const { data, isPending, isError } = useUsersList(page);
+    const [filterParams, setFilterParams] = useState<FilterParams>();
+    const { data, isPending, isError } = useUsersList(page, filterParams);
     const { canAdd } = useUserManagementPermissions(); 
     const { open } = useSidebar();
     const totalPages = data?.totalPages ?? 1;
@@ -39,9 +42,15 @@ export function UserManagementList() {
         (_, index) => windowStart + index,
     );
 
+    function handleFilterSubmit(params: FilterParams) {
+        setPage(1);
+        setFilterParams(params);
+    }
+
     return (
         <section>
             <SectionTitle text="gestão usuários" />
+            <Filter filters={USER_CATEGORIES} onSubmit={handleFilterSubmit} />
             <Card>
                 <CardContent className="flex flex-col gap-3">
                     {isPending ? (
@@ -57,7 +66,7 @@ export function UserManagementList() {
                     ) : null}
 
                     {!isPending && !isError && data?.users.length === 0 ? (
-                        <p className="text-sm text-muted-foreground text-center py-8">Nenhum usuário cadastrado.</p>
+                        <p className="text-sm text-muted-foreground text-center py-8">Nenhum usuário encontrado.</p>
                     ) : null}
 
                     {!isPending && !isError

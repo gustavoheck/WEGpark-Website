@@ -6,11 +6,12 @@ import { CreateUserRequestDTO } from "../types/User";
 import { deactivateUser } from "../services/userManagementService";
 import { UpdateUserRequestDTO } from "../types/User";
 import { getUserById, updateUser, activateUser } from "../services/userManagementService";
+import { GetServiceProps } from "@/shared/types/GetServiceProps";
 
-export function useUsersList(page: number) {
+export function useUsersList(page: number, filters?: GetServiceProps) {
     return useQuery({
-        queryKey: ["users", page],
-        queryFn: () => listUsers(page),
+        queryKey: ["users", page, filters],
+        queryFn: () => listUsers(page, filters),
     });
 }
 
