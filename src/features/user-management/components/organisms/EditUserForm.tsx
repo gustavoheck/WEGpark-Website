@@ -37,7 +37,6 @@ export default function EditUserForm({ user }: EditUserFormProps) {
     const router = useRouter();
     const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
     const { mutate: updateUser } = useUpdateUser();
-    const [isOpenSuccess, setIsOpenSuccess] = useState(false);
 
     const {
         register,
@@ -62,7 +61,6 @@ export default function EditUserForm({ user }: EditUserFormProps) {
             {
                 onSuccess: () => {
                     toast.add({ type: "success", description: "Usuário atualizado com sucesso!"});
-                    setIsOpenSuccess(true);
                     router.push("/gestao-usuarios");
                 },
                 onError: (error: unknown) => {

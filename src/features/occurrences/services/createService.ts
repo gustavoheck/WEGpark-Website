@@ -13,7 +13,7 @@ export async function createOccurrence(
     };
   }
 
-  const { plate: _plate, ...occurrence } = data;
+  const { plate, ...occurrence } = data;
   const { data: response } = await api.post("/occurrence", {
     ...occurrence,
     vehicleId,

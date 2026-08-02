@@ -95,6 +95,7 @@ function ToastDescription({
           "group-data-[type=info]/toast:text-primary",
         className
       )}
+      {...props}
     />
   )
 }

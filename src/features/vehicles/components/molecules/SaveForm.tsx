@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
 import { useVehicle } from "../../hooks/useVehicle";
 import { mapFormDataToVehicleRequest } from "../../mappers/vehicleMapper";
+import { AxiosError } from "axios";
 
 export default function SaveForm() {
     const router = useRouter();
@@ -37,9 +38,9 @@ export default function SaveForm() {
                     toast.add({type : "success" , description : "Veículo cadastrado com sucesso!"})
                     router.push("/veiculos")
                 },
-                onError: (error: any) => {
+                onError: (error: unknown) => {
                     setIsOpenConfirmationNormal(false)
-                    if (error?.response?.status === 409) {
+                    if (error instanceof AxiosError && error.response?.status === 409) {
                         setIsOpenConfirmationLink(true)
                     }
                     else {

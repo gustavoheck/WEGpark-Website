@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
 import { useVehicle } from "../../hooks/useVehicle";
 import { mapFormDataToVehicleRequest } from "../../mappers/vehicleMapper";
+import { AxiosError } from "axios";
 
 interface EditFormProps {
     vehicle: Vehicle
@@ -47,9 +48,9 @@ export default function EditForm({ vehicle }: EditFormProps) {
                     toast.add({ type: "success", description: "Veículo atualizado com sucesso!" })
                     router.push("/veiculos")
                 },
-                onError: (error: any) => {
+                onError: (error: unknown) => {
                     setIsOpenConfirmation(false)
-                    if (error?.response?.status === 409) {
+                    if (error instanceof AxiosError && error.response?.status === 409) {
                         toast.add({ type: "error", description: "Já existe outro veículo cadastrado com esta placa." });
                         return;
                     }

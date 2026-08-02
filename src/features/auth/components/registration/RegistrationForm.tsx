@@ -46,7 +46,7 @@ export function RegistrationForm({ onRegistered }: RegistrationFormProps) {
     const userType = watch("type") as ParkUserType | undefined;
 
     function handleSelectType(type: ParkUserType) {
-        setValue("type", type as any, { shouldValidate: true });
+        setValue("type", type as RegisterFormValues["type"], { shouldValidate: true });
     }
 
     function onSubmit(values: RegisterFormValues) {
