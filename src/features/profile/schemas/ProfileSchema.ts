@@ -7,7 +7,7 @@ const baseSchema = z.object({
 });
 
 const employeeFields = z.object({
-  role: z.literal("COLLABORATOR"), 
+  parkUserType: z.literal("COLLABORATOR"), 
   department: z.string().min(1, "Informe o setor"),
   badgeNumber: z.string()
     .min(1, "Informe o número do crachá")
@@ -19,7 +19,7 @@ const employeeFields = z.object({
 });
 
 const visitorFields = z.object({
-  role: z.literal("VISITOR"),
+  parkUserType: z.literal("VISITOR"),
   companyName: z.string().min(1, "Informe o nome da empresa"),
 });
 
@@ -29,7 +29,7 @@ const visitorProfileSchema = baseSchema.merge(visitorFields);
 export type EmployeeProfileFormValues = z.infer<typeof employeeProfileSchema>;
 export type VisitorProfileFormValues = z.infer<typeof visitorProfileSchema>;
 
-export const profileSchema = z.discriminatedUnion("role", [
+export const profileSchema = z.discriminatedUnion("parkUserType", [
   employeeProfileSchema,
   visitorProfileSchema,
 ]);

@@ -35,9 +35,9 @@ export function ProfileEditForm() {
         resolver: zodResolver(profileSchema),
         mode: "onChange",
         values: profile
-            ? profile.role === "VISITOR"
-                ? { role: "VISITOR", name: profile.name, companyName: profile.companyName }
-                : { role: "COLLABORATOR", name: profile.name, department: profile.department, badgeNumber: profile.badgeNumber, email: profile.email }
+            ? profile.parkUserType === "VISITOR"
+                ? { parkUserType: "VISITOR", name: profile.name, companyName: profile.companyName }
+                : { parkUserType: "COLLABORATOR", name: profile.name, department: profile.department, badgeNumber: profile.badgeNumber, email: profile.email }
             : undefined,
     });
 
@@ -46,7 +46,7 @@ export function ProfileEditForm() {
     }
 
     function onSubmit(data: ProfileFormValues) {
-        const { role, ...updateData } = data;
+        const { parkUserType, ...updateData } = data;
         updateProfile(updateData, {
             onSuccess: () => {
                 setIsOpenConfirmation(false);
@@ -75,7 +75,7 @@ export function ProfileEditForm() {
                         <FieldGroup className="gap-4 mb-6">
                             <FormField text="nome" id="name" registration={register("name")} error={errors.name} />
 
-                            {profile.role === "VISITOR" ? (
+                            {profile.parkUserType === "VISITOR" ? (
                                 <VisitorProfileFields
                                     register={register as unknown as UseFormRegister<VisitorProfileFormValues>}
                                     errors={errors as unknown as FieldErrors<VisitorProfileFormValues>}
