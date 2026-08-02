@@ -2,7 +2,6 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 
 import { FieldGroup } from '@/components/ui/field';
 import FormField from '@/shared/components/atoms/FormField';
@@ -11,22 +10,22 @@ import SectionTitle from '@/shared/components/atoms/SectionTitle';
 
 import { Card, CardHeader, CardDescription, CardContent } from '@/components/ui/card';
 
-import { useLogin } from '@/features/auth/hooks/useLogin';
-import { UserRoleType } from '@/shared/enum/UserRole';
 import { useAuth } from '@/shared/context/AuthContext';
 import { LoginResponse } from '../../types/auth.type';
 import { LoginPasswordFormValues, loginPasswordSchema } from '../../schemas/auth.schema';
+import { useLogin } from '../../hooks/auth.mutations';
+import { SystemRoleType } from '@/shared/enum/SystemRoleType';
 
 interface PasswordFormProps {
   email: string;
-  role: UserRoleType;
+  role: SystemRoleType;
   onLoginSuccess?: (response: LoginResponse) => void;
+  onNotVerified : () => void
 }
 
-export function PasswordForm({ email, role, onLoginSuccess }: PasswordFormProps) {
+export function PasswordForm({ email, role, onLoginSuccess, onNotVerified }: PasswordFormProps) {
   const { mutate: login, isPending, error } = useLogin();
   const { login: setAuth } = useAuth();
-  const router = useRouter();
 
   const {
     register,
@@ -41,13 +40,11 @@ export function PasswordForm({ email, role, onLoginSuccess }: PasswordFormProps)
     login(
       { email, password: values.password, role },
       {
-        onSuccess: (response: any) => {
-          console.log("Resposta recebida do backend:", response); // Ambiente de teste
-
+        onSuccess: (response: LoginResponse) => {
           const jwtToken = response.token;
 
           if (!jwtToken) {
-            console.error("Token não encontrado na resposta do backend. Objeto recebido:", response); //Ambiente de testes
+            onNotVerified();
             return;
           }
 
@@ -56,12 +53,7 @@ export function PasswordForm({ email, role, onLoginSuccess }: PasswordFormProps)
           if (onLoginSuccess) {
             onLoginSuccess(response);
           }
-
-          router.push("/veiculos");
         },
-        onError: (err) => {
-          console.error("Erro na requisição de login:", err);
-        }
       },
     );
   }

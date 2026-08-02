@@ -1,5 +1,5 @@
 import { useAuth } from "@/shared/context/AuthContext";
-import { UserRole } from "@/shared/enum/UserRole";
+import { SystemRole } from "@/shared/enum/SystemRoleType";
 
 export function useUserManagementPermissions() {
     const { user } = useAuth();
@@ -13,7 +13,7 @@ export function useUserManagementPermissions() {
         };
     }
 
-    const isHR = user.currentRole === UserRole.ROLE_RH;
+    const isHR = user.currentRole === SystemRole.RH;
 
     return {
         canAdd: isHR,

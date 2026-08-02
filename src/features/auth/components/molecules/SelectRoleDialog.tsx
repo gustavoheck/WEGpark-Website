@@ -6,21 +6,19 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { UserRoleType }  from "@/shared/enum/UserRole"
+import { SystemRoleType }  from "@/shared/enum/SystemRoleType"
 
-const roleLabels: Record<UserRoleType, string> = {
+const roleLabels: Record<SystemRoleType, string> = {
   ROLE_PARK: "Usuário",
   ROLE_ADMIN: "Administrador",
   ROLE_RH: "RH",
-  ROLE_GUARD: "Guarita",
-  ROLE_COLLABORATOR: "Colaborador",
-  ROLE_VISITOR: "Visitante",
+  ROLE_GUARD: "Guarita"
 };
 
 interface SelectRoleDialogProps {
   open: boolean;
-  roles: UserRoleType[];
-  onSelect: (role: UserRoleType) => void;
+  roles: SystemRoleType[];
+  onSelect: (role: SystemRoleType) => void;
 }
 
 export function SelectRoleDialog({ open, roles, onSelect }: SelectRoleDialogProps) {

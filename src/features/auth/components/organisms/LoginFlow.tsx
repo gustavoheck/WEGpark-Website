@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { CheckEmailForm } from "./CheckEmailForm";
 import { SelectRoleDialog } from "../molecules/SelectRoleDialog";
 import { PasswordForm } from "./PasswordForm";
-import { UserRoleType } from "@/shared/enum/UserRole";
+import { SystemRoleType } from "@/shared/enum/SystemRoleType";
 import { LoginResponse } from "../../types/auth.type";
+import { toast } from "@/components/ui/toast";
+import { CheckEmailForm } from "./CheckEmailForm";
+import { VerifyEmailCard } from "./VerifyEmailCard";
 
-type Step = "EMAIL" | "SELECT_ROLE" | "PASSWORD";
+type Step = "EMAIL" | "SELECT_ROLE" | "PASSWORD" | "VERIFY_EMAIL";
 
 interface LoginFlowProps {
   onLoginSuccess: (response: LoginResponse) => void;
@@ -16,14 +18,16 @@ interface LoginFlowProps {
 export function LoginFlow({ onLoginSuccess }: LoginFlowProps) {
   const [step, setStep] = useState<Step>("EMAIL");
   const [email, setEmail] = useState('');
-  const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>([]);
-  const [selectedRole, setSelectedRole] = useState<UserRoleType | null>(null);
+  const [availableRoles, setAvailableRoles] = useState<SystemRoleType[]>([]);
+  const [selectedRole, setSelectedRole] = useState<SystemRoleType | null>(null);
 
-  function handleEmailChecked(checkedEmail: string, roles: UserRoleType[] = []) {
+  function handleEmailChecked(checkedEmail: string, roles: SystemRoleType[] = []) {
     setEmail(checkedEmail);
     setAvailableRoles(roles);
 
-    if (roles.length === 1) {
+    if (!roles || roles.length === 0) {
+      toast.add({ type: "error", description: "Email não possui nenhuma role em nosso sistema" })
+    } else if (roles.length === 1) {
       setSelectedRole(roles[0]);
       setStep('PASSWORD');
     } else {
@@ -31,9 +35,13 @@ export function LoginFlow({ onLoginSuccess }: LoginFlowProps) {
     }
   }
 
-  function handleRoleSelected(role: UserRoleType) {
+  function handleRoleSelected(role: SystemRoleType) {
     setSelectedRole(role);
     setStep('PASSWORD');
+  }
+
+  function handleEmailNotVerified() {
+    setStep('VERIFY_EMAIL')
   }
 
   return (
@@ -48,8 +56,12 @@ export function LoginFlow({ onLoginSuccess }: LoginFlowProps) {
         onSelect={handleRoleSelected}
       />
       {step === 'PASSWORD' && selectedRole ? (
-        <PasswordForm email={email} role={selectedRole} onLoginSuccess={onLoginSuccess} />
+        <PasswordForm email={email} role={selectedRole} onLoginSuccess={onLoginSuccess} onNotVerified={handleEmailNotVerified} />
       ) : null}
+
+      {step === 'VERIFY_EMAIL' && (
+        <VerifyEmailCard email={email} />
+      )}
     </div>
   );
 }

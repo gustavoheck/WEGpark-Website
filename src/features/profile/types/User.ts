@@ -1,13 +1,13 @@
-import { UserRoleType } from "@/shared/enum/UserRole";
+import { ParkUserType } from "@/features/auth/enums/UserType";
 
 interface BaseUserProfile {
   id: string;
   email: string;
-  role: UserRoleType;
+  role: ParkUserType;
 }
 
 export interface EmployeeProfile extends BaseUserProfile {
-  role: "COLLABORATOR" | "RH" | "GUARD";
+  role: "COLLABORATOR";
   name: string;
   department: string;
   badgeNumber: string;

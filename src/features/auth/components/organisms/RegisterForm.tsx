@@ -18,11 +18,11 @@ import FormButton from "@/shared/components/atoms/FormButton";
 import { UserTypeSelector } from "../../../auth/components/molecules/UserTypeSelector";
 import { EmployeeFields } from "../../../auth/components/molecules/CollaboratorFields";
 import { VisitorFields } from "../../../auth/components/molecules/VisitorFields";
-import { UserType } from "../../enums/UserType";
 import { toast } from "@/components/ui/toast";
 import { useRegister } from "../../hooks/auth.mutations";
 import { RegisterFormValues, registerSchema } from "../../schemas/auth.schema";
 import { RegisterRequest } from "../../types/auth.type";
+import { ParkUserType } from "../../enums/UserType";
 
 interface RegisterFormProps {
     onRegistered: (email: string) => void;
@@ -43,9 +43,9 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         formState: { errors },
     } = methods;
 
-    const userType = watch("type") as UserType | undefined;
+    const userType = watch("type") as ParkUserType | undefined;
 
-    function handleSelectType(type: UserType) {
+    function handleSelectType(type: ParkUserType) {
         setValue("type", type as any, { shouldValidate: true });
     }
 
@@ -74,7 +74,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         }
 
         register(
-            { request, userType: values.type as UserType },
+            { request, userType: values.type as ParkUserType },
             {
                 onSuccess: () => {
                     onRegistered(values.email);

@@ -11,13 +11,17 @@ import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 
 import { NewPasswordFormValues, newPasswordSchema } from "../../schemas/auth.schema";
+import { useResetPassword } from "../../hooks/auth.mutations";
+import { SystemRoleType } from "@/shared/enum/SystemRoleType";
 
 interface NewPasswordFormProps {
     resetToken: string;
+    email: string;
+    role: SystemRoleType;
     onReset: () => void;
 }
 
-export function NewPasswordForm({ resetToken, onReset }: NewPasswordFormProps) {
+export function NewPasswordForm({ resetToken, email, role, onReset }: NewPasswordFormProps) {
     const { mutate, isPending, isError } = useResetPassword();
 
     const {
@@ -31,7 +35,7 @@ export function NewPasswordForm({ resetToken, onReset }: NewPasswordFormProps) {
 
     function onSubmit(values: NewPasswordFormValues) {
         mutate(
-            { resetToken, newPassword: values.password },
+            { email, password: values.password, role, tokenIfPasswordReset: resetToken },
             { onSuccess: () => onReset() }
         );
     }

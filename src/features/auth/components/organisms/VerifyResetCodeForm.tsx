@@ -26,15 +26,16 @@ import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import FormButton from "@/shared/components/atoms/FormButton";
 
 import { ResetPasswordAnswerFormValues, ResetPasswordAnswerSchema } from "../../schemas/auth.schema";
-import { useResetPasswordCheck } from "../../hooks/auth.mutations";
+import { useResetPasswordAnswer } from "../../hooks/auth.mutations";
 
 interface VerifyResetCodeProps {
     email: string;
+    numberTokenId: string;
     onVerified: (resetToken: string) => void;
 }
 
-export function VerifyResetCodeForm({ email, onVerified }:VerifyResetCodeProps) {
-    const { mutate, isPending, error } = useResetPasswordCheck();
+export function VerifyResetCodeForm({ email, numberTokenId, onVerified }:VerifyResetCodeProps) {
+    const { mutate, isPending, error } = useResetPasswordAnswer();
 
     const {
         control,
@@ -47,8 +48,8 @@ export function VerifyResetCodeForm({ email, onVerified }:VerifyResetCodeProps) 
 
     function onSubmit(values: ResetPasswordAnswerFormValues) {
         mutate(
-            { email, code: values.code },
-            { onSuccess: (data) => onVerified(data.resetToken) }
+            { numberTokenId, numberCode: values.code },
+            { onSuccess: (data) => onVerified(data.token) }
         );
     }
 

@@ -14,28 +14,30 @@ import { FieldGroup } from "@/components/ui/field";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
-
-import { useRequestResetCode } from "../../hooks/useResetPassword";
+import { ResetPasswordCheckFormValues, ResetPasswordCheckSchema } from "../../schemas/auth.schema";
+import { useResetPasswordCheck } from "../../hooks/auth.mutations";
+import { SystemRoleType } from "@/shared/enum/SystemRoleType";
+import { SystemRole } from "@/shared/enum/SystemRoleType";
 
 interface RequestResetFormProps {
-    onCodeRequested: (email: string) => void;
+    onCodeRequested: (email: string, role: SystemRoleType, numberTokenId: string) => void;
 }
 
 export function RequestResetForm({ onCodeRequested }: RequestResetFormProps) {
-    const { mutate, isPending, isError } = useRequestResetCode();
+    const { mutate, isPending, isError } = useResetPasswordCheck();
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<RequestResetFormValues>({
-        resolver: zodResolver(requestResetSchema),
-        defaultValues: { email: "" },
+    } = useForm<ResetPasswordCheckFormValues>({
+        resolver: zodResolver(ResetPasswordCheckSchema),
+        defaultValues: { email: "", role: "ROLE_PARK" },
     });
 
-    function onSubmit(values: RequestResetFormValues) {
-        mutate(values.email, {
-            onSuccess: () => onCodeRequested(values.email),
+    function onSubmit(values: ResetPasswordCheckFormValues) {
+        mutate(values, {
+            onSuccess: (response) => onCodeRequested(values.email, values.role, response.token),
         });
     }
 
@@ -56,6 +58,16 @@ export function RequestResetForm({ onCodeRequested }: RequestResetFormProps) {
                             registration={register("email")}
                             error={errors.email}
                         />
+                        <select
+                            id="role"
+                            {...register("role")}
+                            className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+                        >
+                            <option value={SystemRole.PARK}>Usuário</option>
+                            <option value={SystemRole.GUARD}>Guarita</option>
+                            <option value={SystemRole.RH}>RH</option>
+                            <option value={SystemRole.ADMIN}>Administrador</option>
+                        </select>
 
                         {isError ? (
                             <p className="text-sm text-destructive">

@@ -10,7 +10,7 @@ import {
 } from "../services/auth.service";
 import {
   AuthAccount,
-  BaseRequest,
+  CheckAccountRequest,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
@@ -22,12 +22,12 @@ import {
   ResetPasswordRequest,
   ResetPasswordResponse,
 } from "../types/auth.type";
-import { UserType } from "../enums/UserType";
+import { ParkUserType } from "../enums/UserType";
 
 // Login
 
 export function useAuthAccountRoles() {
-  return useMutation<AuthAccount[], Error, BaseRequest>({
+  return useMutation<AuthAccount[], Error, CheckAccountRequest>({
     mutationFn: authAccountRoles,
   });
 }
@@ -42,7 +42,7 @@ export function useLogin() {
 
 export interface RegisterUserMutationParams {
   request: RegisterRequest;
-  userType: UserType;
+  userType: ParkUserType;
 }
 
 export function useRegister() {

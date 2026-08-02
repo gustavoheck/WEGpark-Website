@@ -4,20 +4,15 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/shared/components/organisms/AppSidebar";
 import Header from "@/shared/components/organisms/Header";
 import { getSidebarItems } from "@/shared/config/sidebar";
-import { usePathname } from "next/navigation";
+import { useAuth } from "@/shared/context/AuthContext";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-
-  const role = pathname.startsWith("/admin")
-    ? "admin"
-    : "parkuser";
-
-  const sidebarItems = getSidebarItems(role);
+  const { user } = useAuth();
+  const sidebarItems = user ? getSidebarItems(user.currentRole) : [];
 
   return (
     <SidebarProvider defaultOpen={false}>

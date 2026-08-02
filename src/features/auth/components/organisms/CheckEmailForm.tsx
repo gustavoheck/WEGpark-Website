@@ -16,15 +16,15 @@ import {
   CardHeader
 } from "@/components/ui/card";
 
-import { UserRoleType } from '@/shared/enum/UserRole';
+import { SystemRoleType } from '@/shared/enum/SystemRoleType';
 import { CheckEmailFormValues, checkEmailSchema } from '../../schemas/auth.schema';
 import { useAuthAccountRoles } from '../../hooks/auth.mutations';
 
 interface CheckEmailFormProps {
-  onEmailChecked: (email: string, roles: UserRoleType[]) => void;
+  onEmailChecked: (email: string, roles: SystemRoleType[]) => void;
 }
 
-export function AccountRoles({ onEmailChecked }: CheckEmailFormProps) {
+export function CheckEmailForm ({ onEmailChecked }: CheckEmailFormProps) {
   const { mutate: accountRoles, isPending, error } = useAuthAccountRoles();
 
   const {
@@ -38,7 +38,7 @@ export function AccountRoles({ onEmailChecked }: CheckEmailFormProps) {
 
   function onSubmit(values: CheckEmailFormValues) {
     accountRoles(
-      values.email,
+       { email: values.email },
       {
         onSuccess: (response) => {
           const roles = response.map((item) => item.role);

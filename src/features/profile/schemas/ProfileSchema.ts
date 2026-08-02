@@ -1,4 +1,4 @@
-import { email, z } from "zod";
+import { z } from "zod";
 
 const CORPORATE_EMAIL_DOMAIN = "@weg.net";
 
@@ -7,7 +7,7 @@ const baseSchema = z.object({
 });
 
 const employeeFields = z.object({
-  role: z.literal("COLABORADOR"), 
+  role: z.literal("COLLABORATOR"), 
   department: z.string().min(1, "Informe o setor"),
   badgeNumber: z.string()
     .min(1, "Informe o número do crachá")
@@ -19,7 +19,7 @@ const employeeFields = z.object({
 });
 
 const visitorFields = z.object({
-  role: z.literal("VISITANTE"),
+  role: z.literal("VISITOR"),
   companyName: z.string().min(1, "Informe o nome da empresa"),
 });
 

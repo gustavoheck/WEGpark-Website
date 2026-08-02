@@ -1,4 +1,4 @@
-import { UserRole } from "@/shared/enum/UserRole";
+import { SystemRole } from "@/shared/enum/SystemRoleType";
 import z from "zod";
 
 // Aux Constants
@@ -87,9 +87,9 @@ export type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export const ResetPasswordCheckSchema = z.object({
   email: emailField,
-  role: z.nativeEnum(UserRole)
+  role: z.nativeEnum(SystemRole)
 });
-export type resetPasswordCheckFormValues = z.infer<typeof ResetPasswordCheckSchema>;
+export type ResetPasswordCheckFormValues = z.infer<typeof ResetPasswordCheckSchema>;
 
 export const ResetPasswordAnswerSchema = z.object({
   code: codeField,

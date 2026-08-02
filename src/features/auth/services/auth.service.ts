@@ -1,8 +1,8 @@
 import { api } from "@/shared/lib/api";
-import { USER_TYPE_MAP, UserType } from "../enums/UserType";
 import {
   AuthAccount,
   BaseRequest,
+  CheckAccountRequest,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
@@ -14,20 +14,21 @@ import {
   ResetPasswordRequest,
   ResetPasswordResponse,
 } from "../types/auth.type";
+import { ParkUserType } from "../enums/UserType";
 
 export async function register(
   request: RegisterRequest,
-  userType: UserType
+  userType: ParkUserType
 ): Promise<RegisterResponse> {
   const { data } = await api.post<RegisterResponse>(
-    `/auth/register/${USER_TYPE_MAP[userType].toLowerCase()}`,
+    `/auth/register/${ParkUserType[userType].toLowerCase()}`,
     request
   );
   return data;
 }
 
 export async function authAccountRoles(
-  request: BaseRequest
+  request: CheckAccountRequest
 ): Promise<AuthAccount[]> {
   const { data } = await api.post<AuthAccount[]>("/auth", request);
   return data;
@@ -68,6 +69,6 @@ export async function resetPassword(
   return data;
 }
 
-export async function resendEmail( email: string): Promise<void> {
-    await api.post("/auth/resend-email", email);
+export async function resendEmail(email: string): Promise<void> {
+  await api.post("/auth/resend-email", email);
 }

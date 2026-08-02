@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { RequestResetForm } from "../organisms/RequestResetForm";
 import { VerifyResetCodeForm } from "../organisms/VerifyResetCodeForm";
 import { NewPasswordForm } from "../organisms/NewPasswordForm";
+import { SystemRoleType } from "@/shared/enum/SystemRoleType";
 
 type Step = "REQUEST" | "VERIFY" | "RESET" | "DONE";
 
@@ -15,10 +16,14 @@ export function ResetPasswordFlow() {
     const router = useRouter();
     const [step, setStep] = useState<Step>("REQUEST");
     const [email, setEmail] = useState("");
+    const [role, setRole] = useState<SystemRoleType | null>(null);
+    const [numberTokenId, setNumberTokenId] = useState("");
     const [resetToken, setResetToken] = useState("");
 
-    function handleCodeRequested(requestedEmail: string) {
+    function handleCodeRequested(requestedEmail: string, requestedRole: SystemRoleType, tokenId: string) {
         setEmail(requestedEmail);
+        setRole(requestedRole);
+        setNumberTokenId(tokenId);
         setStep("VERIFY");
     }
 
@@ -50,11 +55,11 @@ export function ResetPasswordFlow() {
             ) : null}
 
             {step === "VERIFY" ? (
-                <VerifyResetCodeForm email={email} onVerified={handleVerified} />
+                <VerifyResetCodeForm email={email} numberTokenId={numberTokenId} onVerified={handleVerified} />
             ) : null}
 
-            {step === "RESET" ? (
-                <NewPasswordForm resetToken={resetToken} onReset={handleReset} />
+            {step === "RESET" && role ? (
+                <NewPasswordForm resetToken={resetToken} email={email} role={role} onReset={handleReset} />
             ) : null}
 
             {step === "DONE" ? (
