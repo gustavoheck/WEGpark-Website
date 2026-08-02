@@ -35,9 +35,9 @@ export function ProfileEditForm() {
         resolver: zodResolver(profileSchema),
         mode: "onChange",
         values: profile
-            ? profile.role === "VISITANTE"
-                ? { role: "VISITANTE", name: profile.name, companyName: profile.companyName }
-                : { role: "COLABORADOR", name: profile.name, department: profile.department, badgeNumber: profile.badgeNumber }
+            ? profile.role === "VISITOR"
+                ? { role: "VISITOR", name: profile.name, companyName: profile.companyName }
+                : { role: "COLLABORATOR", name: profile.name, department: profile.department, badgeNumber: profile.badgeNumber, email: profile.email }
             : undefined,
     });
 
@@ -75,7 +75,7 @@ export function ProfileEditForm() {
                         <FieldGroup className="gap-4 mb-6">
                             <FormField text="nome" id="name" registration={register("name")} error={errors.name} />
 
-                            {profile.role === "VISITANTE" ? (
+                            {profile.role === "VISITOR" ? (
                                 <VisitorProfileFields
                                     register={register as unknown as UseFormRegister<VisitorProfileFormValues>}
                                     errors={errors as unknown as FieldErrors<VisitorProfileFormValues>}

@@ -45,7 +45,7 @@ export function ProfileView() {
                             <ProfileDetailField label="Nome" value={profile.name} />
                             <ProfileDetailField label="Email" value={profile.email} />
 
-                            {profile.role === "VISITANTE" ? (
+                            {profile.role === "VISITOR" ? (
                                 <>
                                     <ProfileDetailField label="Empresa" value={profile.companyName} />
                                     <ProfileDetailField label="Cpf" value={profile.cpf} />

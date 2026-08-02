@@ -22,7 +22,7 @@ export default async function Usuarios({ params }: EditarPageProps) {
     const ownerId = vehicle.ownerId
 
     const userList = UserMockList
-    const whoIsSeeing = 1
+    const whoIsSeeing = "1"
 
     return (
         <section>

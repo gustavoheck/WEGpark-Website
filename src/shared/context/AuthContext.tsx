@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
-import { UserRoleType } from "@/shared/enum/UserRole";
+import { SystemRoleType } from "@/shared/enum/SystemRoleType";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { JWTPayload } from "../types/JWTPayload";
@@ -10,14 +10,14 @@ interface AuthUser {
   uuid: string;
   email: string;
   roles: string[];
-  currentRole: UserRoleType;
+  currentRole: SystemRoleType;
 }
 
 interface AuthContextType {
   token: string | null;
   user: AuthUser | null;
   isAuthenticated: boolean;
-  login: (token: string, selectedRole: UserRoleType) => void;
+  login: (token: string, selectedRole: SystemRoleType) => void;
   logout: () => void;
 }
 
@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     Cookies.remove("auth_role");
   }, []);
 
-  const processToken = (jwtToken: string, activeRole: UserRoleType): AuthUser | null => {
+  const processToken = (jwtToken: string, activeRole: SystemRoleType): AuthUser | null => {
     try {
       const decoded = jwtDecode<JWTPayload>(jwtToken);
 
@@ -42,6 +42,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (decoded.exp && decoded.exp * 1000 < Date.now()) {
         console.warn("Token JWT expirado");
+        return null;
+      }
+
+      if (!decoded.roles?.includes(activeRole)) {
+        console.warn("A role selecionada não pertence ao token JWT");
         return null;
       }
 
@@ -59,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const savedToken = Cookies.get("auth_token");
-    const savedRole = Cookies.get("auth_role") as UserRoleType;
+    const savedRole = Cookies.get("auth_role") as SystemRoleType;
 
     if (savedToken && savedRole) {
       const parsedUser = processToken(savedToken, savedRole);
@@ -72,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [logout]);
 
-  const login = (newToken: string, selectedRole: UserRoleType) => {
+  const login = (newToken: string, selectedRole: SystemRoleType) => {
     if (!newToken) {
       console.error("Tentativa de login sem token válido.");
       return;

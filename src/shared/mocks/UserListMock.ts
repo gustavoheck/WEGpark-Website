@@ -4,22 +4,22 @@ const UserMockList: User[] = [
   {
     uuid: "1",
     name: "John Smith",
-    role : "PARKUSER"
+    role : "ROLE_PARK"
   },
   {
     uuid: "2",
     name: "Mark Smith",
-    role : "PARKUSER"
+    role : "ROLE_PARK"
   },
   {
     uuid: "3",
     name: "William Smith",
-    role : "GUARD"
+    role : "ROLE_GUARD"
   },
   {
     uuid: "4",
     name: "John Smith",
-    role : "PARKUSER"
+    role : "ROLE_PARK"
   },
 ];
 

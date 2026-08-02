@@ -13,12 +13,12 @@ export function useUserManagementPermissions() {
         };
     }
 
-    const isHR = user.currentRole === SystemRole.RH;
+    const isAdmin = user.currentRole === SystemRole.ADMIN;
 
     return {
-        canAdd: isHR,
-        canEdit: isHR,
-        canDelete: isHR,
-        canView: isHR,
+        canAdd: isAdmin,
+        canEdit: isAdmin,
+        canDelete: isAdmin,
+        canView: isAdmin,
     };
 }

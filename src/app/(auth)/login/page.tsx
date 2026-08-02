@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { LoginFlow } from "@/features/auth/components/organisms/LoginFlow";
+import { LoginFlow } from "@/features/auth/components/login/LoginFlow";
 import { useAuth } from "@/shared/context/AuthContext";
 import { useEffect } from "react";
 
