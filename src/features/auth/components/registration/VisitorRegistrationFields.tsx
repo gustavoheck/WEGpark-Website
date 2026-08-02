@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import FormField from "@/shared/components/atoms/FormField";
 import { VisitorFormValues } from "../../schemas/auth.schema";
 
-export function VisitorFields() {
+export function VisitorRegistrationFields() {
     const {
         register,
         formState: { errors },

@@ -15,15 +15,15 @@ import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 import { ResetPasswordCheckFormValues, ResetPasswordCheckSchema } from "../../schemas/auth.schema";
-import { useResetPasswordCheck } from "../../hooks/auth.mutations";
+import { useResetPasswordCheck } from "../../hooks/useAuthMutations";
 import { SystemRoleType } from "@/shared/enum/SystemRoleType";
 import { SystemRole } from "@/shared/enum/SystemRoleType";
 
-interface RequestResetFormProps {
+interface PasswordResetRequestFormProps {
     onCodeRequested: (email: string, role: SystemRoleType, numberTokenId: string) => void;
 }
 
-export function RequestResetForm({ onCodeRequested }: RequestResetFormProps) {
+export function PasswordResetRequestForm({ onCodeRequested }: PasswordResetRequestFormProps) {
     const { mutate, isPending, isError } = useResetPasswordCheck();
 
     const {

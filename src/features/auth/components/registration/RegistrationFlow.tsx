@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { RegisterForm } from "./RegisterForm";
-import { VerifyEmailCard } from "./VerifyEmailCard";
+import { RegistrationForm } from "./RegistrationForm";
+import { EmailVerificationCard } from "../shared/EmailVerificationCard";
 
-type Step = "REGISTER" | "VERIFY" | "DONE";
+type RegistrationStep = "REGISTER" | "VERIFY";
 
-export function RegisterFlow() {
-    const [step, setStep] = useState<Step>("REGISTER");
+export function RegistrationFlow() {
+    const [step, setStep] = useState<RegistrationStep>("REGISTER");
     const [email, setEmail] = useState("");
 
     function handleRegistered(registeredEmail: string) {
@@ -18,11 +18,11 @@ export function RegisterFlow() {
     return (
         <div className="mx-auto w-full max-w-md space-y-8 py-12">
             {step === "REGISTER" ? (
-                <RegisterForm onRegistered={handleRegistered} />
+                <RegistrationForm onRegistered={handleRegistered} />
             ) : null}
             
             {step === "VERIFY" ? (
-                <VerifyEmailCard email={email} />
+                <EmailVerificationCard email={email} />
             ) : null}
         </div>
     );

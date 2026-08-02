@@ -1,5 +1,5 @@
-import { RegisterFlow } from "@/features/auth/components/organisms/RegisterFlow";
+import { RegistrationFlow } from "@/features/auth/components/registration/RegistrationFlow";
 
 export default function RegisterPage() {
-    return <RegisterFlow />
+    return <RegistrationFlow />
 }

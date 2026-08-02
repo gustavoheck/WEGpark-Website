@@ -3,16 +3,16 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ParkUserType } from "../../enums/UserType";
 
-interface UserTypeSelectorProps {
+interface  ParkUserTypeSelectorProps {
     value: ParkUserType | null;
-    onChange: (type: ParkUserType) => void;
+    onChangeParkUser: (type: ParkUserType) => void;
 }
 
-export function UserTypeSelector({ value, onChange }: UserTypeSelectorProps) {
+export function  ParkUserTypeSelector({ value, onChangeParkUser }:  ParkUserTypeSelectorProps) {
     return (
         <RadioGroup
             value={value ?? undefined}
-            onValueChange={(newValue) => onChange(newValue as ParkUserType)}
+            onValueChange={(newValue) => onChangeParkUser(newValue as ParkUserType)}
             className="grid grid-cols-1 gap-4 md:grid-cols-2"
         >
             <Label

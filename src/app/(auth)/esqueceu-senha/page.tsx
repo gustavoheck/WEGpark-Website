@@ -1,5 +1,6 @@
-import { ResetPasswordFlow } from "@/features/auth/components/molecules/ResetPasswordFlow";
+import { PasswordResetFlow } from "@/features/auth/components/password-reset/PasswordResetFlow";
+
 
 export default function ResetPasswordPage() {
-    return <ResetPasswordFlow />;
+    return <PasswordResetFlow />;
 }

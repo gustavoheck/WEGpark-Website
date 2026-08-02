@@ -1,22 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { SelectRoleDialog } from "../molecules/SelectRoleDialog";
-import { PasswordForm } from "./PasswordForm";
 import { SystemRoleType } from "@/shared/enum/SystemRoleType";
 import { LoginResponse } from "../../types/auth.type";
 import { toast } from "@/components/ui/toast";
-import { CheckEmailForm } from "./CheckEmailForm";
-import { VerifyEmailCard } from "./VerifyEmailCard";
+import { EmailLookupForm } from "./EmailLookupForm";
+import { RoleSelectionDialog } from "./RoleSelectionDialog";
+import { LoginCredentialsForm } from "./LoginCredentialsForm";
+import { EmailVerificationCard } from "../shared/EmailVerificationCard";
 
-type Step = "EMAIL" | "SELECT_ROLE" | "PASSWORD" | "VERIFY_EMAIL";
+type LoginStep = "EMAIL" | "SELECT_ROLE" | "PASSWORD" | "VERIFY_EMAIL";
 
 interface LoginFlowProps {
   onLoginSuccess: (response: LoginResponse) => void;
 }
 
 export function LoginFlow({ onLoginSuccess }: LoginFlowProps) {
-  const [step, setStep] = useState<Step>("EMAIL");
+  const [step, setStep] = useState<LoginStep>("EMAIL");
   const [email, setEmail] = useState('');
   const [availableRoles, setAvailableRoles] = useState<SystemRoleType[]>([]);
   const [selectedRole, setSelectedRole] = useState<SystemRoleType | null>(null);
@@ -44,23 +44,31 @@ export function LoginFlow({ onLoginSuccess }: LoginFlowProps) {
     setStep('VERIFY_EMAIL')
   }
 
+  function handleRoleDialogOpenChange(open: boolean) {
+    if (!open) {
+      setSelectedRole(null);
+      setStep("EMAIL");
+    }
+  }
+
   return (
     <div className="mx-auto w-full max-w-md space-y-8 py-12">
       {step === 'EMAIL' ? (
-        <CheckEmailForm onEmailChecked={handleEmailChecked} />
+        <EmailLookupForm onEmailChecked={handleEmailChecked} />
       ) : null}
 
-      <SelectRoleDialog
+      <RoleSelectionDialog
         open={step === 'SELECT_ROLE'}
         roles={availableRoles}
-        onSelect={handleRoleSelected}
+        onSelectRole={handleRoleSelected}
+        onOpenChange={handleRoleDialogOpenChange}
       />
       {step === 'PASSWORD' && selectedRole ? (
-        <PasswordForm email={email} role={selectedRole} onLoginSuccess={onLoginSuccess} onNotVerified={handleEmailNotVerified} />
+        <LoginCredentialsForm email={email} role={selectedRole} onLoginSuccess={onLoginSuccess} onNotVerified={handleEmailNotVerified} />
       ) : null}
 
       {step === 'VERIFY_EMAIL' && (
-        <VerifyEmailCard email={email} />
+        <EmailVerificationCard email={email} />
       )}
     </div>
   );

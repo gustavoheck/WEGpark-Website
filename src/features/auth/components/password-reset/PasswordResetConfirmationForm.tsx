@@ -11,17 +11,17 @@ import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 
 import { NewPasswordFormValues, newPasswordSchema } from "../../schemas/auth.schema";
-import { useResetPassword } from "../../hooks/auth.mutations";
+import { useResetPassword } from "../../hooks/useAuthMutations";
 import { SystemRoleType } from "@/shared/enum/SystemRoleType";
 
-interface NewPasswordFormProps {
+interface PasswordResetConfirmationFormProps {
     resetToken: string;
     email: string;
     role: SystemRoleType;
     onReset: () => void;
 }
 
-export function NewPasswordForm({ resetToken, email, role, onReset }: NewPasswordFormProps) {
+export function PasswordResetConfirmationForm({ resetToken, email, role, onReset }: PasswordResetConfirmationFormProps) {
     const { mutate, isPending, isError } = useResetPassword();
 
     const {

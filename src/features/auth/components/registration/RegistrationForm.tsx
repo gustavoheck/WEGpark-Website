@@ -15,20 +15,20 @@ import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 
-import { UserTypeSelector } from "../../../auth/components/molecules/UserTypeSelector";
-import { EmployeeFields } from "../../../auth/components/molecules/CollaboratorFields";
-import { VisitorFields } from "../../../auth/components/molecules/VisitorFields";
 import { toast } from "@/components/ui/toast";
-import { useRegister } from "../../hooks/auth.mutations";
+import { useRegister } from "../../hooks/useAuthMutations";
 import { RegisterFormValues, registerSchema } from "../../schemas/auth.schema";
 import { RegisterRequest } from "../../types/auth.type";
 import { ParkUserType } from "../../enums/UserType";
+import { CollaboratorRegistrationFields } from "./CollaboratorRegistrationFields";
+import { ParkUserTypeSelector } from "./ParkUserTypeSelector";
+import { VisitorRegistrationFields } from "./VisitorRegistrationFields";
 
-interface RegisterFormProps {
+interface RegistrationFormProps {
     onRegistered: (email: string) => void;
 }
 
-export function RegisterForm({ onRegistered }: RegisterFormProps) {
+export function RegistrationForm({ onRegistered }: RegistrationFormProps) {
     const { mutate: register, isPending, error } = useRegister();
 
     const methods = useForm<RegisterFormValues>({
@@ -136,11 +136,11 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
                                 error={errors.confirmPassword}
                             />
 
-                            <UserTypeSelector value={userType || null} onChange={handleSelectType} />
+                            <ParkUserTypeSelector value={userType || null} onChangeParkUser={handleSelectType} />
 
-                            {userType === "COLLABORATOR" && <EmployeeFields />}
+                            {userType === "COLLABORATOR" && <CollaboratorRegistrationFields />}
 
-                            {userType === "VISITOR" && <VisitorFields />}
+                            {userType === "VISITOR" && <VisitorRegistrationFields />}
 
                             {error && (
                                 <p className="text-sm text-destructive">

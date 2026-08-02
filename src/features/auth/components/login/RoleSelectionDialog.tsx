@@ -15,15 +15,16 @@ const roleLabels: Record<SystemRoleType, string> = {
   ROLE_GUARD: "Guarita"
 };
 
-interface SelectRoleDialogProps {
+interface  RoleSelectionDialogProps {
   open: boolean;
   roles: SystemRoleType[];
-  onSelect: (role: SystemRoleType) => void;
+  onSelectRole: (role: SystemRoleType) => void;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function SelectRoleDialog({ open, roles, onSelect }: SelectRoleDialogProps) {
+export function  RoleSelectionDialog({ open, roles, onSelectRole, onOpenChange }:  RoleSelectionDialogProps) {
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Como você deseja entrar?</DialogTitle>
@@ -34,7 +35,7 @@ export function SelectRoleDialog({ open, roles, onSelect }: SelectRoleDialogProp
 
         <div className="flex flex-col gap-2">
           {roles.map((role) => (
-            <Button key={role} variant="outline" onClick={() => onSelect(role)} className="py-5 text-lg font-semibold">
+            <Button key={role} variant="outline" onClick={() => onSelectRole(role)} className="py-5 text-lg font-semibold">
               {roleLabels[role]}
             </Button>
           ))}

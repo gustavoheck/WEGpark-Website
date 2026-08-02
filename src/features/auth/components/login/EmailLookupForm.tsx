@@ -18,13 +18,13 @@ import {
 
 import { SystemRoleType } from '@/shared/enum/SystemRoleType';
 import { CheckEmailFormValues, checkEmailSchema } from '../../schemas/auth.schema';
-import { useAuthAccountRoles } from '../../hooks/auth.mutations';
+import { useAuthAccountRoles } from '../../hooks/useAuthMutations';
 
-interface CheckEmailFormProps {
+interface EmailLookupFormProps {
   onEmailChecked: (email: string, roles: SystemRoleType[]) => void;
 }
 
-export function CheckEmailForm ({ onEmailChecked }: CheckEmailFormProps) {
+export function EmailLookupForm ({ onEmailChecked }: EmailLookupFormProps) {
   const { mutate: accountRoles, isPending, error } = useAuthAccountRoles();
 
   const {

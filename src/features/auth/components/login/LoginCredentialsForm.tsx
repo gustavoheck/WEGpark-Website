@@ -13,17 +13,17 @@ import { Card, CardHeader, CardDescription, CardContent } from '@/components/ui/
 import { useAuth } from '@/shared/context/AuthContext';
 import { LoginResponse } from '../../types/auth.type';
 import { LoginPasswordFormValues, loginPasswordSchema } from '../../schemas/auth.schema';
-import { useLogin } from '../../hooks/auth.mutations';
+import { useLogin } from '../../hooks/useAuthMutations';
 import { SystemRoleType } from '@/shared/enum/SystemRoleType';
 
-interface PasswordFormProps {
+interface LoginCredentialsFormProps {
   email: string;
   role: SystemRoleType;
   onLoginSuccess?: (response: LoginResponse) => void;
   onNotVerified : () => void
 }
 
-export function PasswordForm({ email, role, onLoginSuccess, onNotVerified }: PasswordFormProps) {
+export function LoginCredentialsForm({ email, role, onLoginSuccess, onNotVerified }: LoginCredentialsFormProps) {
   const { mutate: login, isPending, error } = useLogin();
   const { login: setAuth } = useAuth();
 
