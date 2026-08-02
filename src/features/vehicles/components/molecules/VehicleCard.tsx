@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import Vehicle from "../../../../shared/types/Vehicle";
-import { Car, Check, ChevronDown, Eye, Pencil, Trash2, Unlink, Users, } from "lucide-react";
+import { Car, Check, ChevronDown, Eye, Pencil, Unlink, Users, } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -23,9 +23,9 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
     const { uuid, plate, brand, model, color} = vehicle
     const [isExpanded, setIsExpanded] = useState(false)
 
-    const { canEdit, canDelete, canUnlink, isOwner} = useVehiclePermissions(vehicle)
+    const { canEdit, canUnlink, isOwner} = useVehiclePermissions(vehicle)
 
-    const { activeDialog, openDeleteDialog, openUnlinkDialog, closeDialog, actions, isDeleting} = useVehicleCardActions(uuid)
+    const { isUnlinkDialogOpen, setIsUnlinkDialogOpen, handleUnlink, isUnlinking } = useVehicleCardActions(uuid)
 
     return (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
@@ -62,15 +62,12 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                     <CardContent className="py-4 border-t border-dashed bg-muted/20">
                         <div className="grid grid-cols-2 gap-3 w-full">
                             <VehicleCardButton title="ver ocorrências" Icon={Eye} href="/ocorrencias" />
-                            <VehicleCardButton title="ver usuarios" Icon={Users} href={`/veiculos/${uuid}/usuarios`} />
+                            <VehicleCardButton title="ver usuarios" Icon={Users} href={`/veiculos/${encodeURIComponent(plate)}/usuarios`} />
                             { canEdit && (
-                                <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${uuid}/editar`} variant="last"/>
-                            )}
-                            { canDelete && (
-                                <VehicleCardButton title="excluir" Icon={Trash2} destructive onClick={openDeleteDialog} pending={isDeleting}/>
+                                <VehicleCardButton title="editar" Icon={Pencil} href={`/veiculos/${encodeURIComponent(plate)}/editar`} variant="last"/>
                             )}
                             { canUnlink && (
-                                <VehicleCardButton title="desvincular" Icon={Unlink} destructive onClick={openUnlinkDialog} variant="last" pending={isDeleting} />
+                                <VehicleCardButton title="desvincular" Icon={Unlink} destructive onClick={() => setIsUnlinkDialogOpen(true)} variant="last" pending={isUnlinking} />
                             )}
                         </div>
                     </CardContent>
@@ -88,20 +85,20 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                 </CardFooter>
 
                 <AlertDialog
-                    open={activeDialog === "delete"}
-                    onOpenChange={(open) => !open && closeDialog()}
+                    open={false}
+                    onOpenChange={() => undefined}
                     title="Excluir Veículo"
                     description="Você realmente deseja exluir esse veículo? Esta ação removerá seu vinculo, e os vinculos de todos os usuários com esse veículo."
-                    onClick={actions.handleDelete}
+                    onClick={() => undefined}
                     confirmText="Excluir"
                 />
 
                 <AlertDialog
-                    open={activeDialog === "unlink"}
-                    onOpenChange={(open) => !open && closeDialog()}
+                    open={isUnlinkDialogOpen}
+                    onOpenChange={setIsUnlinkDialogOpen}
                     title="Desvincular Veículo"
                     description="Você realmente deseja se desvincular desse veículo? Esta ação removerá seu vinculo, e você apenas o recupera-la ao pedir permissão novamente."
-                    onClick={actions.handleUnlink}
+                    onClick={handleUnlink}
                     confirmText="Desvincular"
                 />
             </Card>
