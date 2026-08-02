@@ -17,7 +17,8 @@ import { UserProfileDTO, UpdateProfileRequestDTO } from "../types/User";
  let mockProfile: UserProfileDTO = {
      id: "2",
      email: "visitante@exemplo.com",
-     role: "VISITOR",
+     systemRole: "ROLE_PARK",
+     parkUserType: "VISITOR",
      name: "Maria Souza",
      companyName: "Empresa XYZ",
      cpf: "123.456.789-00",

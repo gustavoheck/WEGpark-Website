@@ -24,6 +24,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
 
       Cookies.remove("auth_token");
+      Cookies.remove("auth_role");
       
       if (typeof window !== "undefined") {
         window.location.href = "/login";

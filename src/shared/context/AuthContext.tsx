@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
-import { SystemRoleType } from "@/shared/enum/SystemRoleType";
+import { isSystemRole, SystemRoleType } from "@/shared/enum/SystemRoleType";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { JWTPayload } from "../types/JWTPayload";
@@ -9,7 +9,7 @@ import { JWTPayload } from "../types/JWTPayload";
 interface AuthUser {
   uuid: string;
   email: string;
-  roles: string[];
+  roles: SystemRoleType[];
   currentRole: SystemRoleType;
 }
 
@@ -17,6 +17,7 @@ interface AuthContextType {
   token: string | null;
   user: AuthUser | null;
   isAuthenticated: boolean;
+  isReady: boolean;
   login: (token: string, selectedRole: SystemRoleType) => void;
   logout: () => void;
 }
@@ -26,6 +27,7 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [isReady, setIsReady] = useState(false);
 
   const logout = useCallback(() => {
     setToken(null);
@@ -45,7 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return null;
       }
 
-      if (!decoded.roles?.includes(activeRole)) {
+      const roles = (decoded.roles ?? []).filter(isSystemRole);
+
+      if (!roles.includes(activeRole)) {
         console.warn("A role selecionada não pertence ao token JWT");
         return null;
       }
@@ -53,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return {
         uuid: decoded.uuid || "",
         email: decoded.sub || "",
-        roles: decoded.roles || [],
+        roles,
         currentRole: activeRole,
       };
     } catch (error) {
@@ -64,9 +68,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const savedToken = Cookies.get("auth_token");
-    const savedRole = Cookies.get("auth_role") as SystemRoleType;
+    const savedRole = Cookies.get("auth_role");
 
-    if (savedToken && savedRole) {
+    if (savedToken && isSystemRole(savedRole)) {
       const parsedUser = processToken(savedToken, savedRole);
       if (parsedUser) {
         setToken(savedToken);
@@ -74,7 +78,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         logout();
       }
+    } else if (savedToken || savedRole) {
+      logout();
     }
+
+    setIsReady(true);
   }, [logout]);
 
   const login = (newToken: string, selectedRole: SystemRoleType) => {
@@ -110,6 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         token,
         user,
         isAuthenticated: !!token,
+        isReady,
         login,
         logout,
       }}

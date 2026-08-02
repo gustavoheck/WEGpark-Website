@@ -1,7 +1,7 @@
 import { cn } from "@/shared/lib/utils";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ParkUserType } from "../../enums/UserType";
+import { ParkUserType } from "@/shared/enum/ParkUserType";
 
 interface  ParkUserTypeSelectorProps {
     value: ParkUserType | null;

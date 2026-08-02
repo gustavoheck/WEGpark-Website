@@ -7,3 +7,7 @@ export const SystemRole = {
 
 export type SystemRoleType =
   (typeof SystemRole)[keyof typeof SystemRole];
+
+export function isSystemRole(value: unknown): value is SystemRoleType {
+  return typeof value === "string" && Object.values(SystemRole).includes(value as SystemRoleType);
+}

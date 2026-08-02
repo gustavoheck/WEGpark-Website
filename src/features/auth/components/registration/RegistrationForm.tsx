@@ -19,7 +19,7 @@ import { toast } from "@/components/ui/toast";
 import { useRegister } from "../../hooks/useAuthMutations";
 import { RegisterFormValues, registerSchema } from "../../schemas/auth.schema";
 import { RegisterRequest } from "../../types/auth.type";
-import { ParkUserType } from "../../enums/UserType";
+import { ParkUserType } from "@/shared/enum/ParkUserType";
 import { CollaboratorRegistrationFields } from "./CollaboratorRegistrationFields";
 import { ParkUserTypeSelector } from "./ParkUserTypeSelector";
 import { VisitorRegistrationFields } from "./VisitorRegistrationFields";

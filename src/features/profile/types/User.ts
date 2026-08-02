@@ -1,20 +1,24 @@
-import { ParkUserType } from "@/features/auth/enums/UserType";
+import { ParkUserType } from "@/shared/enum/ParkUserType";
+import { SystemRole, SystemRoleType } from "@/shared/enum/SystemRoleType";
 
 interface BaseUserProfile {
   id: string;
   email: string;
-  role: ParkUserType;
+  systemRole: SystemRoleType;
+  parkUserType: ParkUserType;
 }
 
 export interface EmployeeProfile extends BaseUserProfile {
-  role: "COLLABORATOR";
+  systemRole: typeof SystemRole.PARK;
+  parkUserType: "COLLABORATOR";
   name: string;
   department: string;
   badgeNumber: string;
 }
 
 export interface VisitorProfile extends BaseUserProfile {
-  role: "VISITOR";
+  systemRole: typeof SystemRole.PARK;
+  parkUserType: "VISITOR";
   name: string;
   companyName: string;
   cpf: string;

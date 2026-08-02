@@ -22,7 +22,7 @@ import {
   ResetPasswordRequest,
   ResetPasswordResponse,
 } from "../types/auth.type";
-import { ParkUserType } from "../enums/UserType";
+import { ParkUserType } from "@/shared/enum/ParkUserType";
 
 // Login
 
