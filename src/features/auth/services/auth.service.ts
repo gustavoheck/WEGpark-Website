@@ -1,7 +1,6 @@
 import { api } from "@/shared/lib/api";
 import {
   AuthAccount,
-  BaseRequest,
   CheckAccountRequest,
   LoginRequest,
   LoginResponse,

@@ -10,14 +10,16 @@ import Link from "next/link";
 import { useState } from "react";
 import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/shared/lib/utils";
-import { useGetVehicles } from "@/features/vehicles/hooks/useGetVehicles";
+import { useGetMyVehicles, useGetVehicles } from "@/features/vehicles/hooks/useGetVehicles";
 import { VEHICLE_CATEGORIES } from "@/features/vehicles/constants/vehicleFilters";
 
 export default function VehiclePage() {
     const { canAdd, isGuard } = useVehiclePermissions()
     const { open } = useSidebar();
     const [filterParams, setFilterParams] = useState<FilterParams>()
-    const { vehicles, isSearching } = useGetVehicles(filterParams);
+    const allVehiclesQuery = useGetVehicles(filterParams, isGuard);
+    const myVehiclesQuery = useGetMyVehicles(!isGuard);
+    const { vehicles, isSearching } = isGuard ? allVehiclesQuery : myVehiclesQuery;
 
     function handleFilterSubmit(params: FilterParams) {
         setFilterParams(params);

@@ -32,7 +32,6 @@ export function CreateUserForm() {
     const router = useRouter();
     const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
     const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
-    const [isOpenSuccess, setIsOpenSuccess] = useState(false);
 
     const {
         register,
@@ -74,7 +73,6 @@ export function CreateUserForm() {
             } as CreateUserRequestDTO, {
             onSuccess: () => {
                 setIsOpenConfirmation(false);
-                setIsOpenSuccess(true);
                 toast.add({type : "success" , description : "Usuário cadastrado com sucesso!"})
                 router.push("/gestao-usuarios");
             },

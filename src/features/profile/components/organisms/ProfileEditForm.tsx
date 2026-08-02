@@ -25,7 +25,7 @@ export function ProfileEditForm() {
     const [isOpenInformative, setIsOpenInformative] = useState(false);
 
     const { data: profile, isPending: isLoadingProfile } = useProfile();
-    const { mutate: updateProfile, isPending: isSaving } = useUpdateProfile();
+    const { mutate: updateProfile } = useUpdateProfile();
 
     const {
         register,
@@ -46,7 +46,10 @@ export function ProfileEditForm() {
     }
 
     function onSubmit(data: ProfileFormValues) {
-        const { parkUserType, ...updateData } = data;
+        const updateData = data.parkUserType === "VISITOR"
+            ? { name: data.name, companyName: data.companyName }
+            : { name: data.name, department: data.department, badgeNumber: data.badgeNumber };
+
         updateProfile(updateData, {
             onSuccess: () => {
                 setIsOpenConfirmation(false);

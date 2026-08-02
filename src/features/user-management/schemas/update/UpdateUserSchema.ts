@@ -1,4 +1,4 @@
-import { email, z } from "zod";
+import { z } from "zod";
 
 const CORPORATE_EMAIL_DOMAIN = "@weg.net";
 const phoneRegex = /^\(?\d{2}\)?\s?9?\d{4}-?\d{4}$/;

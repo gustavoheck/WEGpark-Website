@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import Notification from "../types/Notification";
 import { getNotificationConfig } from "../utils/notifications-helpers";
 import Link from "next/link";
-import { ArrowBigRight, ArrowRight} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 interface NotificationCardProps {
     notification : Notification
@@ -10,7 +10,7 @@ interface NotificationCardProps {
 
 export default function NotificationCard ({notification} : NotificationCardProps) {
 
-    const {label, icon : IconNotification, text, href} = getNotificationConfig(notification)
+    const { icon: IconNotification, text, href } = getNotificationConfig(notification)
 
     return (
         <Card className="flex-row items-center text-balance justify-between px-4">

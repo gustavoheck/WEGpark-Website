@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Car, CarFront, Link } from "lucide-react";
+import { CarFront, Link } from "lucide-react";
 import { Request } from "../types/Request";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
 import DialogComponent from "@/shared/components/organisms/Dialog";

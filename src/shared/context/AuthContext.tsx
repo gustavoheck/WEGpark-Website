@@ -73,6 +73,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (savedToken && isSystemRole(savedRole)) {
       const parsedUser = processToken(savedToken, savedRole);
       if (parsedUser) {
+        // Browser-only session hydration is intentionally performed after mount.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setToken(savedToken);
         setUser(parsedUser);
       } else {
