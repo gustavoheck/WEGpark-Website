@@ -44,16 +44,12 @@ export async function getVehicle(
   pageable: Partial<typeof DEFAULT_PAGEABLE> = {},
 ): Promise<VehiclePage> {
   const { category, value } = params;
-  const filter = category && value ? { [category]: value } : {};
   const requestedPageable = { ...DEFAULT_PAGEABLE, ...pageable };
 
   const { data } = await api.get<VehiclePageResponse>("/vehicle", {
-    // The API receives both values as query objects (`filter` and `pageable`).
-    // They are serialized as JSON because the backend exposes them as object
-    // parameters instead of individual query parameters such as `plate`.
     params: {
-      filter: JSON.stringify(filter),
-      pageable: JSON.stringify(requestedPageable),
+      ...(category && value ? { [category]: value } : {}),
+      ...requestedPageable,
     },
   });
 
