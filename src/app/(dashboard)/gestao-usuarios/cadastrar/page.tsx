@@ -1,4 +1,4 @@
-import { CreateUserForm } from "@/features/hr-user-management/components/organisms/CreateUserForm";
+import { CreateUserForm } from "@/features/user-management/components/organisms/CreateUserForm";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 

@@ -126,7 +126,7 @@ function ToastClose({
       aria-label="Close toast"
       render={render}
       className={cn(
-        "relative shrink-0 text-primary after:absolute after:-inset-2 after:content-[''] hover:primary",
+        "relative shrink-0 text-primary after:absolute after:-inset-2 after:content-['']", "group-data-[type=error]/toast:!text-destructive", "group-data-[type=success]/toast:text-primary",
         className
       )}
       {...props}
