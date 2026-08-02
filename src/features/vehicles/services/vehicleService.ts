@@ -10,13 +10,18 @@ export async function saveVehicle( request : VehicleRequest
     return mapVehicleResponseToDomain(data);
 }
 
+export async function getMyVehicles(): Promise<Vehicle[]> {
+  const { data } = await api.get<VehicleResponse[]>("/vehicle/me");
+  return data.map(mapVehicleResponseToDomain);
+}
+
 export async function getVehicle( params: GetServiceProps = {} ): Promise<Vehicle[]> {
   const { category, value } = params;
 
   const { data } = await api.get<VehicleResponse[]>("/vehicle", {
     params: category && value ? { [category]: value } : {},
   });
-  return data.map((d) => {return mapVehicleResponseToDomain(d)});
+  return data.map(mapVehicleResponseToDomain);
 }
 
 export async function getVehicleByPlate( plate : string ): Promise<Vehicle> {
