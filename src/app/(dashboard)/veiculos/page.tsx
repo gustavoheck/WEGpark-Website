@@ -39,7 +39,7 @@ export default function VehiclePage() {
                 <Link href="/veiculos/adicionar">
                     <Button className={cn("fixed bottom-4 right-4 text-xl rounded-sm py-6 font-bold z-50", open ? "left-68" : "left-4")} variant="default">
                         <Plus className="size-7" />
-                        Cadastrar Usuário
+                        Cadastrar Veículo
                     </Button>
                 </Link>
             )}
