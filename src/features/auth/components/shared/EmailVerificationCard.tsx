@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants, Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -45,11 +45,12 @@ export function EmailVerificationCard({ email }: { email: string }) {
         </CardDescription>
 
         <div className="flex flex-col gap-2 pt-2">
-          <Button variant="outline" onClick={handleResend} disabled={isPending}>
-            {isPending ? "Reenviando..." : "Não recebeu? Reenviar e-mail"}
-          </Button>
 
-          <Link href="/login" className={buttonVariants({ variant: "default" })}>
+          <Link href="/login" className="text-sm text-primary hover:text-primary hover:underline" onClick={handleResend}>
+            {isPending ? "Reenviando..." : "Não recebeu? Reenviar e-mail"}
+          </Link>
+
+          <Link href="/login" className="text-sm text-primary hover:text-primary hover:underline">
             Voltar à Página de Login
           </Link>
         </div>
