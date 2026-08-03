@@ -1,8 +1,8 @@
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../../../components/ui/sidebar";
 import SidebarItem from "@/shared/types/SidebarItem";
-import UserMock from "@/shared/mocks/UserMock";
 import Profile from "../molecules/Profile";
 import Link from "next/link";
+import { useAuth } from "@/shared/context/AuthContext";
 
 interface AppSidebarProps {
   menuItems: SidebarItem[]
@@ -10,13 +10,17 @@ interface AppSidebarProps {
 
 export function AppSidebar({ menuItems }: AppSidebarProps) {
 
-  const username = UserMock.name
+  const { user } = useAuth();
+
+  if (!user){
+    return
+  }
 
   return (
     <Sidebar>
 
       <SidebarHeader>
-        <Profile username={username} />
+        <Profile username={user.email} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
