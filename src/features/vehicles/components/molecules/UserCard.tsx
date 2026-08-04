@@ -6,15 +6,18 @@ import { VehicleUser } from "@/shared/types/Vehicle";
 
 interface UserCardProps {
   user: VehicleUser;
+  name?: string;
 }
 
-export default function UserCard({ user }: UserCardProps) {
+export default function UserCard({ user, name }: UserCardProps) {
+  const displayName = name || user.uuid;
+
   return (
     <Card className="flex h-18 flex-row items-center justify-between pr-4">
       <CardHeader className="flex w-full items-center gap-3">
-        <ProfilePicture name={user.uuid} variant="secondary" />
+        <ProfilePicture name={displayName} variant="secondary" />
         <p className={`text-xl font-semibold ${user.isOwner ? "text-primary" : "text-foreground"}`}>
-          {user.uuid}
+          {displayName}
         </p>
       </CardHeader>
     </Card>

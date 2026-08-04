@@ -20,7 +20,7 @@ export function AppSidebar({ menuItems }: AppSidebarProps) {
     <Sidebar>
 
       <SidebarHeader>
-        <Profile username={user.email} />
+        <Profile username={user.name } />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

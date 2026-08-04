@@ -4,6 +4,8 @@ const CORPORATE_EMAIL_DOMAIN = "@weg.net";
 
 const baseSchema = z.object({
   name: z.string().min(1, "Informe o nome"),
+  telephone: z.string().min(1, "Informe o telefone"),
+  email: z.string().email("Informe um email válido"),
 });
 
 const employeeFields = z.object({

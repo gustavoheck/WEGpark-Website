@@ -11,7 +11,6 @@ import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
 import DialogComponent from "@/shared/components/organisms/Dialog";
-import SectionTitle from "@/shared/components/atoms/SectionTitle";
 
 import { useProfile } from "../../hooks/useProfile";
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
@@ -19,6 +18,8 @@ import { profileSchema, ProfileFormValues, EmployeeProfileFormValues, VisitorPro
 import { EmployeeProfileFields } from "../molecules/EmployeeProfileFields";
 import { VisitorProfileFields } from "../molecules/VisitorProfileFields";
 import ProfilePicture from "@/shared/components/atoms/ProfilePicture";
+import { mapProfileUpdate } from "../../mappers/profileMapper";
+import { Profile } from "../../types/Profile";
 
 export function ProfileEditForm() {
     const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
@@ -36,8 +37,8 @@ export function ProfileEditForm() {
         mode: "onChange",
         values: profile
             ? profile.parkUserType === "VISITOR"
-                ? { parkUserType: "VISITOR", name: profile.name, companyName: profile.companyName }
-                : { parkUserType: "COLLABORATOR", name: profile.name, department: profile.department, badgeNumber: profile.badgeNumber, email: profile.email }
+                ? { parkUserType: "VISITOR", name: profile.name, telephone: profile.telephone, email: profile.email, companyName: profile.companyName }
+                : { parkUserType: "COLLABORATOR", name: profile.name, telephone: profile.telephone, department: profile.department, badgeNumber: profile.badgeNumber, email: profile.email }
             : undefined,
     });
 
@@ -46,9 +47,11 @@ export function ProfileEditForm() {
     }
 
     function onSubmit(data: ProfileFormValues) {
-        const updateData = data.parkUserType === "VISITOR"
-            ? { name: data.name, companyName: data.companyName }
-            : { name: data.name, department: data.department, badgeNumber: data.badgeNumber };
+        const updateData = mapProfileUpdate(
+            data.parkUserType === "VISITOR"
+                ? ({ ...profile, name: data.name, telephone: data.telephone, companyName: data.companyName } as Profile)
+                : ({ ...profile, name: data.name, telephone: data.telephone, department: data.department, badgeNumber: data.badgeNumber } as Profile),
+        );
 
         updateProfile(updateData, {
             onSuccess: () => {
@@ -68,7 +71,6 @@ export function ProfileEditForm() {
 
     return (
         <>
-            <SectionTitle text="Editar Informações" />
             <div className="flex flex-col items-center">
                 <ProfilePicture name={profile.name} variant="secondary" className="w-40 h-40 text-6xl mb-8"/>
             </div>
@@ -77,6 +79,8 @@ export function ProfileEditForm() {
                     <form onSubmit={handleSubmit(handleConfirmEdit)}>
                         <FieldGroup className="gap-4 mb-6">
                             <FormField text="nome" id="name" registration={register("name")} error={errors.name} />
+                            <FormField text="email" id="email" type="email" registration={register("email")} error={errors.email} disabled />
+                            <FormField text="telefone" id="telephone" registration={register("telephone")} error={errors.telephone} />
 
                             {profile.parkUserType === "VISITOR" ? (
                                 <VisitorProfileFields

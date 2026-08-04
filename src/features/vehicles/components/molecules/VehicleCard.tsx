@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import Vehicle from "../../../../shared/types/Vehicle";
-import { Car, Check, ChevronDown, Eye, Pencil, Unlink, Users, } from "lucide-react";
+import { Car, Check, ChevronDown, Eye, Pencil, Trash2, Unlink, Users, } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -23,7 +23,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
     const { uuid, plate, brand, model, color} = vehicle
     const [isExpanded, setIsExpanded] = useState(false)
 
-    const { canEdit, canUnlink, isOwner} = useVehiclePermissions(vehicle)
+    const { canDelete, canEdit, canUnlink, isOwner} = useVehiclePermissions(vehicle)
 
     const { isUnlinkDialogOpen, setIsUnlinkDialogOpen, handleUnlink, isUnlinking } = useVehicleCardActions(uuid)
 
@@ -69,6 +69,9 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                             { canUnlink && (
                                 <VehicleCardButton title="desvincular" Icon={Unlink} destructive onClick={() => setIsUnlinkDialogOpen(true)} variant="last" pending={isUnlinking} />
                             )}
+                            { canDelete && (
+                                <VehicleCardButton title="excluir" Icon={Trash2} destructive onClick={() => setIsUnlinkDialogOpen(true)} variant="last" pending={isUnlinking} />
+                            )}
                         </div>
                     </CardContent>
                 </CollapsibleContent>
@@ -85,16 +88,16 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                 </CardFooter>
 
                 <AlertDialog
-                    open={false}
-                    onOpenChange={() => undefined}
+                    open={isUnlinkDialogOpen && isOwner}
+                    onOpenChange={setIsUnlinkDialogOpen}
                     title="Excluir Veículo"
                     description="Você realmente deseja exluir esse veículo? Esta ação removerá seu vinculo, e os vinculos de todos os usuários com esse veículo."
-                    onClick={() => undefined}
+                    onClick={handleUnlink}
                     confirmText="Excluir"
                 />
 
                 <AlertDialog
-                    open={isUnlinkDialogOpen}
+                    open={isUnlinkDialogOpen && !isOwner}
                     onOpenChange={setIsUnlinkDialogOpen}
                     title="Desvincular Veículo"
                     description="Você realmente deseja se desvincular desse veículo? Esta ação removerá seu vinculo, e você apenas o recupera-la ao pedir permissão novamente."

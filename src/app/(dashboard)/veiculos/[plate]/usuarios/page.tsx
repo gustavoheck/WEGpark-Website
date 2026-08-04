@@ -3,11 +3,13 @@
 import { useParams } from "next/navigation";
 import UserList from "@/features/vehicles/components/organisms/UserList";
 import { useGetVehicles } from "@/features/vehicles/hooks/useGetVehicles";
+import { useAuth } from "@/shared/context/AuthContext";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 
 export default function VehicleUsersPage() {
   const params = useParams<{ plate: string }>();
+  const { user } = useAuth();
   const plate = decodeURIComponent(params.plate ?? "").trim().toUpperCase();
   const { vehicles, isSearching, isError } = useGetVehicles(
     { category: "plate", value: plate },
@@ -28,7 +30,7 @@ export default function VehicleUsersPage() {
       {!isSearching && !isError && !vehicle ? (
         <p className="text-center text-muted-foreground">Veículo não encontrado.</p>
       ) : null}
-      {vehicle ? <UserList users={vehicle.users} /> : null}
+      {vehicle ? <UserList users={vehicle.users} currentUser={user ?? undefined} /> : null}
     </section>
   );
 }

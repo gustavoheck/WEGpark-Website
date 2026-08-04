@@ -1,5 +1,6 @@
 interface ParkUserDefaultsRequest {
   name: string;
+  telephone: string;
 }
 
 export interface CollaboratorProfileRequest {
