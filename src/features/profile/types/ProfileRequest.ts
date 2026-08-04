@@ -1,16 +1,20 @@
-interface ParkUserDefaultsRequest {
+﻿interface ParkUserDefaultsRequest {
   name: string;
   telephone: string;
 }
 
 export interface CollaboratorProfileRequest {
-  defaults: ParkUserDefaultsRequest;
-  badgeNumber: string;
-  location: string;
+  defaults?: ParkUserDefaultsRequest;
+  parkUserDefaults?: ParkUserDefaultsRequest;
+  badgeNumber?: string;
+  location?: string;
+  department?: string;
 }
 
 export interface VisitorProfileRequest {
-  defaults: ParkUserDefaultsRequest;
-  company: string;
-  cpf: string;
+  defaults?: ParkUserDefaultsRequest;
+  parkUserDefaults?: ParkUserDefaultsRequest;
+  company?: string;
+  companyName?: string;
+  cpf?: string;
 }

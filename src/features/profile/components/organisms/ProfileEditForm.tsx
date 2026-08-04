@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
@@ -19,7 +19,7 @@ import { EmployeeProfileFields } from "../molecules/EmployeeProfileFields";
 import { VisitorProfileFields } from "../molecules/VisitorProfileFields";
 import ProfilePicture from "@/shared/components/atoms/ProfilePicture";
 import { mapProfileUpdate } from "../../mappers/profileMapper";
-import { Profile } from "../../types/Profile";
+import { Profile, VisitorProfile, CollaboratorProfile } from "../../types/Profile";
 
 export function ProfileEditForm() {
     const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
@@ -31,29 +31,99 @@ export function ProfileEditForm() {
     const {
         register,
         handleSubmit,
+        watch,
+        reset,
         formState: { errors, isDirty, isValid },
     } = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
         mode: "onChange",
-        values: profile
+        defaultValues: profile
             ? profile.parkUserType === "VISITOR"
-                ? { parkUserType: "VISITOR", name: profile.name, telephone: profile.telephone, email: profile.email, companyName: profile.companyName }
-                : { parkUserType: "COLLABORATOR", name: profile.name, telephone: profile.telephone, department: profile.department, badgeNumber: profile.badgeNumber, email: profile.email }
+                ? {
+                    parkUserType: "VISITOR",
+                    name: profile.name,
+                    telephone: profile.telephone,
+                    email: profile.email,
+                    companyName: profile.companyName,
+                    cpf: profile.cpf,
+                }
+                : {
+                    parkUserType: "COLLABORATOR",
+                    name: profile.name,
+                    telephone: profile.telephone,
+                    department: profile.department,
+                    badgeNumber: profile.badgeNumber,
+                    email: profile.email,
+                }
             : undefined,
     });
+
+    useEffect(() => {
+        if (!profile) return;
+
+        const nextValues = profile.parkUserType === "VISITOR"
+            ? {
+                parkUserType: "VISITOR" as const,
+                name: profile.name,
+                telephone: profile.telephone,
+                email: profile.email,
+                companyName: profile.companyName,
+                cpf: profile.cpf,
+            }
+            : {
+                parkUserType: "COLLABORATOR" as const,
+                name: profile.name,
+                telephone: profile.telephone,
+                department: profile.department,
+                badgeNumber: profile.badgeNumber,
+                email: profile.email,
+            };
+
+        reset(nextValues);
+    }, [profile, reset]);
+
+    const parkUserType = watch("parkUserType");
 
     function handleConfirmEdit() {
         setIsOpenConfirmation(true);
     }
 
     function onSubmit(data: ProfileFormValues) {
-        const updateData = mapProfileUpdate(
-            data.parkUserType === "VISITOR"
-                ? ({ ...profile, name: data.name, telephone: data.telephone, companyName: data.companyName } as Profile)
-                : ({ ...profile, name: data.name, telephone: data.telephone, department: data.department, badgeNumber: data.badgeNumber } as Profile),
-        );
+        if (data.parkUserType === "VISITOR") {
+            const visitorProfile: VisitorProfile = {
+                uuid: profile!.uuid,
+                email: profile!.email,
+                name: data.name,
+                telephone: data.telephone,
+                parkUserType: "VISITOR",
+                companyName: data.companyName,
+                cpf: data.cpf,
+            };
 
-        updateProfile(updateData, {
+            updateProfile(mapProfileUpdate(visitorProfile), {
+                onSuccess: () => {
+                    setIsOpenConfirmation(false);
+                    setIsOpenInformative(true);
+                },
+                onError: () => {
+                    setIsOpenConfirmation(false);
+                    alert("Erro!");
+                },
+            });
+            return;
+        }
+
+        const collaboratorProfile: CollaboratorProfile = {
+            uuid: profile!.uuid,
+            email: profile!.email,
+            name: data.name,
+            telephone: data.telephone,
+            parkUserType: "COLLABORATOR",
+            department: data.department,
+            badgeNumber: data.badgeNumber,
+        };
+
+        updateProfile(mapProfileUpdate(collaboratorProfile), {
             onSuccess: () => {
                 setIsOpenConfirmation(false);
                 setIsOpenInformative(true);
@@ -82,11 +152,10 @@ export function ProfileEditForm() {
                             <FormField text="email" id="email" type="email" registration={register("email")} error={errors.email} disabled />
                             <FormField text="telefone" id="telephone" registration={register("telephone")} error={errors.telephone} />
 
-                            {profile.parkUserType === "VISITOR" ? (
+                            {parkUserType === "VISITOR" ? (
                                 <VisitorProfileFields
                                     register={register as unknown as UseFormRegister<VisitorProfileFormValues>}
                                     errors={errors as unknown as FieldErrors<VisitorProfileFormValues>}
-                                    cpf={profile.cpf}
                                 />
                             ) : (
                                 <EmployeeProfileFields

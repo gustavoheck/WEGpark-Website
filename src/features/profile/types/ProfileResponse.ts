@@ -1,4 +1,4 @@
-import { ParkUserType } from "@/shared/enum/ParkUserType";
+﻿import { ParkUserType } from "@/shared/enum/ParkUserType";
 
 interface ParkUserDefaults {
   uuid: string;
@@ -10,15 +10,19 @@ interface ParkUserDefaults {
 }
 
 export interface CollaboratorProfileResponse {
-  defaults: ParkUserDefaults;
-  badgeNumber: string;
-  location: string;
+  defaults?: ParkUserDefaults;
+  parkUserDefaults?: ParkUserDefaults;
+  badgeNumber?: string;
+  location?: string;
+  department?: string;
 }
 
 export interface VisitorProfileResponse {
-  defaults: ParkUserDefaults;
-  company: string;
-  cpf: string;
+  defaults?: ParkUserDefaults;
+  parkUserDefaults?: ParkUserDefaults;
+  company?: string;
+  companyName?: string;
+  cpf?: string;
 }
 
 export type ProfileResponse =
