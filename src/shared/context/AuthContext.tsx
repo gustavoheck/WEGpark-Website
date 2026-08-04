@@ -10,6 +10,7 @@ interface AuthUser {
   uuid: string;
   email: string;
   roles: SystemRoleType[];
+  name: string
   currentRole: SystemRoleType;
 }
 
@@ -57,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return {
         uuid: decoded.uuid || "",
         email: decoded.sub || "",
+        name: decoded.name || "",
         roles,
         currentRole: activeRole,
       };

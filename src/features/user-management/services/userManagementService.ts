@@ -11,6 +11,53 @@ import { GetServiceProps } from "@/shared/types/GetServiceProps";
 
 const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
 
+interface BackendPage<T> {
+    content: T[];
+    number: number;
+    totalPages: number;
+    totalElements: number;
+}
+
+type BackendUser = {
+    uuid?: string;
+    email?: string;
+    telephone?: string;
+    name?: string;
+    badgeNumber?: string;
+    defaults?: {
+        uuid: string;
+        email: string;
+        telephone: string;
+        name: string;
+        active: boolean;
+        userType: "COLLABORATOR" | "VISITOR" | "GUARD";
+    };
+    company?: string;
+    cpf?: string;
+};
+
+function mapBackendUser(user: BackendUser) {
+    if (user.defaults) {
+        return {
+            id: user.defaults.uuid,
+            name: user.defaults.name,
+            email: user.defaults.email,
+            active: user.defaults.active,
+            role: user.defaults.userType === "COLLABORATOR" ? "EMPLOYEE" : user.defaults.userType,
+            badgeNumber: user.badgeNumber,
+        } as PaginatedUsersResponseDTO["users"][number];
+    }
+
+    return {
+        id: user.uuid ?? "",
+        name: user.name ?? "",
+        email: user.email ?? "",
+        active: true,
+        role: "HR",
+        badgeNumber: user.badgeNumber,
+    } as PaginatedUsersResponseDTO["users"][number];
+}
+
 export async function createUser(payload: CreateUserRequestDTO): Promise<CreateUserResponseDTO> {
     if (USE_MOCKS) return mockService.createUser(payload);
 
@@ -25,9 +72,18 @@ export async function listUsers(
     if (USE_MOCKS) return mockService.listUsers(page, filters);
 
     const { category, value } = filters;
-    const params = category && value ? { page, [category]: value } : { page };
-    const { data } = await api.get<PaginatedUsersResponseDTO>("/rh/usuarios", { params });
-    return data;
+    const params = {
+        page: Math.max(0, page - 1),
+        size: 10,
+        ...(category && value ? { [category]: value } : {}),
+    };
+    const { data } = await api.get<BackendPage<BackendUser>>("/rh", { params });
+    return {
+        users: data.content.map(mapBackendUser),
+        currentPage: data.number + 1,
+        totalPages: data.totalPages,
+        totalItems: data.totalElements,
+    };
 }
 
 export async function getUserById(id: string): Promise<UserDetailDTO> {
@@ -44,10 +100,10 @@ export async function updateUser(id: string, payload: UpdateUserRequestDTO): Pro
 
 export async function deactivateUser(id: string): Promise<void> {
     if (USE_MOCKS) return mockService.deactivateUser(id);
-    await api.patch(`/rh/usuarios/${id}/desativar`);
+    await api.post(`/rh/user/${id}/desactivate`);
 }
 
 export async function activateUser(id: string): Promise<void> {
     if (USE_MOCKS) return mockService.activateUser(id);
-    await api.patch(`/rh/usuarios/${id}/ativar`);
+    await api.post(`/rh/user/${id}/desactivate`);
 }

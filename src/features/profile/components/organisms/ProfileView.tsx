@@ -44,6 +44,7 @@ export function ProfileView() {
                         <>
                             <ProfileDetailField label="Nome" value={profile.name} />
                             <ProfileDetailField label="Email" value={profile.email} />
+                            <ProfileDetailField label="Telefone" value={profile.telephone} />
 
                             {profile.parkUserType === "VISITOR" ? (
                                 <>

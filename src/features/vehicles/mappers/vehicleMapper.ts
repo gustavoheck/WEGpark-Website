@@ -3,11 +3,11 @@ import { VehicleRequest, VehicleResponse } from "../types/vehicle";
 import { VehicleFormData } from "../schemas/VehicleSchema";
 
 export function mapVehicleResponseToDomain(response: VehicleResponse): Vehicle {
-    const owner = response.vehicleUsers.find((v) => v.isOwner)
-
-    if (!owner) {
-        throw new Error(`Vehicle ${response.uuid} returned from API without owner (isOwner).`)
-    }
+    const users = (response.vehicleUsers ?? []).map((vehicleUser) => ({
+      uuid: vehicleUser.userUuid,
+      isOwner: vehicleUser.isOwner,
+    }));
+    const owner = users.find((vehicleUser) => vehicleUser.isOwner);
 
   return {
     uuid: response.uuid,
@@ -15,7 +15,10 @@ export function mapVehicleResponseToDomain(response: VehicleResponse): Vehicle {
     model: response.model,
     brand: response.brand,
     color: response.color,
-    ownerId: owner.userUuid
+    // PUT responses do not include vehicleUsers. Keeping an empty owner avoids
+    // failing an otherwise successful update while preserving data from GETs.
+    ownerId: owner?.uuid ?? "",
+    users,
   };
 }
 

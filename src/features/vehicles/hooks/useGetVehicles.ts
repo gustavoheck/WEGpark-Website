@@ -1,36 +1,40 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getMyVehicles, getVehicle, getVehicleByPlate } from "../services/vehicleService";
+import { getMyVehicles, getVehicle } from "../services/vehicleService";
 import { GetServiceProps } from "@/shared/types/GetServiceProps";
 
-export function useGetVehicles(params?: GetServiceProps, enabled = true) {
+interface VehiclePaginationParams {
+  page?: number;
+  size?: number;
+}
+
+export function useGetVehicles(
+  params?: GetServiceProps,
+  enabled = true,
+  pagination?: VehiclePaginationParams,
+) {
   const query = useQuery({
-    queryKey: ["vehicle", params],
-    queryFn: () => getVehicle(params),
+    queryKey: ["vehicle", params, pagination],
+    queryFn: () => getVehicle(params, pagination),
     enabled,
   });
 
   return {
-    vehicles: query.data ?? [],
+    vehicles: query.data?.vehicles ?? [],
     isSearching: query.isLoading || query.isFetching,
     isError: query.isError,
     refetch: query.refetch,
-  };
-}
-
-export function useGetVehicleByPlate(plate?: string) {
-  const query = useQuery({
-    queryKey: ["vehicle", "by-plate", plate],
-    queryFn: () => getVehicleByPlate(plate!),
-    enabled: !!plate,
-  });
-
-  return {
-    vehicle: query.data,
-    isSearching: query.isLoading || query.isFetching,
-    isError: query.isError,
-    refetch: query.refetch,
+    pagination: query.data
+      ? {
+          page: query.data.page,
+          totalPages: query.data.totalPages,
+          totalElements: query.data.totalElements,
+          size: query.data.size,
+          first: query.data.first,
+          last: query.data.last,
+        }
+      : undefined,
   };
 }
 
@@ -46,5 +50,6 @@ export function useGetMyVehicles(enabled = true) {
     isSearching: query.isLoading || query.isFetching,
     isError: query.isError,
     refetch: query.refetch,
+    pagination: undefined,
   };
 }
