@@ -113,19 +113,14 @@ export default function VehiclePage() {
         </Pagination>
       ) : null}
 
-      {canAdd ? (
-        <Link
-          href="/veiculos/adicionar"
-          className={cn(
-            buttonVariants({ variant: "default" }),
-            "fixed right-4 bottom-4 z-50 rounded-sm py-6 text-xl font-bold",
-            isMobile ? "left-4" : "left-68",
-          )}
-        >
-          <Plus className="size-7" />
-          Cadastrar Veículo
-        </Link>
-      ) : null}
-    </>
-  );
+            {canAdd && (
+                <Link href="/veiculos/adicionar">
+                    <Button className="fixed bottom-4 right-4 text-xl rounded-sm py-6 font-bold z-50 w-fit" variant="default">
+                        <Plus className="size-7" />
+                        Cadastrar Veículo
+                    </Button>
+                </Link>
+            )}
+        </>
+    )
 }
