@@ -1,18 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Plus } from "lucide-react";
 
-import { buttonVariants } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
-import { useSidebar } from "@/components/ui/sidebar";
+import FloatingActionLink from "@/shared/components/atoms/FloatingActionLink";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import Filter, { FilterParams } from "@/shared/components/molecules/Filter";
 import { canAccessRoute } from "@/shared/config/accessControl";
 import { useAuth } from "@/shared/context/AuthContext";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
-import { cn } from "@/shared/lib/utils";
 import FilterCategory from "@/shared/types/FilterCategory";
 
 import { useGet } from "../../hooks/useGet";
@@ -38,7 +35,6 @@ export default function OccurrenceList({
   const [occurrencesList, setOccurrencesList] =
     useState<Occurrence[]>(initialOccurrences);
   const { mutate: getOccurrence } = useGet();
-  const { isMobile } = useSidebar();
   const { user } = useAuth();
   const canCreate = user
     ? canAccessRoute(user.currentRole, "/ocorrencias/cadastrar")
@@ -94,24 +90,24 @@ export default function OccurrenceList({
       <SectionTitle text="ocorrências" />
       <Filter filters={filtersObject} onSubmit={onSubmit} />
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 mb-24 md:gap-0 md:overflow-hidden md:rounded-xl md:bg-card md:ring-1 md:ring-foreground/10">
+        <div className="hidden grid-cols-[minmax(11rem,1fr)_minmax(0,1.3fr)_auto] items-center gap-3 border-b bg-muted/50 px-4 py-2 text-xs font-semibold text-muted-foreground md:grid">
+          <span>Registro</span>
+          <span>Veículo e local</span>
+          <span className="text-right">Ações</span>
+        </div>
+
         {occurrencesList.map((occurrence) => (
           <OccurrenceCard key={occurrence.uuid} occurrence={occurrence} />
         ))}
       </div>
 
       {canCreate ? (
-        <Link
+        <FloatingActionLink
           href="/ocorrencias/cadastrar"
-          className={cn(
-            buttonVariants({ variant: "default" }),
-            "fixed right-4 bottom-4 z-50 rounded-sm py-6 text-xl font-bold",
-            isMobile ? "left-4" : "left-68",
-          )}
-        >
-          <Plus className="size-7" />
-          Cadastrar Ocorrência
-        </Link>
+          label="Cadastrar Ocorrência"
+          Icon={Plus}
+        />
       ) : null}
     </section>
   );

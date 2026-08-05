@@ -1,17 +1,17 @@
-import Link from "next/link";
 import { ElementType } from "react";
 import { cva } from "class-variance-authority";
+import Link from "next/link";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/shared/lib/utils";
 
 const gridVariants = cva(
-  "flex h-11 items-center justify-center gap-2 text-md font-medium capitalize",
+  "flex h-10 min-w-0 items-center justify-center gap-2 px-2 text-xs font-medium capitalize min-[380px]:text-sm",
   {
     variants: {
       variant: {
         default: "",
-        last: "last:odd:col-span-2",
+        last: "last:odd:col-span-1 min-[380px]:last:odd:col-span-2",
       },
     },
     defaultVariants: {
@@ -28,6 +28,7 @@ interface VehicleCardButtonProps {
   Icon: ElementType;
   onClick?: () => void;
   pending?: boolean;
+  compact?: boolean;
 }
 
 export default function VehicleCardButton({
@@ -38,21 +39,30 @@ export default function VehicleCardButton({
   onClick,
   variant,
   pending = false,
+  compact = false,
 }: VehicleCardButtonProps) {
-  const className = cn(
-    buttonVariants({ variant: destructive ? "destructive" : "outline" }),
+  const visualVariant = destructive ? "destructive" : "outline";
+  const actionClassName = cn(
     gridVariants({ variant }),
+    compact && "size-9 p-0",
+  );
+  const className = cn(
+    buttonVariants({ variant: visualVariant }),
+    actionClassName,
   );
   const content = (
     <>
-      <Icon className={cn("size-5", !destructive && "text-foreground")} />
-      {title}
+      <Icon className={cn("size-4.5", !destructive && "text-foreground")} />
+      <span className={cn(compact && "sr-only")}>{title}</span>
     </>
   );
+  const accessibilityProps = compact
+    ? { "aria-label": title, title }
+    : undefined;
 
   if (href) {
     return (
-      <Link href={href} className={className}>
+      <Link href={href} className={className} {...accessibilityProps}>
         {content}
       </Link>
     );
@@ -61,10 +71,11 @@ export default function VehicleCardButton({
   return (
     <Button
       type="button"
-      variant={destructive ? "destructive" : "outline"}
-      className={gridVariants({ variant })}
+      variant={visualVariant}
+      className={actionClassName}
       onClick={onClick}
       disabled={pending}
+      {...accessibilityProps}
     >
       {content}
     </Button>

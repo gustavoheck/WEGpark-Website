@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Plus } from "lucide-react";
 
-import { buttonVariants } from "@/components/ui/button";
 import {
   Pagination,
   PaginationContent,
@@ -13,7 +11,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useSidebar } from "@/components/ui/sidebar";
 import VehicleList from "@/features/vehicles/components/organisms/VehicleList";
 import { VEHICLE_CATEGORIES } from "@/features/vehicles/constants/vehicleFilters";
 import {
@@ -22,14 +19,13 @@ import {
 } from "@/features/vehicles/hooks/useGetVehicles";
 import { useVehiclePermissions } from "@/features/vehicles/hooks/useVehiclePermissions";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
+import FloatingActionLink from "@/shared/components/atoms/FloatingActionLink";
 import Filter, { FilterParams } from "@/shared/components/molecules/Filter";
-import { cn } from "@/shared/lib/utils";
 
 const MAX_VISIBLE_PAGES = 5;
 
 export default function VehiclePage() {
   const { canAdd, canViewAllVehicles } = useVehiclePermissions();
-  const { isMobile } = useSidebar();
   const [filterParams, setFilterParams] = useState<FilterParams>();
   const [page, setPage] = useState(0);
   const allVehiclesQuery = useGetVehicles(filterParams, canViewAllVehicles, {
@@ -113,14 +109,13 @@ export default function VehiclePage() {
         </Pagination>
       ) : null}
 
-            {canAdd && (
-                <Link href="/veiculos/adicionar">
-                    <Button className="fixed bottom-4 right-4 text-xl rounded-sm py-6 font-bold z-50 w-fit" variant="default">
-                        <Plus className="size-7" />
-                        Cadastrar Veículo
-                    </Button>
-                </Link>
-            )}
-        </>
-    )
+      {canAdd ? (
+        <FloatingActionLink
+          href="/veiculos/adicionar"
+          label="Cadastrar Veículo"
+          Icon={Plus}
+        />
+      ) : null}
+    </>
+  );
 }
