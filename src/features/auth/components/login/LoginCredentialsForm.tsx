@@ -1,30 +1,43 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { FieldGroup } from '@/components/ui/field';
-import FormField from '@/shared/components/atoms/FormField';
-import FormButton from '@/shared/components/atoms/FormButton';
-import SectionTitle from '@/shared/components/atoms/SectionTitle';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card";
+import { FieldGroup } from "@/components/ui/field";
+import { toast } from "@/components/ui/toast";
+import FormButton from "@/shared/components/atoms/FormButton";
+import FormField from "@/shared/components/atoms/FormField";
+import SectionTitle from "@/shared/components/atoms/SectionTitle";
+import { useAuth } from "@/shared/context/AuthContext";
+import { SystemRoleType } from "@/shared/enum/SystemRoleType";
+import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
-import { Card, CardHeader, CardDescription, CardContent } from '@/components/ui/card';
-
-import { useAuth } from '@/shared/context/AuthContext';
-import { LoginResponse } from '../../types/auth.type';
-import { LoginPasswordFormValues, loginPasswordSchema } from '../../schemas/auth.schema';
-import { useLogin } from '../../hooks/useAuthMutations';
-import { SystemRoleType } from '@/shared/enum/SystemRoleType';
+import { useLogin } from "../../hooks/useAuthMutations";
+import {
+  LoginPasswordFormValues,
+  loginPasswordSchema,
+} from "../../schemas/auth.schema";
 
 interface LoginCredentialsFormProps {
   email: string;
   role: SystemRoleType;
-  onLoginSuccess?: (response: LoginResponse) => void;
-  onNotVerified : () => void
+  onLoginSuccess: (role: SystemRoleType) => void;
+  onNotVerified: () => void;
 }
 
-export function LoginCredentialsForm({ email, role, onLoginSuccess, onNotVerified }: LoginCredentialsFormProps) {
-  const { mutate: login, isPending, error } = useLogin();
+export function LoginCredentialsForm({
+  email,
+  role,
+  onLoginSuccess,
+  onNotVerified,
+}: LoginCredentialsFormProps) {
+  const { mutate: login, isPending } = useLogin();
   const { login: setAuth } = useAuth();
 
   const {
@@ -33,14 +46,14 @@ export function LoginCredentialsForm({ email, role, onLoginSuccess, onNotVerifie
     formState: { errors },
   } = useForm<LoginPasswordFormValues>({
     resolver: zodResolver(loginPasswordSchema),
-    defaultValues: { password: '' },
+    defaultValues: { password: "" },
   });
 
   function onSubmit(values: LoginPasswordFormValues) {
     login(
       { email, password: values.password, role },
       {
-        onSuccess: (response: LoginResponse) => {
+        onSuccess: (response) => {
           const jwtToken = response.token;
 
           if (!jwtToken) {
@@ -49,18 +62,25 @@ export function LoginCredentialsForm({ email, role, onLoginSuccess, onNotVerifie
           }
 
           setAuth(jwtToken, role);
-
-          if (onLoginSuccess) {
-            onLoginSuccess(response);
-          }
+          onLoginSuccess(role);
+        },
+        onError: (error) => {
+          toast.add({
+            type: "error",
+            description: getApiErrorMessage(
+              error,
+              "E-mail ou senha inválidos.",
+            ),
+          });
         },
       },
     );
   }
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <SectionTitle text="Entrar" className="py-2 flex" />
+        <SectionTitle text="Entrar" className="flex py-2" />
         <CardDescription>
           Digite sua senha para acessar sua conta.
         </CardDescription>
@@ -82,10 +102,10 @@ export function LoginCredentialsForm({ email, role, onLoginSuccess, onNotVerifie
               registration={register("password")}
               error={errors.password}
             />
-            {error ? (
-              <p className="text-sm text-destructive">E-mail ou senha inválidos.</p>
-            ) : null}
-            <FormButton disabled={isPending} text={isPending ? "Entrando..." : "Entrar"} />
+            <FormButton
+              disabled={isPending}
+              text={isPending ? "Entrando..." : "Entrar"}
+            />
           </FieldGroup>
         </form>
       </CardContent>

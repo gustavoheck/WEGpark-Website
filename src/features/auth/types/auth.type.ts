@@ -1,6 +1,3 @@
-
-// Aux Types
-
 import { SystemRoleType } from "@/shared/enum/SystemRoleType";
 
 export interface UserBase {
@@ -12,8 +9,6 @@ export interface BaseRequest {
   email: string;
   password: string;
 }
-
-// Register
 
 export interface CollaboratorRequest {
   defaults: BaseRequest;
@@ -36,11 +31,10 @@ export interface RegisterResponse {
   email: string;
 }
 
-// Login
-
 export interface AuthAccount {
   role: SystemRoleType;
 }
+
 export interface CheckAccountRequest {
   email: string;
 }
@@ -55,7 +49,9 @@ export interface LoginResponse {
   token?: string | null;
 }
 
-// Password Reset
+export interface ResendEmailRequest {
+  email: string;
+}
 
 export interface ResetPasswordCheckRequest {
   email: string;
@@ -80,4 +76,8 @@ export interface ResetPasswordRequest extends BaseRequest {
   tokenIfPasswordReset: string;
 }
 
-export type ResetPasswordResponse = RegisterResponse
+export interface ResetPasswordResponse {
+  id: number;
+  uuid: string;
+  email: string;
+}
