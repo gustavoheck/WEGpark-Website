@@ -1,11 +1,34 @@
-import Link from "next/link"
-import ProfilePicture from "../atoms/ProfilePicture"
+import Link from "next/link";
 
-export default function Profile ({username} : {username : string}) {
+import ProfilePicture from "../atoms/ProfilePicture";
+
+interface ProfileProps {
+  username: string;
+  href?: string;
+}
+
+export default function Profile({ username, href }: ProfileProps) {
+  const content = (
+    <>
+      <ProfilePicture name={username} />
+      <p className="text-lg text-white">{username}</p>
+    </>
+  );
+
+  if (href) {
     return (
-        <Link href="/perfil" className="flex items-center gap-2 px-2 py-4 w-full h-full">
-              <ProfilePicture name={username} />
-              <p className="text-lg text-white">{username}</p>
-        </Link>
-    )
+      <Link
+        href={href}
+        className="flex h-full w-full items-center gap-2 px-2 py-4"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="flex h-full w-full items-center gap-2 px-2 py-4">
+      {content}
+    </div>
+  );
 }

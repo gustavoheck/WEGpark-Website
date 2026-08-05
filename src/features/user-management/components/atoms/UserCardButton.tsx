@@ -1,56 +1,79 @@
-// features/hr-user-management/components/atoms/UserCardButton.tsx
-import { Button } from "@/components/ui/button";
-import { cn } from "@/shared/lib/utils";
-import { cva } from "class-variance-authority";
 import Link from "next/link";
 import { ElementType } from "react";
+import { cva } from "class-variance-authority";
+
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/shared/lib/utils";
 
 const gridVariants = cva("", {
-    variants: {
-        variant: {
-            default: "",
-            last: "last:odd:col-span-2",
-        },
+  variants: {
+    variant: {
+      default: "",
+      last: "last:odd:col-span-2",
     },
-    defaultVariants: {
-        variant: "default",
-    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
 });
 
 interface UserCardButtonProps {
-    title: string;
-    href?: string;
-    tone?: "destructive" | "primary";
-    variant?: "last";
-    Icon: ElementType;
-    onClick?: () => void;
-    disabled?: boolean;
+  title: string;
+  href?: string;
+  tone?: "destructive" | "primary";
+  variant?: "last";
+  Icon: ElementType;
+  onClick?: () => void;
+  disabled?: boolean;
 }
 
-export default function UserCardButton({ title, href, Icon, tone, onClick, disabled, variant }: UserCardButtonProps) {
-    const buttonVariant = tone === "destructive" ? "destructive" : tone === "primary" ? "default" : "outline";
+export default function UserCardButton({
+  title,
+  href,
+  Icon,
+  tone,
+  onClick,
+  disabled,
+  variant,
+}: UserCardButtonProps) {
+  const visualVariant =
+    tone === "destructive"
+      ? "destructive"
+      : tone === "primary"
+        ? "default"
+        : "outline";
+  const className = cn(
+    buttonVariants({ variant: visualVariant }),
+    "h-11 text-md font-medium capitalize",
+    gridVariants({ variant }),
+  );
+  const content = (
+    <>
+      <Icon className="size-5" />
+      {title}
+    </>
+  );
 
-    if (href) {
-        return (
-            <Button asChild variant={buttonVariant} className={cn("h-11 text-md font-medium capitalize", gridVariants({ variant }))}>
-                <Link href={href}>
-                    <Icon className="size-5" />
-                    {title}
-                </Link>
-            </Button>
-        );
-    }
-
+  if (href) {
     return (
-        <Button
-            type="button"
-            variant={buttonVariant}
-            disabled={disabled}
-            onClick={onClick}
-            className={cn("h-11 text-md font-medium capitalize", gridVariants({ variant }))}
-        >
-            <Icon className="size-5" />
-            {title}
-        </Button>
+      <Link href={href} className={className}>
+        {content}
+      </Link>
     );
+  }
+
+  return (
+    <Button
+      type="button"
+      variant={visualVariant}
+      disabled={disabled}
+      onClick={onClick}
+      className={cn(
+        "h-11 text-md font-medium capitalize",
+        gridVariants({ variant }),
+      )}
+    >
+      {content}
+    </Button>
+  );
 }

@@ -1,30 +1,48 @@
-﻿import { CollaboratorProfileRequest, VisitorProfileRequest } from "../types/ProfileRequest";
 import { Profile } from "../types/Profile";
-import { ProfileResponse } from "../types/ProfileResponse";
+import {
+  CollaboratorProfileRequest,
+  VisitorProfileRequest,
+} from "../types/ProfileRequest";
+import {
+  CollaboratorProfileResponse,
+  ProfileResponse,
+  VisitorProfileResponse,
+} from "../types/ProfileResponse";
 
 function getDefaults(response: ProfileResponse) {
   return response.defaults ?? response.parkUserDefaults;
 }
 
+function isVisitorResponse(
+  response: ProfileResponse,
+): response is VisitorProfileResponse {
+  return (
+    "company" in response || "companyName" in response || "cpf" in response
+  );
+}
+
 export function mapProfileResponse(response: ProfileResponse): Profile {
   const defaults = getDefaults(response);
-  const userType = defaults?.userType;
-  const companyName = (response as any).companyName ?? (response as any).company ?? "";
-  const cpf = (response as any).cpf ?? "";
-  const badgeNumber = (response as any).badgeNumber ?? "";
-  const department = (response as any).department ?? (response as any).location ?? "";
 
-  if (userType === "VISITOR" || companyName || cpf) {
+  if (
+    defaults?.userType === "VISITOR" ||
+    (isVisitorResponse(response) &&
+      Boolean(response.company ?? response.companyName ?? response.cpf))
+  ) {
+    const visitorResponse = response as VisitorProfileResponse;
+
     return {
       uuid: defaults?.uuid ?? "",
       email: defaults?.email ?? "",
       telephone: defaults?.telephone ?? "",
       name: defaults?.name ?? "",
       parkUserType: "VISITOR",
-      companyName,
-      cpf,
+      companyName: visitorResponse.company ?? visitorResponse.companyName ?? "",
+      cpf: visitorResponse.cpf ?? "",
     };
   }
+
+  const collaboratorResponse = response as CollaboratorProfileResponse;
 
   return {
     uuid: defaults?.uuid ?? "",
@@ -32,12 +50,15 @@ export function mapProfileResponse(response: ProfileResponse): Profile {
     telephone: defaults?.telephone ?? "",
     name: defaults?.name ?? "",
     parkUserType: "COLLABORATOR",
-    badgeNumber,
-    department,
+    badgeNumber: collaboratorResponse.badgeNumber ?? "",
+    department:
+      collaboratorResponse.location ?? collaboratorResponse.department ?? "",
   };
 }
 
-export function mapProfileUpdate(profile: Profile): CollaboratorProfileRequest | VisitorProfileRequest {
+export function mapProfileUpdate(
+  profile: Profile,
+): CollaboratorProfileRequest | VisitorProfileRequest {
   const defaults = { name: profile.name, telephone: profile.telephone };
   const parkUserDefaults = defaults;
 

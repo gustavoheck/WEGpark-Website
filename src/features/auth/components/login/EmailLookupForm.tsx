@@ -1,31 +1,35 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import Link from 'next/link';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-import { FieldGroup } from '@/components/ui/field';
-import FormField from "@/shared/components/atoms/FormField";
-import SectionTitle from "@/shared/components/atoms/SectionTitle";
-import FormButton from "@/shared/components/atoms/FormButton";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader
+  CardHeader,
 } from "@/components/ui/card";
+import { FieldGroup } from "@/components/ui/field";
+import { toast } from "@/components/ui/toast";
+import FormButton from "@/shared/components/atoms/FormButton";
+import FormField from "@/shared/components/atoms/FormField";
+import SectionTitle from "@/shared/components/atoms/SectionTitle";
+import { SystemRoleType } from "@/shared/enum/SystemRoleType";
+import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
-import { SystemRoleType } from '@/shared/enum/SystemRoleType';
-import { CheckEmailFormValues, checkEmailSchema } from '../../schemas/auth.schema';
-import { useAuthAccountRoles } from '../../hooks/useAuthMutations';
+import { useAuthAccountRoles } from "../../hooks/useAuthMutations";
+import {
+  CheckEmailFormValues,
+  checkEmailSchema,
+} from "../../schemas/auth.schema";
 
 interface EmailLookupFormProps {
   onEmailChecked: (email: string, roles: SystemRoleType[]) => void;
 }
 
-export function EmailLookupForm ({ onEmailChecked }: EmailLookupFormProps) {
-  const { mutate: accountRoles, isPending, error } = useAuthAccountRoles();
+export function EmailLookupForm({ onEmailChecked }: EmailLookupFormProps) {
+  const { mutate: accountRoles, isPending } = useAuthAccountRoles();
 
   const {
     register,
@@ -33,33 +37,43 @@ export function EmailLookupForm ({ onEmailChecked }: EmailLookupFormProps) {
     formState: { errors },
   } = useForm<CheckEmailFormValues>({
     resolver: zodResolver(checkEmailSchema),
-    defaultValues: { email: '' },
+    defaultValues: { email: "" },
   });
 
   function onSubmit(values: CheckEmailFormValues) {
     accountRoles(
-       { email: values.email },
+      { email: values.email },
       {
         onSuccess: (response) => {
-          const roles = response.map((item) => item.role);
-          onEmailChecked(values.email, roles);
-        }
+          onEmailChecked(
+            values.email,
+            response.map((item) => item.role),
+          );
+        },
+        onError: (error) => {
+          toast.add({
+            type: "error",
+            description: getApiErrorMessage(
+              error,
+              "Não foi possível continuar. Verifique o e-mail informado.",
+            ),
+          });
+        },
       },
     );
   }
-  return (
 
+  return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <SectionTitle text="Entrar" className="py-2 flex" />
+        <SectionTitle text="Entrar" className="flex py-2" />
         <CardDescription>
-          Digite seu email para acessar sua conta.
+          Digite seu e-mail para acessar sua conta.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit, (invalidErrors) => console.log("Erros de Validação:", invalidErrors))}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup>
-
             <FormField
               text="email"
               id="email"
@@ -69,27 +83,25 @@ export function EmailLookupForm ({ onEmailChecked }: EmailLookupFormProps) {
 
             <Link
               href="/esqueceu-senha"
-              className="w-fit text-sm text-primary hover:text-primary hover:underline"
+              className="w-fit text-sm text-primary hover:underline"
             >
               Esqueceu a senha?
             </Link>
+
             <p className="text-sm text-muted-foreground">
               Ainda não possui uma conta?{" "}
               <Link
-                href={"/cadastro"}
-                className="text-sm text-primary hover:text-primary hover:underline"
+                href="/cadastro"
+                className="text-sm text-primary hover:underline"
               >
                 Cadastre-se aqui
               </Link>
             </p>
 
-            {error ? (
-              <p className="text-sm text-destructive">
-                Não foi possível continuar. Verifique o e-mail informado.
-              </p>
-            ) : null}
-
-            <FormButton disabled={isPending} text={isPending ? "Verificando..." : "Continuar"} />
+            <FormButton
+              disabled={isPending}
+              text={isPending ? "Verificando..." : "Continuar"}
+            />
           </FieldGroup>
         </form>
       </CardContent>
