@@ -24,19 +24,23 @@ export default function Header() {
   );
 
   return (
-    <header className="bg-primary flex w-full h-18 items-center justify-between px-2 relative">
+    <header className="relative grid h-18 w-full grid-cols-[3rem_1fr_3rem] items-center bg-primary px-2 sm:px-4">
       <SidebarTrigger
         variant="none"
-        className="h-12 w-12 text-white md:hidden"
+        className="col-start-1 row-start-1 h-12 w-12 text-white md:hidden"
       />
 
-      <Link href={homeRoute} className="absolute left-1/2 -translate-x-1/2">
+      <Link
+        href={homeRoute}
+        className="col-start-2 row-start-1 justify-self-center"
+      >
         <Image
           src="/assets/images/logo-white.png"
           alt="Logo da WEGpark"
           height={66}
           width={98}
           loading="eager"
+          className="h-auto w-20 sm:w-24"
         />
       </Link>
 
@@ -46,13 +50,13 @@ export default function Header() {
           aria-label="Abrir notificações"
           className={cn(
             buttonVariants({ variant: "none", size: "icon" }),
-            "flex items-center absolute right-2",
+            "col-start-3 row-start-1 h-12 w-12 justify-self-end text-white hover:bg-white/10",
           )}
         >
           <Bell className="size-7" />
         </Link>
       ) : (
-        <span aria-hidden="true" />
+        <span className="col-start-3 row-start-1" aria-hidden="true" />
       )}
     </header>
   );

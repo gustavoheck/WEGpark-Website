@@ -6,13 +6,11 @@ import { Plus } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
-import { useSidebar } from "@/components/ui/sidebar";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import Filter, { FilterParams } from "@/shared/components/molecules/Filter";
 import { canAccessRoute } from "@/shared/config/accessControl";
 import { useAuth } from "@/shared/context/AuthContext";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
-import { cn } from "@/shared/lib/utils";
 import FilterCategory from "@/shared/types/FilterCategory";
 
 import { useGet } from "../../hooks/useGet";
@@ -38,7 +36,6 @@ export default function OccurrenceList({
   const [occurrencesList, setOccurrencesList] =
     useState<Occurrence[]>(initialOccurrences);
   const { mutate: getOccurrence } = useGet();
-  const { isMobile } = useSidebar();
   const { user } = useAuth();
   const canCreate = user
     ? canAccessRoute(user.currentRole, "/ocorrencias/cadastrar")
@@ -94,7 +91,7 @@ export default function OccurrenceList({
       <SectionTitle text="ocorrências" />
       <Filter filters={filtersObject} onSubmit={onSubmit} />
 
-      <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 gap-4 pb-24 lg:grid-cols-2 2xl:grid-cols-3">
         {occurrencesList.map((occurrence) => (
           <OccurrenceCard key={occurrence.uuid} occurrence={occurrence} />
         ))}
@@ -103,13 +100,13 @@ export default function OccurrenceList({
       {canCreate ? (
         <Link
           href="/ocorrencias/cadastrar"
-          className={cn(
-            buttonVariants({ variant: "default" }),
-            "fixed right-4 bottom-4 z-50 rounded-sm py-6 text-xl font-bold",
-            isMobile ? "left-4" : "left-68",
-          )}
+          className={buttonVariants({
+            variant: "default",
+            className:
+              "fixed right-4 bottom-4 z-50 w-fit max-w-[calc(100vw-2rem)] rounded-sm px-4 py-6 text-base font-bold shadow-lg sm:text-xl",
+          })}
         >
-          <Plus className="size-7" />
+          <Plus className="size-5 sm:size-7" />
           Cadastrar Ocorrência
         </Link>
       ) : null}

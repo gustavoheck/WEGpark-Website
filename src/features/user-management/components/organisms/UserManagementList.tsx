@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Plus } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -14,15 +14,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useSidebar } from "@/components/ui/sidebar";
-
+import { Skeleton } from "@/components/ui/skeleton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
-import { Plus } from "lucide-react";
-import { useUserManagementPermissions } from "../../hooks/useUserManagementPermissions";
-import { cn } from "@/shared/lib/utils";
 import Filter, { FilterParams } from "@/shared/components/molecules/Filter";
-import { USER_CATEGORIES } from "../../constants/userFilters";
 
+import { USER_CATEGORIES } from "../../constants/userFilters";
+import { useUserManagementPermissions } from "../../hooks/useUserManagementPermissions";
 import { useUsersList } from "../../hooks/useUserManagement";
 import UserManagementCard from "../molecules/UserManagementCard";
 
@@ -33,7 +30,6 @@ export function UserManagementList() {
   const [filterParams, setFilterParams] = useState<FilterParams>();
   const { data, isPending, isError } = useUsersList(page, filterParams);
   const { canAdd } = useUserManagementPermissions();
-  const { isMobile } = useSidebar();
   const totalPages = data?.totalPages ?? 1;
   const windowStart = Math.max(
     1,
@@ -50,28 +46,29 @@ export function UserManagementList() {
     setFilterParams(params);
   }
 
-    return (
-        <section>
-            <SectionTitle text="gestão usuários" />
-            <Filter filters={USER_CATEGORIES} onSubmit={handleFilterSubmit} />
-            <Card>
-                <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {isPending ? (
-                        <div className="flex flex-col gap-3">
-                            <Skeleton className="h-24 w-full" />
-                            <Skeleton className="h-24 w-full" />
-                            <Skeleton className="h-24 w-full" />
-                        </div>
-                    ) : null}
+  return (
+    <section>
+      <SectionTitle text="gestão usuários" />
+      <Filter filters={USER_CATEGORIES} onSubmit={handleFilterSubmit} />
+
+      <Card>
+        <CardContent className="grid grid-cols-1 gap-3 lg:grid-cols-2 2xl:grid-cols-3">
+          {isPending ? (
+            <div className="col-span-full grid grid-cols-1 gap-3 lg:grid-cols-2 2xl:grid-cols-3">
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+          ) : null}
 
           {isError ? (
-            <p className="text-sm text-destructive">
+            <p className="col-span-full text-sm text-destructive">
               Não foi possível carregar os usuários.
             </p>
           ) : null}
 
           {!isPending && !isError && data?.users.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
+            <p className="col-span-full py-8 text-center text-sm text-muted-foreground">
               Nenhum usuário encontrado.
             </p>
           ) : null}
@@ -125,16 +122,17 @@ export function UserManagementList() {
           </PaginationContent>
         </Pagination>
       ) : null}
+
       {canAdd ? (
         <Link
           href="/gestao-usuarios/cadastrar"
-          className={cn(
-            buttonVariants({ variant: "default" }),
-            "fixed right-4 bottom-4 z-50 rounded-sm py-6 text-xl font-bold",
-            isMobile ? "left-4" : "left-68",
-          )}
+          className={buttonVariants({
+            variant: "default",
+            className:
+              "fixed right-4 bottom-4 z-50 w-fit max-w-[calc(100vw-2rem)] rounded-sm px-4 py-6 text-base font-bold shadow-lg sm:text-xl",
+          })}
         >
-          <Plus className="size-7" />
+          <Plus className="size-5 sm:size-7" />
           Cadastrar Usuário
         </Link>
       ) : null}

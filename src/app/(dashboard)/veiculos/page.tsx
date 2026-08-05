@@ -13,7 +13,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useSidebar } from "@/components/ui/sidebar";
 import VehicleList from "@/features/vehicles/components/organisms/VehicleList";
 import { VEHICLE_CATEGORIES } from "@/features/vehicles/constants/vehicleFilters";
 import {
@@ -23,13 +22,11 @@ import {
 import { useVehiclePermissions } from "@/features/vehicles/hooks/useVehiclePermissions";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import Filter, { FilterParams } from "@/shared/components/molecules/Filter";
-import { cn } from "@/shared/lib/utils";
 
 const MAX_VISIBLE_PAGES = 5;
 
 export default function VehiclePage() {
   const { canAdd, canViewAllVehicles } = useVehiclePermissions();
-  const { isMobile } = useSidebar();
   const [filterParams, setFilterParams] = useState<FilterParams>();
   const [page, setPage] = useState(0);
   const allVehiclesQuery = useGetVehicles(filterParams, canViewAllVehicles, {
@@ -113,14 +110,19 @@ export default function VehiclePage() {
         </Pagination>
       ) : null}
 
-            {canAdd && (
-                <Link href="/veiculos/adicionar">
-                    <Button className="fixed bottom-4 right-4 text-xl rounded-sm py-6 font-bold z-50 w-fit" variant="default">
-                        <Plus className="size-7" />
-                        Cadastrar Veículo
-                    </Button>
-                </Link>
-            )}
-        </>
-    )
+      {canAdd ? (
+        <Link
+          href="/veiculos/adicionar"
+          className={buttonVariants({
+            variant: "default",
+            className:
+              "fixed right-4 bottom-4 z-50 w-fit max-w-[calc(100vw-2rem)] rounded-sm px-4 py-6 text-base font-bold shadow-lg sm:text-xl",
+          })}
+        >
+          <Plus className="size-5 sm:size-7" />
+          Cadastrar Veículo
+        </Link>
+      ) : null}
+    </>
+  );
 }
