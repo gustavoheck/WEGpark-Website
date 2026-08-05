@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { Plus } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { buttonVariants } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Pagination,
   PaginationContent,
@@ -14,15 +12,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useSidebar } from "@/components/ui/sidebar";
-
+import { Skeleton } from "@/components/ui/skeleton";
+import FloatingActionLink from "@/shared/components/atoms/FloatingActionLink";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
-import { Plus } from "lucide-react";
-import { useUserManagementPermissions } from "../../hooks/useUserManagementPermissions";
-import { cn } from "@/shared/lib/utils";
 import Filter, { FilterParams } from "@/shared/components/molecules/Filter";
-import { USER_CATEGORIES } from "../../constants/userFilters";
 
+import { USER_CATEGORIES } from "../../constants/userFilters";
+import { useUserManagementPermissions } from "../../hooks/useUserManagementPermissions";
 import { useUsersList } from "../../hooks/useUserManagement";
 import UserManagementCard from "../molecules/UserManagementCard";
 
@@ -33,7 +29,6 @@ export function UserManagementList() {
   const [filterParams, setFilterParams] = useState<FilterParams>();
   const { data, isPending, isError } = useUsersList(page, filterParams);
   const { canAdd } = useUserManagementPermissions();
-  const { isMobile } = useSidebar();
   const totalPages = data?.totalPages ?? 1;
   const windowStart = Math.max(
     1,
@@ -50,28 +45,29 @@ export function UserManagementList() {
     setFilterParams(params);
   }
 
-    return (
-        <section>
-            <SectionTitle text="gestão usuários" />
-            <Filter filters={USER_CATEGORIES} onSubmit={handleFilterSubmit} />
-            <Card>
-                <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {isPending ? (
-                        <div className="flex flex-col gap-3">
-                            <Skeleton className="h-24 w-full" />
-                            <Skeleton className="h-24 w-full" />
-                            <Skeleton className="h-24 w-full" />
-                        </div>
-                    ) : null}
+  return (
+    <section className="pb-24">
+      <SectionTitle text="gestão usuários" />
+      <Filter filters={USER_CATEGORIES} onSubmit={handleFilterSubmit} />
+
+      <Card>
+        <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {isPending ? (
+            <div className="col-span-full flex flex-col gap-3">
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+          ) : null}
 
           {isError ? (
-            <p className="text-sm text-destructive">
+            <p className="col-span-full text-sm text-destructive">
               Não foi possível carregar os usuários.
             </p>
           ) : null}
 
           {!isPending && !isError && data?.users.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
+            <p className="col-span-full py-8 text-center text-sm text-muted-foreground">
               Nenhum usuário encontrado.
             </p>
           ) : null}
@@ -85,7 +81,7 @@ export function UserManagementList() {
       </Card>
 
       {!isPending && data && data.totalPages > 1 ? (
-        <Pagination className="mt-6 pb-4 color-primary">
+        <Pagination className="mt-6 pb-4">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
@@ -125,18 +121,13 @@ export function UserManagementList() {
           </PaginationContent>
         </Pagination>
       ) : null}
+
       {canAdd ? (
-        <Link
+        <FloatingActionLink
           href="/gestao-usuarios/cadastrar"
-          className={cn(
-            buttonVariants({ variant: "default" }),
-            "fixed right-4 bottom-4 z-50 rounded-sm py-6 text-xl font-bold",
-            isMobile ? "left-4" : "left-68",
-          )}
-        >
-          <Plus className="size-7" />
-          Cadastrar Usuário
-        </Link>
+          label="Cadastrar Usuário"
+          Icon={Plus}
+        />
       ) : null}
     </section>
   );
