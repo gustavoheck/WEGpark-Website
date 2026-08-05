@@ -1,11 +1,12 @@
-import { Button } from "@/components/ui/button"
-import { cn } from "@/shared/lib/utils"
-import { cva } from "class-variance-authority"
-import Link from "next/link"
-import { ElementType } from "react"
+import Link from "next/link";
+import { ElementType } from "react";
+import { cva } from "class-variance-authority";
 
-const buttonVariants = cva(
-  "flex justify-center items-center gap-2 h-11 text-md font-medium capitalize disabled:bg-muted",
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/shared/lib/utils";
+
+const gridVariants = cva(
+  "flex h-11 items-center justify-center gap-2 text-md font-medium capitalize",
   {
     variants: {
       variant: {
@@ -14,28 +15,58 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default"
+      variant: "default",
     },
-  }
-)
+  },
+);
 
 interface VehicleCardButtonProps {
-    title: string,
-    href?: string,
-    destructive?: boolean
-    variant? : "last"
-    Icon: ElementType
-    onClick?: () => void
-    pending? : boolean
+  title: string;
+  href?: string;
+  destructive?: boolean;
+  variant?: "last";
+  Icon: ElementType;
+  onClick?: () => void;
+  pending?: boolean;
 }
 
-export default function VehicleCardButton({ title, href = "", Icon, destructive = false, onClick, variant , pending = false }: VehicleCardButtonProps) {
+export default function VehicleCardButton({
+  title,
+  href,
+  Icon,
+  destructive = false,
+  onClick,
+  variant,
+  pending = false,
+}: VehicleCardButtonProps) {
+  const className = cn(
+    buttonVariants({ variant: destructive ? "destructive" : "outline" }),
+    gridVariants({ variant }),
+  );
+  const content = (
+    <>
+      <Icon className={cn("size-5", !destructive && "text-foreground")} />
+      {title}
+    </>
+  );
+
+  if (href) {
     return (
-        <Button asChild variant={destructive ? "destructive" : "outline"} className={cn(buttonVariants({variant}))} onClick={onClick} disabled={pending}>
-            <Link href={href}>
-                <Icon className={`size-5 ${!destructive ? "text-foreground" : ""}`} />
-                {title}
-            </Link>
-        </Button>
-    )
+      <Link href={href} className={className}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <Button
+      type="button"
+      variant={destructive ? "destructive" : "outline"}
+      className={gridVariants({ variant })}
+      onClick={onClick}
+      disabled={pending}
+    >
+      {content}
+    </Button>
+  );
 }

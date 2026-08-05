@@ -1,13 +1,20 @@
 "use client";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogClose,
@@ -21,20 +28,20 @@ import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
 import { toast } from "@/components/ui/toast";
+import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 import Vehicle from "@/shared/types/Vehicle";
 import VehicleListMock from "@/shared/mocks/VehicleListMock";
 import { PARKING_SPACE_MAP } from "../../enums/parking-space-map";
 import { WARNING_TYPE_MAP } from "../../enums/warning-type";
 import {
   CreateOccurrenceFormValues,
-  createOccurrenceSchema
+  createOccurrenceSchema,
 } from "../../schemas/CreateOccurrenceSchema";
 import { useCreateOccurrence } from "../../hooks/useCreateOccurrence";
 import { OccurrenceTypeSelector } from "../molecules/OccurrenceTypeSelector";
 import { AlertDialogAction } from "@/components/ui/alert-dialog";
 
 export default function CreateOccurrenceForm() {
-
   const router = useRouter();
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [foundVehicle, setFoundVehicle] = useState<Vehicle | null>(null);
@@ -46,7 +53,7 @@ export default function CreateOccurrenceForm() {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     trigger,
     formState: { errors, isValid },
   } = useForm<CreateOccurrenceFormValues>({
@@ -56,11 +63,13 @@ export default function CreateOccurrenceForm() {
     defaultValues: { plate: "", location: "", gate: "", description: "" },
   });
 
-  const occurrenceType = watch("occurrenceType");
+  const occurrenceType = useWatch({ control, name: "occurrenceType" });
+  const plateValue = useWatch({ control, name: "plate" });
+  const warningType = useWatch({ control, name: "warningType" });
+  const parkingSpaceType = useWatch({ control, name: "parkingSpaceType" });
 
   async function searchVehicle() {
-
-    const plate = watch("plate").trim();
+    const plate = plateValue.trim();
 
     if (!plate) {
       await trigger("plate");
@@ -70,7 +79,6 @@ export default function CreateOccurrenceForm() {
     setSearching(true);
 
     try {
-
       const mockVehicle = VehicleListMock.find(
         (item) => item.plate.toUpperCase() === plate.toUpperCase(),
       );
@@ -79,9 +87,11 @@ export default function CreateOccurrenceForm() {
 
       setFoundVehicle(mockVehicle);
       setVehicleDialog(true);
-
     } catch {
-      toast.add({ type: "error", description: "Veículo não encontrado. Confira a placa informada."});
+      toast.add({
+        type: "error",
+        description: "Veículo não encontrado. Confira a placa informada.",
+      });
     } finally {
       setSearching(false);
     }
@@ -94,14 +104,23 @@ export default function CreateOccurrenceForm() {
       { data, vehicleId: vehicle.uuid },
       {
         onSuccess: () => {
-          toast.add({type: "success", description: "Ocorrência registrada com sucesso!"});
+          toast.add({
+            type: "success",
+            description: "Ocorrência registrada com sucesso!",
+          });
           router.push("/ocorrencias");
         },
-        onError: () => {
+        onError: (error) => {
           setConfirmation(false);
-          toast.add({ type: "error", description: "Não foi possível registrar a ocorrência. Tente novamente."});
+          toast.add({
+            type: "error",
+            description: getApiErrorMessage(
+              error,
+              "Não foi possível registrar a ocorrência. Tente novamente.",
+            ),
+          });
         },
-      }
+      },
     );
   }
 
@@ -110,7 +129,7 @@ export default function CreateOccurrenceForm() {
       <CardContent>
         <form onSubmit={handleSubmit(() => setConfirmation(true))}>
           <FieldGroup className="mb-6 gap-4">
-            {/*Parte inicial da busca por placa*/ }
+            {/*Parte inicial da busca por placa*/}
             <div className="flex items-end gap-3">
               <div className="flex-1">
                 <FormField
@@ -168,17 +187,21 @@ export default function CreateOccurrenceForm() {
                     setValue("occurrenceType", type, { shouldValidate: true })
                   }
                 />
-              
+
                 {errors.occurrenceType && (
-                  <p className="text-sm text-destructive">{errors.occurrenceType.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.occurrenceType.message}
+                  </p>
                 )}
 
                 {occurrenceType === "WARNING" && (
                   <>
                     <SelectField
                       label="tipo do aviso"
-                      value={watch("warningType")}
-                      onChange={(value) => setValue("warningType", value, { shouldValidate: true })}
+                      value={warningType}
+                      onChange={(value) =>
+                        setValue("warningType", value, { shouldValidate: true })
+                      }
                       error={errors.warningType?.message}
                       options={WARNING_TYPE_MAP}
                     />
@@ -194,8 +217,12 @@ export default function CreateOccurrenceForm() {
                   <>
                     <SelectField
                       label="tipo de vaga"
-                      value={watch("parkingSpaceType")}
-                      onChange={(value) => setValue("parkingSpaceType", value, { shouldValidate: true })}
+                      value={parkingSpaceType}
+                      onChange={(value) =>
+                        setValue("parkingSpaceType", value, {
+                          shouldValidate: true,
+                        })
+                      }
                       error={errors.parkingSpaceType?.message}
                       options={PARKING_SPACE_MAP}
                     />
@@ -291,20 +318,27 @@ export default function CreateOccurrenceForm() {
               </div>
             )}
             <DialogFooter>
-              <DialogClose render={<Button variant="outline" className="py-5 text-lg font-semibold" />}>
+              <DialogClose
+                render={
+                  <Button
+                    variant="outline"
+                    className="py-5 text-lg font-semibold"
+                  />
+                }
+              >
                 Cancelar
               </DialogClose>
 
               <AlertDialogAction
-                  onClick={() => {
-                    setVehicle(foundVehicle);
-                    setFoundVehicle(null);
-                    setVehicleDialog(false);
-                  }}
-                  className="py-5 text-lg font-semibold disabled:bg-muted"
-                  disabled={isPending}
+                onClick={() => {
+                  setVehicle(foundVehicle);
+                  setFoundVehicle(null);
+                  setVehicleDialog(false);
+                }}
+                className="py-5 text-lg font-semibold disabled:bg-muted"
+                disabled={isPending}
               >
-                  Confirmar veículo
+                Confirmar veículo
               </AlertDialogAction>
             </DialogFooter>
           </DialogContent>
@@ -319,7 +353,6 @@ export default function CreateOccurrenceForm() {
           confirmText="Registrar"
           pending={isPending}
         />
-
       </CardContent>
     </Card>
   );
@@ -341,8 +374,14 @@ function SelectField({
   return (
     <div className="grid gap-2">
       <span className="text-lg font-semibold capitalize">{label}</span>
-      <Select value={value || null} onValueChange={(nextValue) => onChange(nextValue ?? "")}>
-        <SelectTrigger className="h-auto w-full py-5 text-lg" aria-invalid={!!error}>
+      <Select
+        value={value || null}
+        onValueChange={(nextValue) => onChange(nextValue ?? "")}
+      >
+        <SelectTrigger
+          className="h-auto w-full py-5 text-lg"
+          aria-invalid={!!error}
+        >
           <SelectValue placeholder="Selecione uma opção">
             {value ? options[value] : undefined}
           </SelectValue>
@@ -350,7 +389,11 @@ function SelectField({
         <SelectContent>
           <SelectGroup>
             {Object.entries(options).map(([optionValue, text]) => (
-              <SelectItem key={optionValue} value={optionValue} className="py-3 text-lg">
+              <SelectItem
+                key={optionValue}
+                value={optionValue}
+                className="py-3 text-lg"
+              >
                 {text}
               </SelectItem>
             ))}

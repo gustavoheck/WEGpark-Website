@@ -1,4 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
+
+import { ParkUserType } from "@/shared/enum/ParkUserType";
+
 import {
   authAccountRoles,
   login,
@@ -15,6 +18,7 @@ import {
   LoginResponse,
   RegisterRequest,
   RegisterResponse,
+  ResendEmailRequest,
   ResetPasswordAnswerRequest,
   ResetPasswordAnswerResponse,
   ResetPasswordCheckRequest,
@@ -22,9 +26,6 @@ import {
   ResetPasswordRequest,
   ResetPasswordResponse,
 } from "../types/auth.type";
-import { ParkUserType } from "@/shared/enum/ParkUserType";
-
-// Login
 
 export function useAuthAccountRoles() {
   return useMutation<AuthAccount[], Error, CheckAccountRequest>({
@@ -33,12 +34,10 @@ export function useAuthAccountRoles() {
 }
 
 export function useLogin() {
-    return useMutation<LoginResponse, Error, LoginRequest>({
-        mutationFn: login
-    })
+  return useMutation<LoginResponse, Error, LoginRequest>({
+    mutationFn: login,
+  });
 }
-
-// Register
 
 export interface RegisterUserMutationParams {
   request: RegisterRequest;
@@ -52,21 +51,27 @@ export function useRegister() {
 }
 
 export function useResendEmail() {
-  return useMutation<void, Error, string>({
-    mutationFn: (email: string) => resendEmail(email),
+  return useMutation<void, Error, ResendEmailRequest>({
+    mutationFn: resendEmail,
   });
 }
 
-// Reset Password
-
 export function useResetPasswordCheck() {
-  return useMutation<ResetPasswordCheckResponse, Error, ResetPasswordCheckRequest>({
+  return useMutation<
+    ResetPasswordCheckResponse,
+    Error,
+    ResetPasswordCheckRequest
+  >({
     mutationFn: resetPasswordCheck,
   });
 }
 
 export function useResetPasswordAnswer() {
-  return useMutation<ResetPasswordAnswerResponse, Error, ResetPasswordAnswerRequest>({
+  return useMutation<
+    ResetPasswordAnswerResponse,
+    Error,
+    ResetPasswordAnswerRequest
+  >({
     mutationFn: resetPasswordAnswer,
   });
 }
