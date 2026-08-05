@@ -1,16 +1,26 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
-import { isSystemRole, SystemRoleType } from "@/shared/enum/SystemRoleType";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import { JWTPayload } from "../types/JWTPayload";
+
+import { AUTH_UNAUTHORIZED_EVENT } from "@/shared/constants/authEvents";
+import { isSystemRole, SystemRoleType } from "@/shared/enum/SystemRoleType";
+import { JWTPayload } from "@/shared/types/JWTPayload";
 
 interface AuthUser {
   uuid: string;
   email: string;
   roles: SystemRoleType[];
-  name: string
+  name: string;
   currentRole: SystemRoleType;
 }
 
@@ -23,106 +33,120 @@ interface AuthContextType {
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+interface AuthSession {
+  token: string | null;
+  user: AuthUser | null;
+  isReady: boolean;
+}
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [isReady, setIsReady] = useState(false);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-  const logout = useCallback(() => {
-    setToken(null);
-    setUser(null);
-    Cookies.remove("auth_token");
-    Cookies.remove("auth_role");
-  }, []);
+function parseToken(
+  jwtToken: string,
+  activeRole: SystemRoleType,
+): AuthUser | null {
+  try {
+    const decoded = jwtDecode<JWTPayload>(jwtToken);
 
-  const processToken = (jwtToken: string, activeRole: SystemRoleType): AuthUser | null => {
-    try {
-      const decoded = jwtDecode<JWTPayload>(jwtToken);
-
-      console.log("Token decodificado:", decoded);
-
-      if (decoded.exp && decoded.exp * 1000 < Date.now()) {
-        console.warn("Token JWT expirado");
-        return null;
-      }
-
-      const roles = (decoded.roles ?? []).filter(isSystemRole);
-
-      if (!roles.includes(activeRole)) {
-        console.warn("A role selecionada não pertence ao token JWT");
-        return null;
-      }
-
-      return {
-        uuid: decoded.uuid || "",
-        email: decoded.sub || "",
-        name: decoded.name || "",
-        roles,
-        currentRole: activeRole,
-      };
-    } catch (error) {
-      console.error("Erro ao decodificar o token JWT:", error);
+    if (decoded.exp && decoded.exp * 1000 < Date.now()) {
       return null;
     }
-  };
+
+    const roles = (decoded.roles ?? []).filter(isSystemRole);
+
+    if (!roles.includes(activeRole)) {
+      return null;
+    }
+
+    return {
+      uuid: decoded.uuid ?? "",
+      email: decoded.sub ?? "",
+      name: decoded.name ?? "",
+      roles,
+      currentRole: activeRole,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function clearAuthCookies() {
+  Cookies.remove("auth_token");
+  Cookies.remove("auth_role");
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const [session, setSession] = useState<AuthSession>({
+    token: null,
+    user: null,
+    isReady: false,
+  });
+
+  const logout = useCallback(() => {
+    clearAuthCookies();
+    setSession({ token: null, user: null, isReady: true });
+  }, []);
 
   useEffect(() => {
     const savedToken = Cookies.get("auth_token");
     const savedRole = Cookies.get("auth_role");
+    const parsedUser =
+      savedToken && isSystemRole(savedRole)
+        ? parseToken(savedToken, savedRole)
+        : null;
 
-    if (savedToken && isSystemRole(savedRole)) {
-      const parsedUser = processToken(savedToken, savedRole);
-      if (parsedUser) {
-        // Browser-only session hydration is intentionally performed after mount.
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setToken(savedToken);
-        setUser(parsedUser);
-      } else {
-        logout();
-      }
-    } else if (savedToken || savedRole) {
-      logout();
+    if (!parsedUser) {
+      clearAuthCookies();
     }
 
-    setIsReady(true);
-  }, [logout]);
+    // Browser-only cookie hydration intentionally happens after mount.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSession({
+      token: parsedUser ? (savedToken ?? null) : null,
+      user: parsedUser,
+      isReady: true,
+    });
+  }, []);
 
-  const login = (newToken: string, selectedRole: SystemRoleType) => {
-    if (!newToken) {
-      console.error("Tentativa de login sem token válido.");
+  useEffect(() => {
+    function handleUnauthorized() {
+      logout();
+      router.replace("/login");
+    }
+
+    window.addEventListener(AUTH_UNAUTHORIZED_EVENT, handleUnauthorized);
+
+    return () => {
+      window.removeEventListener(AUTH_UNAUTHORIZED_EVENT, handleUnauthorized);
+    };
+  }, [logout, router]);
+
+  function login(newToken: string, selectedRole: SystemRoleType) {
+    const parsedUser = parseToken(newToken, selectedRole);
+
+    if (!parsedUser) {
       return;
     }
 
-    const parsedUser = processToken(newToken, selectedRole);
+    const cookieOptions = {
+      expires: 7,
+      sameSite: "strict" as const,
+      secure: process.env.NODE_ENV === "production",
+    };
 
-    if (parsedUser) {
-      setToken(newToken);
-      setUser(parsedUser);
-
-      const cookieOptions = {
-        expires: 7,
-        sameSite: "lax" as const,
-        secure: process.env.NODE_ENV === "production",
-      };
-
-      Cookies.set("auth_token", newToken, cookieOptions);
-      Cookies.set("auth_role", selectedRole, cookieOptions);
-
-      console.log("Cookies salvos com sucesso!");
-    } else {
-      console.error("Falha ao processar o usuário do token. Os cookies não foram gravados.");
-    }
-  };
+    Cookies.set("auth_token", newToken, cookieOptions);
+    Cookies.set("auth_role", selectedRole, cookieOptions);
+    setSession({ token: newToken, user: parsedUser, isReady: true });
+  }
 
   return (
     <AuthContext.Provider
       value={{
-        token,
-        user,
-        isAuthenticated: !!token,
-        isReady,
+        token: session.token,
+        user: session.user,
+        isAuthenticated: Boolean(session.token),
+        isReady: session.isReady,
         login,
         logout,
       }}
@@ -132,10 +156,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext);
+
   if (!context) {
     throw new Error("useAuth deve ser usado dentro de um AuthProvider");
   }
+
   return context;
-};
+}
