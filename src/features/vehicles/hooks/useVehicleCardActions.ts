@@ -1,23 +1,40 @@
 import { useState } from "react";
+
 import { toast } from "@/components/ui/toast";
+import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
+
 import { useVehicle } from "./useVehicle";
 
 export function useVehicleCardActions(vehicleUuid: string) {
   const [isUnlinkDialogOpen, setIsUnlinkDialogOpen] = useState(false);
   const { unlinkVehicle, isUnlinking } = useVehicle();
 
-  const handleUnlink = () => {
+  function handleUnlink() {
     unlinkVehicle(vehicleUuid, {
       onSuccess: () => {
         setIsUnlinkDialogOpen(false);
-        toast.add({ type: "success", description: "Veículo desvinculado com sucesso!" });
+        toast.add({
+          type: "success",
+          description: "Veículo desvinculado com sucesso!",
+        });
       },
-      onError: () => {
+      onError: (error) => {
         setIsUnlinkDialogOpen(false);
-        toast.add({ type: "error", description: "Erro ao desvincular o veículo. Tente novamente." });
+        toast.add({
+          type: "error",
+          description: getApiErrorMessage(
+            error,
+            "Erro ao desvincular o veículo. Tente novamente.",
+          ),
+        });
       },
     });
-  };
+  }
 
-  return { isUnlinkDialogOpen, setIsUnlinkDialogOpen, handleUnlink, isUnlinking };
+  return {
+    isUnlinkDialogOpen,
+    setIsUnlinkDialogOpen,
+    handleUnlink,
+    isUnlinking,
+  };
 }
