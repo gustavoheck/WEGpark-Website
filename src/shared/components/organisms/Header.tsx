@@ -6,16 +6,16 @@ import Link from "next/link";
 
 export default function Header() {
     return (
-        <div className="bg-primary flex w-full h-18 items-center justify-between px-2"
+        <div className="bg-primary flex w-full h-18 items-center justify-between px-2 relative"
         >
             <SidebarTrigger
                 variant="none"
-                className="h-12 w-12 text-white"
+                className="h-12 w-12 text-white md:hidden"
             />
-            <Link href="/veiculos">
+            <Link href="/veiculos" className="absolute left-1/2 -translate-x-1/2">
                 <Image src="/assets/images/logo-white.png" alt="Logo of the WEGpark" height={66} width={98} loading="eager" />
             </Link>
-            <Link href="/notificacoes" className="flex items-center">
+            <Link href="/notificacoes" className="flex items-center absolute right-2">
                 <Button variant="none">
                     <Bell className="size-7 text-white" />
                 </Button>

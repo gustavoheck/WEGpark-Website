@@ -52,7 +52,7 @@ export function UserManagementList() {
             <SectionTitle text="gestão usuários" />
             <Filter filters={USER_CATEGORIES} onSubmit={handleFilterSubmit} />
             <Card>
-                <CardContent className="flex flex-col gap-3">
+                <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {isPending ? (
                         <div className="flex flex-col gap-3">
                             <Skeleton className="h-24 w-full" />

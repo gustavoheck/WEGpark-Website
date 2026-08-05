@@ -9,7 +9,6 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ menuItems }: AppSidebarProps) {
-
   const { user } = useAuth();
 
   if (!user){
@@ -18,7 +17,6 @@ export function AppSidebar({ menuItems }: AppSidebarProps) {
 
   return (
     <Sidebar>
-
       <SidebarHeader>
         <Profile username={user.name } />
       </SidebarHeader>

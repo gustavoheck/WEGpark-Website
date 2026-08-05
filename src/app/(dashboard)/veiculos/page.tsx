@@ -17,7 +17,6 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useSidebar } from "@/components/ui/sidebar";
-import { cn } from "@/shared/lib/utils";
 import { useGetMyVehicles, useGetVehicles } from "@/features/vehicles/hooks/useGetVehicles";
 import { VEHICLE_CATEGORIES } from "@/features/vehicles/constants/vehicleFilters";
 
@@ -92,7 +91,7 @@ export default function VehiclePage() {
 
             {canAdd && (
                 <Link href="/veiculos/adicionar">
-                    <Button className={cn("fixed bottom-4 right-4 text-xl rounded-sm py-6 font-bold z-50", open ? "left-68" : "left-4")} variant="default">
+                    <Button className="fixed bottom-4 right-4 text-xl rounded-sm py-6 font-bold z-50 w-fit" variant="default">
                         <Plus className="size-7" />
                         Cadastrar Veículo
                     </Button>

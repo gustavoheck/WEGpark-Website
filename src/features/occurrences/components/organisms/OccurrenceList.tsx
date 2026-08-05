@@ -93,7 +93,7 @@ export default function OccurrenceList({ occurrences : initialOccurrences }: Occ
         <section>
             <SectionTitle text="ocorrências" />
             <Filter filters={filtersObject} onSubmit={onSubmit} />
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {occurrencesList.map((occurrence) => {
                     return <OccurrenceCard key={occurrence.uuid} occurrence={occurrence} />
                 })}
