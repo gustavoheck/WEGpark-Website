@@ -1,46 +1,85 @@
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../../../components/ui/sidebar";
-import SidebarItem from "@/shared/types/SidebarItem";
-import Profile from "../molecules/Profile";
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import { canAccessRoute } from "@/shared/config/accessControl";
 import { useAuth } from "@/shared/context/AuthContext";
+import SidebarItem from "@/shared/types/SidebarItem";
+
+import Profile from "../molecules/Profile";
 
 interface AppSidebarProps {
-  menuItems: SidebarItem[]
+  menuItems: SidebarItem[];
 }
 
 export function AppSidebar({ menuItems }: AppSidebarProps) {
+  const { user, logout } = useAuth();
+  const router = useRouter();
 
-  const { user } = useAuth();
+  if (!user) {
+    return null;
+  }
 
-  if (!user){
-    return
+  function handleLogout() {
+    logout();
+    router.replace("/login");
   }
 
   return (
     <Sidebar>
-
       <SidebarHeader>
-        <Profile username={user.name } />
+        <Profile
+          username={user.name}
+          href={
+            canAccessRoute(user.currentRole, "/perfil") ? "/perfil" : undefined
+          }
+        />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => {
-                return (
-                  <SidebarMenuButton key={item.title} asChild size="xl" className="transition-colors">
-                    <Link href={item.href} className="flex gap-2">
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  {item.action === "logout" ? (
+                    <SidebarMenuButton
+                      type="button"
+                      size="xl"
+                      className="transition-colors"
+                      onClick={handleLogout}
+                    >
                       <item.icon className="size-7" />
                       <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                )
-              })}
+                    </SidebarMenuButton>
+                  ) : item.href ? (
+                    <SidebarMenuButton
+                      asChild
+                      size="xl"
+                      className="transition-colors"
+                    >
+                      <Link href={item.href} className="flex gap-2">
+                        <item.icon className="size-7" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  ) : null}
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
