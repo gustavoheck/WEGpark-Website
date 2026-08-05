@@ -9,7 +9,7 @@ const gridVariants = cva("", {
   variants: {
     variant: {
       default: "",
-      last: "last:odd:col-span-2",
+      last: "last:odd:col-span-1 sm:last:odd:col-span-2",
     },
   },
   defaultVariants: {
@@ -44,7 +44,7 @@ export default function UserCardButton({
         : "outline";
   const className = cn(
     buttonVariants({ variant: visualVariant }),
-    "h-11 text-md font-medium capitalize",
+    "h-11 text-sm font-medium capitalize sm:text-base",
     gridVariants({ variant }),
   );
   const content = (
@@ -69,7 +69,7 @@ export default function UserCardButton({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "h-11 text-md font-medium capitalize",
+        "h-11 text-sm font-medium capitalize sm:text-base",
         gridVariants({ variant }),
       )}
     >

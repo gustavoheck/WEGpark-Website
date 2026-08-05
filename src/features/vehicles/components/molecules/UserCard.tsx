@@ -13,10 +13,14 @@ export default function UserCard({ user, name }: UserCardProps) {
   const displayName = name || user.uuid;
 
   return (
-    <Card className="flex h-18 flex-row items-center justify-between pr-4">
-      <CardHeader className="flex w-full items-center gap-3">
+    <Card className="flex min-h-18 flex-row items-center pr-4">
+      <CardHeader className="flex min-w-0 w-full flex-row items-center gap-3">
         <ProfilePicture name={displayName} variant="secondary" />
-        <p className={`text-xl font-semibold ${user.isOwner ? "text-primary" : "text-foreground"}`}>
+        <p
+          className={`min-w-0 break-all text-base font-semibold sm:text-xl ${
+            user.isOwner ? "text-primary" : "text-foreground"
+          }`}
+        >
           {displayName}
         </p>
       </CardHeader>

@@ -6,12 +6,12 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/shared/lib/utils";
 
 const gridVariants = cva(
-  "flex h-11 items-center justify-center gap-2 text-md font-medium capitalize",
+  "flex h-11 items-center justify-center gap-2 text-sm font-medium sm:text-base capitalize",
   {
     variants: {
       variant: {
         default: "",
-        last: "last:odd:col-span-2",
+        last: "last:odd:col-span-1 sm:last:odd:col-span-2",
       },
     },
     defaultVariants: {
