@@ -59,6 +59,13 @@ export default function VehiclePage() {
         <Filter filters={VEHICLE_CATEGORIES} onSubmit={handleFilterSubmit} />
       ) : null}
 
+      {canAdd ? (
+        <FloatingActionLink
+          href="/veiculos/adicionar"
+          label="Cadastrar Veículo"
+          Icon={Plus}
+        />
+      ) : null}
       <VehicleList vehicles={vehicles} isLoading={isSearching} />
 
       {isError ? (
@@ -107,14 +114,6 @@ export default function VehiclePage() {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-      ) : null}
-
-      {canAdd ? (
-        <FloatingActionLink
-          href="/veiculos/adicionar"
-          label="Cadastrar Veículo"
-          Icon={Plus}
-        />
       ) : null}
     </>
   );
