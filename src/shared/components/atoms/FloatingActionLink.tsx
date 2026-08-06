@@ -20,10 +20,10 @@ export default function FloatingActionLink({
       className={buttonVariants({
         variant: "default",
         className:
-          "fixed inset-x-4 bottom-4 z-50 w-auto max-w-[calc(100vw-2rem)] rounded-sm px-4 py-6 text-base font-bold shadow-lg md:right-4 md:left-auto md:w-fit md:text-xl",
+          "fixed inset-x-4 bottom-4 z-50 h-12 w-auto max-w-[calc(100vw-2rem)] gap-2 rounded-lg px-5 text-base font-bold shadow-md md:static md:ml-auto md:mb-3 md:flex md:w-fit md:max-w-none",
       })}
     >
-      <Icon className="size-5 md:size-7" />
+      <Icon className="size-5" />
       {label}
     </Link>
   );

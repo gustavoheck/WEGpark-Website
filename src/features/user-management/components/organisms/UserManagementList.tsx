@@ -50,6 +50,13 @@ export function UserManagementList() {
       <SectionTitle text="gestão usuários" />
       <Filter filters={USER_CATEGORIES} onSubmit={handleFilterSubmit} />
 
+      {canAdd ? (
+        <FloatingActionLink
+          href="/gestao-usuarios/cadastrar"
+          label="Cadastrar Usuário"
+          Icon={Plus}
+        />
+      ) : null}
       <Card>
         <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {isPending ? (
@@ -120,14 +127,6 @@ export function UserManagementList() {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-      ) : null}
-
-      {canAdd ? (
-        <FloatingActionLink
-          href="/gestao-usuarios/cadastrar"
-          label="Cadastrar Usuário"
-          Icon={Plus}
-        />
       ) : null}
     </section>
   );

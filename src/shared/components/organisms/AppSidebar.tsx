@@ -54,13 +54,21 @@ export function AppSidebar({ menuItems }: AppSidebarProps) {
                 <SidebarMenuItem key={item.title}>
                   {item.action === "logout" ? (
                     <SidebarMenuButton
-                      type="button"
+                      asChild
                       size="xl"
                       className="transition-colors"
-                      onClick={handleLogout}
                     >
-                      <item.icon className="size-7" />
-                      <span>{item.title}</span>
+                      <Link
+                        href="/login"
+                        className="flex gap-2 text-white"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          handleLogout();
+                        }}
+                      >
+                        <item.icon className="size-7" />
+                        <span>{item.title}</span>
+                      </Link>
                     </SidebarMenuButton>
                   ) : item.href ? (
                     <SidebarMenuButton
