@@ -1,6 +1,6 @@
-import { api } from "@/shared/lib/api";
+﻿import { api } from "@/shared/lib/api";
 
-import { OccurrenceRequest, OccurrenceResponse, PaginatedOccurrencesResponse, WarningRequest } from "../types/occurrence.type";
+import { OccurrenceRequest, OccurrenceResponse, PaginatedOccurrencesResponse } from "../types/occurrence.type";
 import { OccurrenceType } from "../enums/occurrence-type";
 import { GetServiceProps } from "@/shared/types/GetServiceProps";
 import { BackendPage } from "@/shared/types/Page";
@@ -12,7 +12,7 @@ export async function createOccurrence(
     request: OccurrenceRequest,
     occurrenceType: OccurrenceType
 ) : Promise<OccurrenceResponse> {
-    const { data } = await api.post<OccurrenceResponse>("/occurrence/" + OccurrenceType[occurrenceType].toLowerCase(), request)
+    const { data } = await api.put<OccurrenceResponse>("/occurrence/" + OccurrenceType[occurrenceType].toLowerCase(), request)
     return data;
 }
 
@@ -45,28 +45,18 @@ export async function getMyOccurrences(page: number): Promise<PaginatedOccurrenc
 }
 
 export async function getOccurrenceById(uuid: string) : Promise<OccurrenceResponse> {
-    const { data } = await api.get<OccurrenceResponse>("/ocurrence/" + uuid)
+    const { data } = await api.get<OccurrenceResponse>("/occurrence/" + uuid)
 
     return data
 
 }
 
-export async function updateOcurrence (
+export async function updateOccurrence (
     uuid : string,
-    
-)
-
-export async function updateWarning(uuid: string, data: WarningRequest) {
-    const { data: response } = await api.put(`/occurrence/warning/${uuid}`, data);
-    return response;
+    request : OccurrenceRequest,
+    occurrenceType : OccurrenceType
+) : Promise<OccurrenceResponse> {
+    const { data } = await api.put<OccurrenceResponse>(`/occurrence/${OccurrenceType[occurrenceType].toLowerCase()}/${uuid}` ,request)
+    return data
 }
 
-export async function updateIllegalParking(uuid: string, data: UpdateIllegalParkingFormValues) {
-    const { data: response } = await api.put(`/occurrence/illegal-parking/${uuid}`, data);
-    return response;
-}
-
-export async function updateTrafficAccident(uuid: string, data: UpdateTrafficAccidentFormValues) {
-    const { data: response } = await api.put(`/occurrence/traffic-accident/${uuid}`, data);
-    return response;
-}

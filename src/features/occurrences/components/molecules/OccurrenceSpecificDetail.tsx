@@ -1,4 +1,4 @@
-import { Occurrence } from "../../types/Occurrence";
+﻿import { Occurrence } from "../../types/occurrence.type";
 import { isIllegalParking, isWarning } from "../../utils/occurrence-guards";
 import IllegalParkingDetail from "./IllegalParkingDetail";
 import TraficAccidentDetail from "./TrafficAccidentDetail";
@@ -26,3 +26,4 @@ export default function OccurrenceSpecificDetail ({occurrence} : OccurrenceSpeci
         )
     }
 }
+

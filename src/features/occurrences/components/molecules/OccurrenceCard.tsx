@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { ChevronDown, Eye, Pencil } from "lucide-react";
@@ -20,7 +20,7 @@ import VehicleName from "@/shared/components/atoms/VehicleName";
 import { canAccessRoute } from "@/shared/config/accessControl";
 import { useAuth } from "@/shared/context/AuthContext";
 
-import { Occurrence } from "../../types/Occurrence";
+import { Occurrence } from "../../types/occurrence.type";
 import { getOccurrenceConfig } from "../../utils/occurence-helpers";
 import OccurrenceCardButton from "../atoms/OccurenceCardButton";
 
@@ -30,7 +30,8 @@ interface OccurrenceCardProps {
 
 export default function OccurrenceCard({ occurrence }: OccurrenceCardProps) {
   const { icon: IconComponent, label } = getOccurrenceConfig(occurrence);
-  const { brand, model, ownerId } = occurrence.defaults.vehicle;
+  const { brand, model } = occurrence.defaults.vehicle;
+  const ownerId = occurrence.defaults.vehicle.vehicleUsers?.find((user) => user.isOwner)?.name ?? "—";
   const [isExpanded, setIsExpanded] = useState(false);
   const { user } = useAuth();
   const detailRoute = `/ocorrencias/${occurrence.uuid}`;
@@ -147,3 +148,5 @@ export default function OccurrenceCard({ occurrence }: OccurrenceCardProps) {
     </>
   );
 }
+
+

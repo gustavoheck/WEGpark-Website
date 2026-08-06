@@ -1,7 +1,7 @@
-"use client"
+﻿"use client"
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Occurrence } from "../../types/Occurrence";
+import { Occurrence } from "../../types/occurrence.type";
 import DateHour from "@/shared/components/atoms/DateHour";
 import { getOccurrenceConfig } from "../../utils/occurence-helpers";
 import OccurrenceDetailsLabel from "../atoms/OccurrenceDetailsLabel";
@@ -60,3 +60,4 @@ export default function DetailOccurence({ occurrence }: DetailOccurence) {
     )
 
 }
+

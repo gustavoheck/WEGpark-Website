@@ -1,4 +1,4 @@
-import { Guard } from "@/shared/types/User"
+﻿import { Guard } from "@/shared/types/User"
 import Vehicle from "@/shared/types/Vehicle"
 import { WarningType } from "../enums/warning-type"
 import { ParkingSpaceType } from "../enums/parking-space-map"
@@ -78,3 +78,9 @@ export interface PaginatedOccurrencesResponse {
   totalItems: number;
   pageSize: number;
 }
+
+// Aliases kept only while older occurrence UI components are migrated.
+export type BaseWarning = WarningResponse;
+export type IllegalParking = IllegalParkingResponse;
+export type TrafficAccident = TrafficAccidentResponse;
+export type Occurrence = OccurrenceResponse;

@@ -1,4 +1,4 @@
-import { IllegalParking } from "../../types/IllegalParking";
+﻿import { IllegalParking } from "../../types/occurrence.type";
 import DetailOccurrenceInformation from "./DetailOccurrenceInformation";
 import { PARKING_SPACE_MAP } from "../../enums/parking-space-map";
 
@@ -16,3 +16,4 @@ export default function IllegalParkingDetail ({occurrence} : IllegalParkingDetai
         </div>
     )
 }
+

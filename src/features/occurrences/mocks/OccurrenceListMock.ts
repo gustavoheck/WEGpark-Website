@@ -1,7 +1,7 @@
-import VehicleListMock from "@/shared/mocks/VehicleListMock";
-import { Occurrence } from "../types/Occurrence";
+﻿import VehicleListMock from "@/shared/mocks/VehicleListMock";
+import { Occurrence } from "../types/occurrence.type";
 
-const OccurrencesListMock: Occurrence[] = [
+const OccurrencesListMock = [
   {
     uuid: "123-abc",
     defaults: {
@@ -46,4 +46,6 @@ const OccurrencesListMock: Occurrence[] = [
   },
 ];
 
-export default OccurrencesListMock;
+export default OccurrencesListMock as unknown as Occurrence[];
+
+
