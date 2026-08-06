@@ -12,7 +12,7 @@ interface UserListProps {
 
 export default function UserList ({ users, currentUser }: UserListProps) {
     if (users.length === 0) {
-        return <p className="py-8 text-center text-muted-foreground">Nenhum usuÃ¡rio vinculado a este veÃ­culo.</p>;
+        return <p className="py-8 text-center text-muted-foreground">Nenhum usuário vinculado a este veículo.</p>;
     }
 
     return (
@@ -20,9 +20,9 @@ export default function UserList ({ users, currentUser }: UserListProps) {
             {users.map((user) => {
                 return (
                     <UserCard
-                        key={user.uuid}
+                        key={user.userUuid}
                         user={user}
-                        name={user.uuid === currentUser?.uuid ? currentUser.name : undefined}
+                        name={user.name}
                     />
                 )
             })}

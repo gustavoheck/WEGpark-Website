@@ -30,7 +30,7 @@ export default function VehicleUsersPage() {
       {!isSearching && !isError && !vehicle ? (
         <p className="text-center text-muted-foreground">Veículo não encontrado.</p>
       ) : null}
-      {vehicle ? <UserList users={vehicle.users} currentUser={user ?? undefined} /> : null}
+      {vehicle ? <UserList users={vehicle.vehicleUsers} currentUser={user ?? undefined} /> : null}
     </section>
   );
 }

@@ -29,9 +29,12 @@ interface OccurrenceCardProps {
 }
 
 export default function OccurrenceCard({ occurrence }: OccurrenceCardProps) {
-  const { icon: IconComponent, label } = getOccurrenceConfig(occurrence);
-  const { brand, model } = occurrence.defaults.vehicle;
-  const ownerId = occurrence.defaults.vehicle.vehicleUsers?.find((user) => user.isOwner)?.name ?? "—";
+  const { icon: IconComponent, label } = getOccurrenceConfig(occurrence); const {
+    brand = "",
+    model = "",
+    vehicleUsers = [],
+  } = occurrence.defaults?.vehicle ?? {};
+  const ownerId = vehicleUsers.find((user) => user.isOwner)?.name ?? "—";
   const [isExpanded, setIsExpanded] = useState(false);
   const { user } = useAuth();
   const detailRoute = `/ocorrencias/${occurrence.uuid}`;
@@ -109,9 +112,8 @@ export default function OccurrenceCard({ occurrence }: OccurrenceCardProps) {
             >
               <span>{isExpanded ? "Ver Menos" : "Ver Mais"}</span>
               <ChevronDown
-                className={`size-4 transition-transform duration-300 ${
-                  isExpanded ? "rotate-180" : "rotate-0"
-                }`}
+                className={`size-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : "rotate-0"
+                  }`}
               />
             </CollapsibleTrigger>
           </CardFooter>

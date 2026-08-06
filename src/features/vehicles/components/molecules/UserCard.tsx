@@ -10,14 +10,13 @@ interface UserCardProps {
 }
 
 export default function UserCard({ user, name }: UserCardProps) {
-  const displayName = name || user.uuid;
 
   return (
     <Card className="flex h-18 flex-row items-center justify-between pr-4">
       <CardHeader className="flex w-full items-center gap-3">
-        <ProfilePicture name={displayName} variant="secondary" />
+        <ProfilePicture name={name} variant="secondary" />
         <p className={`text-xl font-semibold ${user.isOwner ? "text-primary" : "text-foreground"}`}>
-          {displayName}
+          {name}
         </p>
       </CardHeader>
     </Card>

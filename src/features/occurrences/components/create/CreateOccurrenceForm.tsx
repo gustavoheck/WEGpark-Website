@@ -17,8 +17,8 @@ import { toast } from "@/components/ui/toast";
 import FormButton from "@/shared/components/atoms/FormButton";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
-import VehicleListMock from "@/shared/mocks/VehicleListMock";
 import type Vehicle from "@/shared/types/Vehicle";
+import { useFindVehicleByPlate } from "@/features/vehicles/hooks/useFindVehicleByPlate";
 
 import { useCreate } from "../../hooks/useOccurrence";
 import { mapCreateFormDataToEntity } from "../../mappers/occurrence.mapper";
@@ -42,9 +42,11 @@ export default function CreateOccurrenceForm() {
   const [foundVehicle, setFoundVehicle] = useState<Vehicle | null>(null);
   const [isVehicleDialogOpen, setIsVehicleDialogOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
+
 
   const { mutate: createOccurrence, isPending } = useCreate();
+  const { mutateAsync: findVehicleByPlate, isPending: isSearching } =
+    useFindVehicleByPlate();
 
   const form = useForm<OccurrenceFormInput>({
     resolver: occurrenceFormResolver,
@@ -76,30 +78,30 @@ export default function CreateOccurrenceForm() {
       return;
     }
 
-    setIsSearching(true);
-
     try {
-      const found = VehicleListMock.find(
-        (item) =>
-          item.plate.toUpperCase() === normalizedPlate.toUpperCase(),
-      );
+      const found = await findVehicleByPlate(normalizedPlate);
 
       if (!found) {
-        throw new Error("Vehicle not found");
+        toast.add({
+          type: "error",
+          description: "Veículo não encontrado. Confira a placa informada.",
+        });
+        return;
       }
 
+      form.setValue("plate", found.plate, { shouldValidate: true });
       setFoundVehicle(found);
       setIsVehicleDialogOpen(true);
-    } catch {
+    } catch (error) {
       toast.add({
         type: "error",
-        description: "Veículo não encontrado. Confira a placa informada.",
+        description: getApiErrorMessage(
+          error,
+          "Não foi possível buscar o veículo. Tente novamente.",
+        ),
       });
-    } finally {
-      setIsSearching(false);
     }
   }
-
   function confirmVehicle() {
     if (!foundVehicle) return;
 

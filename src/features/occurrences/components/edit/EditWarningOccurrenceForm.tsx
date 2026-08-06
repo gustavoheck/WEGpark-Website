@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -12,7 +12,10 @@ import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 import { WARNING_TYPE_MAP } from "../../enums/warning-type";
 import { OccurrenceResponse } from "../../types/occurrence.type";
 import { useUpdate } from "../../hooks/useOccurrence";
-import { UpdateWarningFormValues, updateWarningSchema } from "../../schemas/OccurrenceSchema";
+import {
+  UpdateWarningFormValues,
+  updateWarningSchema,
+} from "../../schemas/OccurrenceSchema";
 import { mapUpdateFormDataToEntity } from "../../mappers/occurrence.mapper";
 import OccurrenceEditFormLayout from "./OccurrenceEditFormLayout";
 import OccurrenceSelectField from "../create/OccurrenceSelectField";
@@ -39,8 +42,8 @@ export default function EditWarningOccurrenceForm({
     resolver: zodResolver(updateWarningSchema),
     mode: "onChange",
     defaultValues: {
-            plate: occurrence.defaults.vehicle.plate,
-            occurrenceType: "WARNING",
+      plate: occurrence.defaults.vehicle?.plate ?? "",
+      occurrenceType: "WARNING",
       location: occurrence.defaults.location,
       gate: occurrence.defaults.gate,
       warningType: occurrence.warningType,
@@ -55,13 +58,13 @@ export default function EditWarningOccurrenceForm({
   }
 
   function submit(data: UpdateWarningFormValues) {
-    const request = mapUpdateFormDataToEntity(data)
+    const request = mapUpdateFormDataToEntity(data);
 
     updateWarning(
       {
         uuid: occurrence.uuid,
         request,
-        occurrenceType : data.occurrenceType
+        occurrenceType: data.occurrenceType,
       },
       {
         onSuccess: () => {
@@ -99,6 +102,12 @@ export default function EditWarningOccurrenceForm({
       saveDisabled={!isDirty || !isValid || isPending}
     >
       <FormField
+        text="Placa do veiculo"
+        id="plate"
+        registration={register("plate")}
+        error={errors.plate}
+      />
+      <FormField
         text="Local / parque"
         id="location"
         registration={register("location")}
@@ -134,5 +143,3 @@ export default function EditWarningOccurrenceForm({
     </OccurrenceEditFormLayout>
   );
 }
-
-
