@@ -18,7 +18,7 @@ const roleOptions: { value: UserRole; label: string; description: string }[] = [
 export function UserTypeSelector({ value, onChange }: UserTypeSelectorProps) {
     return (
         <RadioGroup
-            value={value ?? undefined}
+            value={value ?? ""}
             onValueChange={(newValue) => onChange(newValue as UserRole)}
             className="grid grid-cols-1 gap-4 md:grid-cols-2"
         >
