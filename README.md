@@ -18,6 +18,8 @@ Empresas com estacionamento corporativo frequentemente realizam o controle de ve
 
 - **Colaborador / Visitante (Usuário do estacionamento)**
   - Cadastro, edição e exclusão dos próprios veículos (pode possuir mais de um)
+  - Solicitação de vínculo com um veículo já cadastrado por outro proprietário
+  - Aprovação ou rejeição de solicitações recebidas para os próprios veículos
   - Recebimento de notificações sobre ocorrências do seu veículo
   - Consulta ao histórico de ocorrências do próprio veículo
 - **Guarita**
@@ -35,19 +37,39 @@ Empresas com estacionamento corporativo frequentemente realizam o controle de ve
 
 ## Tecnologias utilizadas
 
-| Categoria          | Tecnologia                                                              |
-|--------------------|--------------------------------------------------------------------------|
-| Framework          | [Next.js](https://nextjs.org/) (App Router) + [React](https://react.dev/) + TypeScript |
-| Estilização        | [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/), [Base UI](https://base-ui.com/) |
-| Estado do servidor | [TanStack Query](https://tanstack.com/query)                             |
-| Formulários        | [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) |
-| HTTP Client        | [Axios](https://axios-http.com/)                                        |
-| Autenticação       | JWT via cookies e localStorage ([js-cookie](https://github.com/js-cookie/js-cookie) + [jwt-decode](https://github.com/auth0/jwt-decode)) |
-| Ícones             | [Lucide React](https://lucide.dev/)                                     |
+| Categoria          | Tecnologia                                                                                                                |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| Framework          | [Next.js](https://nextjs.org/) (App Router) + [React](https://react.dev/) + TypeScript                                    |
+| Estilização        | [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/), [Base UI](https://base-ui.com/)            |
+| Estado do servidor | [TanStack Query](https://tanstack.com/query)                                                                              |
+| Formulários        | [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)                                                 |
+| HTTP Client        | [Axios](https://axios-http.com/)                                                                                          |
+| Autenticação       | JWT via cookies ([js-cookie](https://github.com/js-cookie/js-cookie) + [jwt-decode](https://github.com/auth0/jwt-decode)) |
+| Ícones             | [Lucide React](https://lucide.dev/)                                                                                       |
+
+## Fluxo de vínculo com veículo existente
+
+O primeiro usuário que cadastra um veículo é considerado seu **proprietário**. Quando outra pessoa tenta cadastrar a mesma placa, o sistema não cria um novo veículo nem realiza o vínculo automaticamente. Esse usuário pode solicitar ao proprietário autorização para ser incluído como **dependente**.
+
+1. O usuário informa uma placa já cadastrada na opção **Adicionar Veículo**.
+2. O frontend identifica a resposta de conflito da API e pede a confirmação do usuário.
+3. Ao confirmar, é enviada uma solicitação para o proprietário.
+4. O proprietário consulta o pedido na página **Solicitações**.
+5. O proprietário aceita ou rejeita o vínculo.
+6. Somente após a aprovação a API vincula o solicitante ao veículo como dependente.
+
+| Ação                          | Método   | Endpoint                                |
+| ----------------------------- | -------- | --------------------------------------- |
+| Enviar solicitação de vínculo | `POST`   | `/vehicle/associate/notification`       |
+| Listar solicitações           | `GET`    | `/notification`                         |
+| Aceitar vínculo               | `POST`   | `/vehicle/associate/{uuidNotification}` |
+| Rejeitar solicitação          | `DELETE` | `/notification/{uuidNotification}`      |
+
+> A regra de propriedade e a criação do vínculo como dependente são de responsabilidade da API. O frontend apenas apresenta o fluxo e consome os endpoints existentes.
 
 ## Instruções para instalação
 
-Pré-requisitos: Node.js 18+ e um gerenciador de pacotes (npm, yarn ou pnpm).
+Pré-requisitos: Node.js 20.9+ e npm.
 
 ```bash
 # Clonar o repositório
@@ -64,7 +86,7 @@ Crie um arquivo `.env.local` na raiz do projeto com base no exemplo abaixo:
 
 ```env
 # URL base da API consumida pela aplicação
-NEXT_PUBLIC_API_URL=http://localhost:3333
+NEXT_PUBLIC_API_URL=http://localhost:8081/
 
 # Habilita o uso de dados mockados quando a API não está disponível (true/false)
 # Quando true, a aplicação utiliza dados fictícios pré-definidos no lugar
@@ -72,11 +94,17 @@ NEXT_PUBLIC_API_URL=http://localhost:3333
 NEXT_PUBLIC_USE_MOCKS=false
 ```
 
+Altere a porta de `NEXT_PUBLIC_API_URL` conforme a configuração do ambiente onde a API está sendo executada. O modo mock está disponível somente nas funcionalidades que implementam esse suporte.
+
 ## Instruções para execução
 
 ```bash
 # Ambiente de desenvolvimento
 npm run dev
+
+# Verificação estática
+npm run lint
+npx tsc --noEmit
 
 # Build de produção
 npm run build
@@ -120,13 +148,16 @@ src/
 └── hooks/                   # Hooks globais (ex: detecção de mobile)
 ```
 
-Cada feature segue o padrão atômico (`atoms`, `molecules`, `organisms`) para componentes, além de possuir suas próprias `hooks`, `schemas` (validação Zod), `services` (consumo da API) e `types`.
+O projeto segue uma arquitetura orientada a funcionalidades. Cada domínio pode possuir seus próprios componentes, hooks, schemas, serviços, tipos e mocks conforme sua necessidade.
 
 ## Principais funcionalidades
 
 - Autenticação com login, cadastro, verificação de e-mail e recuperação de senha
 - Seleção de papel de acesso (colaborador, visitante, guarita, RH e administrador)
 - Cadastro, edição e exclusão de veículos
+- Solicitação de vínculo com veículo existente
+- Aprovação ou rejeição de dependentes pelo proprietário do veículo
+- Consulta dos usuários vinculados a um veículo
 - Registro e histórico de ocorrências (janela aberta, luz acesa, alarme, acidente de trânsito, estacionamento irregular)
 - Central de notificações
 - Gestão de usuários pelo RH e pelo administrador (criação e desativação)
@@ -148,7 +179,7 @@ Cada feature segue o padrão atômico (`atoms`, `molecules`, `organisms`) para c
   - Quando a API retorna o código **401 (Unauthorized)**, o usuário é automaticamente redirecionado para a tela de login, impedindo o acesso com sessões inválidas.
 
 - **Uso seguro de cookies**
-  - A aplicação utiliza cookies com o atributo **`SameSite=Lax`** para reduzir riscos de ataques CSRF.
+  - A aplicação utiliza cookies com o atributo **`SameSite=Strict`** para reduzir riscos de ataques CSRF.
   - Em ambiente de produção, também é utilizado o atributo **`Secure`**, permitindo o envio do cookie apenas por conexões HTTPS.
 
 - **Validação de formulários**
