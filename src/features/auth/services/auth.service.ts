@@ -77,5 +77,5 @@ export async function resetPassword(
 }
 
 export async function resendEmail(request: ResendEmailRequest): Promise<void> {
-  await api.post("/auth/resend-email", request);
+  await api.post("/auth/validate-email/resend", request);
 }
