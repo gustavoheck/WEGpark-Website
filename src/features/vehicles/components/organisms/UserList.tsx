@@ -4,13 +4,9 @@ import UserCard from "../molecules/UserCard"
 
 interface UserListProps {
     users: VehicleUser[]
-    currentUser?: {
-        uuid: string
-        name: string
-    }
 }
 
-export default function UserList ({ users, currentUser }: UserListProps) {
+export default function UserList ({ users }: UserListProps) {
     if (users.length === 0) {
         return <p className="py-8 text-center text-muted-foreground">Nenhum usuário vinculado a este veículo.</p>;
     }
