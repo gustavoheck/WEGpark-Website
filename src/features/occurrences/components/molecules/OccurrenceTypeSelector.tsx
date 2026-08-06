@@ -33,7 +33,7 @@ export function OccurrenceTypeSelector({
     <div className="space-y-3">
       <p className="text-lg font-semibold">Tipo da ocorrência</p>
       <RadioGroup
-        value={value}
+        value={value ?? ""}
         onValueChange={(newValue) => onChange(newValue as OccurrenceType)}
         className="grid grid-cols-1 gap-4 md:grid-cols-3"
       >

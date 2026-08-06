@@ -14,15 +14,17 @@ import { toast } from "@/components/ui/toast";
 import FormButton from "@/shared/components/atoms/FormButton";
 import FormField from "@/shared/components/atoms/FormField";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
-import { useAuth } from "@/shared/context/AuthContext";
+import { clearAuthCookies, useAuth } from "@/shared/context/AuthContext";
 import { SystemRoleType } from "@/shared/enum/SystemRoleType";
-import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
 import { useLogin } from "../../hooks/useAuthMutations";
 import {
   LoginPasswordFormValues,
   loginPasswordSchema,
 } from "../../schemas/auth.schema";
+import axios from "axios";
+import delay from "@/shared/utils/delay";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface LoginCredentialsFormProps {
   email: string;
@@ -39,6 +41,7 @@ export function LoginCredentialsForm({
 }: LoginCredentialsFormProps) {
   const { mutate: login, isPending } = useLogin();
   const { login: setAuth } = useAuth();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -50,28 +53,68 @@ export function LoginCredentialsForm({
   });
 
   function onSubmit(values: LoginPasswordFormValues) {
+    clearAuthCookies()
+
     login(
       { email, password: values.password, role },
       {
-        onSuccess: (response) => {
-          const jwtToken = response.token;
+        onSuccess: async (response) => {
+          const token = response?.token?.trim();
 
-          if (!jwtToken) {
+          if (!token) {
+            toast.add({
+              type: "error",
+              description:
+                "Este e-mail não está verificado. Redirecionando para a página de verificação...",
+            });
+
+            await delay(2000);
             onNotVerified();
+
+            return;
+          }
+          setAuth(token, role);
+          await queryClient.invalidateQueries({
+            queryKey: ["current-user"],
+          });
+          onLoginSuccess(role);
+        },
+        onError: async (error: unknown) => {
+          if (!axios.isAxiosError(error)) {
+            toast.add({
+              type: "error",
+              description: "Ocorreu um erro inesperado. Tente novamente."
+            });
             return;
           }
 
-          setAuth(jwtToken, role);
-          onLoginSuccess(role);
-        },
-        onError: (error) => {
-          toast.add({
-            type: "error",
-            description: getApiErrorMessage(
-              error,
-              "E-mail ou senha inválidos.",
-            ),
-          });
+          const status = error.response?.status;
+
+          switch (status) {
+            case 401: {
+              toast.add({
+                type: "error",
+                description: "E-mail ou senha inválidos. Tente novamente."
+              });
+              break;
+            }
+            case 403: {
+              toast.add({
+                type: "error",
+                description: "Este e-mail não está verificado. Redirecionando para página de verificação...",
+              });
+
+              await delay(1500);
+              onNotVerified();
+
+              break;
+            }
+            default:
+              toast.add({
+                type: "error",
+                description: "Ocorreu um erro inesperado.",
+              });
+          }
         },
       },
     );

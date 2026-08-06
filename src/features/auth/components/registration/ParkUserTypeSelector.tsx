@@ -11,7 +11,7 @@ interface  ParkUserTypeSelectorProps {
 export function  ParkUserTypeSelector({ value, onChangeParkUser }:  ParkUserTypeSelectorProps) {
     return (
         <RadioGroup
-            value={value ?? undefined}
+            value={value ?? ""}
             onValueChange={(newValue) => onChangeParkUser(newValue as ParkUserType)}
             className="grid grid-cols-1 gap-4 md:grid-cols-2"
         >

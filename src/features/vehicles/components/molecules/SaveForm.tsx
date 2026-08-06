@@ -11,17 +11,19 @@ import { useState } from "react";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
-import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 import { useVehicle } from "../../hooks/useVehicle";
 import { mapFormDataToVehicleRequest } from "../../mappers/vehicleMapper";
-import { AxiosError } from "axios";
+import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function SaveForm() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const [isOpenConfirmationNormal, setIsOpenConfirmationNormal] =
     useState(false);
   const [isOpenConfirmationLink, setIsOpenConfirmationLink] = useState(false);
-  const { createVehicle, isCreating } = useVehicle();
+  const { createVehicle, requestVehicleAssociation, isCreating, isRequestingVehicleAssociation } = useVehicle();
+  const [plate, setPlate] = useState("")
 
   const {
     register,
@@ -42,35 +44,64 @@ export default function SaveForm() {
           type: "success",
           description: "Veículo cadastrado com sucesso!",
         });
-        router.push("/veiculos");
+        router.replace("/veiculos");
       },
       onError: (error: unknown) => {
-        setIsOpenConfirmationNormal(false);
-        if (error instanceof AxiosError && error.response?.status === 409) {
-          setIsOpenConfirmationLink(true);
-        } else {
+        if (!axios.isAxiosError(error)) {
           toast.add({
             type: "error",
-            description: getApiErrorMessage(
-              error,
-              "Erro ao cadastrar o veículo. Tente novamente.",
-            ),
+            description: "Ocorreu um erro inesperado. Tente novamente."
           });
+          return;
+        }
+
+        setIsOpenConfirmationNormal(false);
+
+        const status = error.response?.status;
+
+        switch (status) {
+          case 409: {
+            setPlate(request.plate)
+            setIsOpenConfirmationLink(true);
+
+            break;
+          }
+          default:
+            toast.add({
+              type: "error",
+              description: "Erro ao cadastrar veículo. Tente novamente",
+            });
         }
       },
     });
   }
 
-  function handleOpenConfirmation() {
-    setIsOpenConfirmationNormal(true);
+  function handleRequestOwnership() {
+    requestVehicleAssociation(
+      { plate: plate }, {
+      onSuccess: async() => {
+        setIsOpenConfirmationLink(false);
+        toast.add({
+          type: "info",
+          description: "Proprietário notificado. Aguarde a resposta.",
+        });
+
+        await queryClient.invalidateQueries({
+          queryKey: ["current-user"],
+        });
+      },
+      onError: () => {
+        toast.add({
+          type: "error",
+          description: "Erro ao notificar proprietário. Tente novamente.",
+        });
+      }
+    }
+    )
   }
 
-  function handleRequestOwnership() {
-    setIsOpenConfirmationLink(false);
-    toast.add({
-      type: "info",
-      description: "Propretário notificado. Aguarde a resposta.",
-    });
+  function handleOpenConfirmation() {
+    setIsOpenConfirmationNormal(true);
   }
 
   return (
@@ -120,6 +151,7 @@ export default function SaveForm() {
             description="Esse veículo já está cadastrado no sistema, deseja mandar uma notificação ao proprietário para se tornar um usuário?"
             onClick={handleRequestOwnership}
             confirmText="Solicitar"
+            pending={isRequestingVehicleAssociation}
           />
         </form>
       </CardContent>

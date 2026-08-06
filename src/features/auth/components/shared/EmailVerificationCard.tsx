@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/card";
 import { toast } from "@/components/ui/toast";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
-import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
 import { useResendEmail } from "../../hooks/useAuthMutations";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 interface EmailVerificationCardProps {
   email: string;
@@ -24,11 +25,19 @@ export function EmailVerificationCard({
 }: EmailVerificationCardProps) {
   const { mutate: resendEmail, isPending } = useResendEmail();
 
-  function handleResend() {
-    if (!email) {
-      return;
-    }
+  const [cooldown, setCooldown] = useState(0);
 
+  useEffect(() => {
+    if (cooldown <= 0) return;
+
+    const timer = setInterval(() => {
+      setCooldown((current) => current - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [cooldown]);
+
+  function handleResend() {
     resendEmail(
       { email },
       {
@@ -37,15 +46,55 @@ export function EmailVerificationCard({
             type: "success",
             description: "E-mail de verificação reenviado!",
           });
+          setCooldown(60);
         },
-        onError: (error) => {
-          toast.add({
-            type: "error",
-            description: getApiErrorMessage(
-              error,
-              "Erro ao reenviar o e-mail. Tente novamente.",
-            ),
-          });
+        onError: (error: unknown) => {
+          if (!axios.isAxiosError(error)) {
+            toast.add({
+              type: "error",
+              description: "Ocorreu um erro inesperado. Tente novamente."
+            });
+            return;
+          }
+
+          const status = error.response?.status;
+
+          switch (status) {
+            case 400: {
+              toast.add({
+                type: "error",
+                description: "Informe um e-mail válido."
+              });
+              break;
+            }
+            case 404: {
+              toast.add({
+                type: "error",
+                description: "Nenhuma conta foi encontrada com este e-mail."
+              });
+              break;
+            }
+            case 409: {
+              toast.add({
+                type: "error",
+                description: "Este e-mail já foi verificado. Redirecionando para o login.",
+              });
+
+              onBackToLogin();
+              break;
+            }
+            case 500:
+              toast.add({
+                type: "error",
+                description: "Não foi possível enviar o e-mail. Tente novamente.",
+              });
+              break;
+            default:
+              toast.add({
+                type: "error",
+                description: "Ocorreu um erro inesperado.",
+              });
+          }
         },
       },
     );
@@ -68,9 +117,9 @@ export function EmailVerificationCard({
             type="button"
             variant="link"
             onClick={handleResend}
-            disabled={isPending}
+            disabled={cooldown > 0}
           >
-            {isPending ? "Reenviando..." : "Não recebeu? Reenviar e-mail"}
+            {cooldown > 0 ? `Reenviar e-mail novamente em ${cooldown}s` : "Reenviar e-mail"}
           </Button>
 
           <Button type="button" variant="link" onClick={onBackToLogin}>

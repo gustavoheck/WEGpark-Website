@@ -70,7 +70,7 @@ function parseToken(
   }
 }
 
-function clearAuthCookies() {
+export function clearAuthCookies() {
   Cookies.remove("auth_token");
   Cookies.remove("auth_role");
 }
