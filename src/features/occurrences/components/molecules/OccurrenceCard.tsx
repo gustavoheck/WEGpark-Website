@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { ChevronDown, Eye, Pencil } from "lucide-react";
@@ -20,7 +20,7 @@ import VehicleName from "@/shared/components/atoms/VehicleName";
 import { canAccessRoute } from "@/shared/config/accessControl";
 import { useAuth } from "@/shared/context/AuthContext";
 
-import { Occurrence } from "../../types/Occurrence";
+import { Occurrence } from "../../types/occurrence.type";
 import { getOccurrenceConfig } from "../../utils/occurence-helpers";
 import OccurrenceCardButton from "../atoms/OccurenceCardButton";
 
@@ -29,8 +29,12 @@ interface OccurrenceCardProps {
 }
 
 export default function OccurrenceCard({ occurrence }: OccurrenceCardProps) {
-  const { icon: IconComponent, label } = getOccurrenceConfig(occurrence);
-  const { brand, model, ownerId } = occurrence.defaults.vehicle;
+  const { icon: IconComponent, label } = getOccurrenceConfig(occurrence); const {
+    brand = "",
+    model = "",
+    vehicleUsers = [],
+  } = occurrence.defaults?.vehicle ?? {};
+  const ownerId = vehicleUsers.find((user) => user.isOwner)?.name ?? "—";
   const [isExpanded, setIsExpanded] = useState(false);
   const { user } = useAuth();
   const detailRoute = `/ocorrencias/${occurrence.uuid}`;
@@ -108,9 +112,8 @@ export default function OccurrenceCard({ occurrence }: OccurrenceCardProps) {
             >
               <span>{isExpanded ? "Ver Menos" : "Ver Mais"}</span>
               <ChevronDown
-                className={`size-4 transition-transform duration-300 ${
-                  isExpanded ? "rotate-180" : "rotate-0"
-                }`}
+                className={`size-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : "rotate-0"
+                  }`}
               />
             </CollapsibleTrigger>
           </CardFooter>
@@ -147,3 +150,5 @@ export default function OccurrenceCard({ occurrence }: OccurrenceCardProps) {
     </>
   );
 }
+
+

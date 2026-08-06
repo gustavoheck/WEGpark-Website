@@ -1,6 +1,6 @@
+import CreateOccurrenceForm from "@/features/occurrences/components/create/CreateOccurrenceForm";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
-import CreateOccurrenceForm from "@/features/occurrences/components/organisms/CreateOccurrenceForm";
 
 export default function RegistrarOcorrencia() {
   return (

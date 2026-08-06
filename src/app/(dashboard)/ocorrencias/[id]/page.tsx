@@ -1,32 +1,48 @@
-import DetailOccurence from "@/features/occurrences/components/molecules/DetailOccurrence";
-import OccurrencesListMock from "@/features/occurrences/mocks/OccurrenceListMock";
+"use client";
+
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
+
+import { Skeleton } from "@/components/ui/skeleton";
+import DetailOccurrence from "@/features/occurrences/components/molecules/DetailOccurrence";
+import {
+  useGetMyOccurrenceById,
+  useGetOccurrenceById,
+} from "@/features/occurrences/hooks/useOccurrence";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
-import { notFound } from "next/navigation";
+import { useAuth } from "@/shared/context/AuthContext";
+import { SystemRole } from "@/shared/enum/SystemRoleType";
 
-interface OccurrencesProps {
-    params: Promise<{ id: string }>;
-}
+export default function OccurrenceDetailsPage() {
+  const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
+  const generalOccurrenceQuery = useGetOccurrenceById();
+  const myOccurrenceQuery = useGetMyOccurrenceById();
+  const isParkUser = user?.currentRole === SystemRole.PARK;
+  const { mutate: getOccurrence, data: occurrence, isPending, isError } =
+    isParkUser ? myOccurrenceQuery : generalOccurrenceQuery;
 
-
-export default async function Occurrences({ params }: OccurrencesProps) {
-
-    const { id } = await params;
-    const occurrence = OccurrencesListMock.find((o) => o.uuid === id);
-
-    if (!occurrence) {
-        notFound()
+  useEffect(() => {
+    if (user) {
+      getOccurrence(id);
     }
+  }, [getOccurrence, id, user]);
 
-    return (
-        <section>
-            <div className="flex items-center w-full pt-8 pb-10 gap-3 relative justify-center">
-                <BackButton />
-                <SectionTitle text="detalhes ocorrência" className="py-0"/>
-            </div>
+  return (
+    <section>
+      <div className="relative flex w-full items-center justify-center gap-3 pt-8 pb-10">
+        <BackButton />
+        <SectionTitle text="detalhes ocorrencia" className="py-0" />
+      </div>
 
-            <DetailOccurence occurrence={occurrence} />
-        </section>
-
-    )
+      {isPending ? <Skeleton className="h-96 w-full" /> : null}
+      {isError ? (
+        <p className="text-sm text-destructive">
+          Nao foi possivel carregar a ocorrencia.
+        </p>
+      ) : null}
+      {occurrence ? <DetailOccurrence occurrence={occurrence} /> : null}
+    </section>
+  );
 }

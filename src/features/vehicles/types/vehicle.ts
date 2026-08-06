@@ -1,3 +1,5 @@
+import type { ParkUserType } from "@/shared/enum/ParkUserType";
+
 export interface CreateVehicleRequest {
     plate : string
     model : string
@@ -6,8 +8,16 @@ export interface CreateVehicleRequest {
 }
 
 export interface VehicleUserResponse {
-    userUuid : string
-    isOwner : boolean
+    userUuid: string;
+    isOwner: boolean;
+    telephone: string;
+    associationActive: boolean;
+    name: string;
+    userType: ParkUserType;
+    badgeNumber?: string;
+    location?: string;
+    boss?: string;
+    company?: string;
 }
 
 export type VehicleRequest = CreateVehicleRequest;

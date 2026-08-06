@@ -1,4 +1,4 @@
-import { BaseWarning } from "../../types/BaseWarning";
+﻿import { BaseWarning } from "../../types/occurrence.type";
 import DetailOccurrenceInformation from "./DetailOccurrenceInformation";
 import { WARNING_TYPE_MAP } from "../../enums/warning-type";
 
@@ -17,3 +17,4 @@ export default function WarningDetail ({occurrence} : WarningDetailProps) {
         </div>
     )
 }
+
