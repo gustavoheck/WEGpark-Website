@@ -206,6 +206,7 @@ export function CreateUserForm() {
             description="Confirma a criação desse usuário com os dados informados?"
             onClick={handleSubmit(onSubmit)}
             confirmText="Cadastrar"
+            pending={isPending}
           />
         </form>
       </CardContent>

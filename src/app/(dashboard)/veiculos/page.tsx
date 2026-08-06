@@ -55,16 +55,16 @@ export default function VehiclePage() {
     <>
       <SectionTitle text="veículos" />
 
-      {canViewAllVehicles ? (
-        <Filter filters={VEHICLE_CATEGORIES} onSubmit={handleFilterSubmit} />
-      ) : null}
-
       {canAdd ? (
         <FloatingActionLink
           href="/veiculos/adicionar"
           label="Cadastrar Veículo"
           Icon={Plus}
         />
+      ) : null}
+
+      {canViewAllVehicles ? (
+        <Filter filters={VEHICLE_CATEGORIES} onSubmit={handleFilterSubmit} />
       ) : null}
       <VehicleList vehicles={vehicles} isLoading={isSearching} />
 

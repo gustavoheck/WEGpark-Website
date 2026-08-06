@@ -26,6 +26,7 @@ export default function AlertDialogComponent({open, onOpenChange, onClick, title
                 <AlertDialogFooter>
                     <AlertDialogCancel className="py-5 text-lg font-semibold">Cancelar</AlertDialogCancel>
                     <AlertDialogAction
+                        type="button"
                         onClick={onClick}
                         className="py-5 text-lg font-semibold disabled:bg-muted"
                         disabled={pending}

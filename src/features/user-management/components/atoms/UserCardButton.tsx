@@ -5,17 +5,20 @@ import { cva } from "class-variance-authority";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/shared/lib/utils";
 
-const gridVariants = cva("", {
-  variants: {
-    variant: {
-      default: "",
-      last: "last:odd:col-span-2",
+const gridVariants = cva(
+  "flex h-10 min-w-0 items-center justify-center gap-2 px-2 text-xs font-medium capitalize min-[380px]:text-sm",
+  {
+    variants: {
+      variant: {
+        default: "",
+        last: "last:odd:col-span-1 min-[380px]:last:odd:col-span-2",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
     },
   },
-  defaultVariants: {
-    variant: "default",
-  },
-});
+);
 
 interface UserCardButtonProps {
   title: string;
@@ -25,6 +28,7 @@ interface UserCardButtonProps {
   Icon: ElementType;
   onClick?: () => void;
   disabled?: boolean;
+  compact?: boolean;
 }
 
 export default function UserCardButton({
@@ -35,6 +39,7 @@ export default function UserCardButton({
   onClick,
   disabled,
   variant,
+  compact = false,
 }: UserCardButtonProps) {
   const visualVariant =
     tone === "destructive"
@@ -42,21 +47,27 @@ export default function UserCardButton({
       : tone === "primary"
         ? "default"
         : "outline";
+  const actionClassName = cn(
+    gridVariants({ variant }),
+    compact && "size-9 p-0",
+  );
   const className = cn(
     buttonVariants({ variant: visualVariant }),
-    "h-11 text-md font-medium capitalize",
-    gridVariants({ variant }),
+    actionClassName,
   );
   const content = (
     <>
-      <Icon className="size-5" />
-      {title}
+      <Icon className="size-4.5" />
+      <span className={cn(compact && "sr-only")}>{title}</span>
     </>
   );
+  const accessibilityProps = compact
+    ? { "aria-label": title, title }
+    : undefined;
 
   if (href) {
     return (
-      <Link href={href} className={className}>
+      <Link href={href} className={className} {...accessibilityProps}>
         {content}
       </Link>
     );
@@ -68,10 +79,8 @@ export default function UserCardButton({
       variant={visualVariant}
       disabled={disabled}
       onClick={onClick}
-      className={cn(
-        "h-11 text-md font-medium capitalize",
-        gridVariants({ variant }),
-      )}
+      className={actionClassName}
+      {...accessibilityProps}
     >
       {content}
     </Button>

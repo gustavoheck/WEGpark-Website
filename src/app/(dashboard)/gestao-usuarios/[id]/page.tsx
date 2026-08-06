@@ -1,16 +1,18 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 
 import { useUser } from "@/features/user-management/hooks/useUserManagement";
 import DetailUser from "@/features/user-management/components/organisms/DetailUser";
+import { UserRole } from "@/features/user-management/types/User";
 
 export default function VisualizarUsuarioPage() {
     const { id } = useParams<{ id: string }>();
-    const { data: user, isPending, isError } = useUser(id);
+    const role = useSearchParams().get("role") as UserRole | null;
+    const { data: user, isPending, isError } = useUser(id, role);
 
     return (
         <section>

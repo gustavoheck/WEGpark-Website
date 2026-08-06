@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -46,9 +45,8 @@ export function UserManagementList() {
   }
 
   return (
-    <section className="pb-24">
+    <section>
       <SectionTitle text="gestão usuários" />
-      <Filter filters={USER_CATEGORIES} onSubmit={handleFilterSubmit} />
 
       {canAdd ? (
         <FloatingActionLink
@@ -57,35 +55,42 @@ export function UserManagementList() {
           Icon={Plus}
         />
       ) : null}
-      <Card>
-        <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {isPending ? (
-            <div className="col-span-full flex flex-col gap-3">
-              <Skeleton className="h-24 w-full" />
-              <Skeleton className="h-24 w-full" />
-              <Skeleton className="h-24 w-full" />
-            </div>
-          ) : null}
 
-          {isError ? (
-            <p className="col-span-full text-sm text-destructive">
-              Não foi possível carregar os usuários.
-            </p>
-          ) : null}
+      <Filter filters={USER_CATEGORIES} onSubmit={handleFilterSubmit} />
 
-          {!isPending && !isError && data?.users.length === 0 ? (
-            <p className="col-span-full py-8 text-center text-sm text-muted-foreground">
-              Nenhum usuário encontrado.
-            </p>
-          ) : null}
+      <div className="mb-24 flex flex-col gap-3 md:gap-0 md:overflow-hidden md:rounded-xl md:bg-card md:ring-1 md:ring-foreground/10">
+        <div className="hidden grid-cols-[minmax(0,1.4fr)_minmax(9rem,0.7fr)_auto] items-center gap-3 border-b bg-muted/50 px-4 py-2 text-xs font-semibold text-muted-foreground md:grid">
+          <span>Usuário</span>
+          <span>Perfil e status</span>
+          <span className="text-right">Ações</span>
+        </div>
 
-          {!isPending && !isError
-            ? data?.users.map((user) => (
-                <UserManagementCard key={user.id} user={user} />
-              ))
-            : null}
-        </CardContent>
-      </Card>
+        {isPending ? (
+          <div className="flex flex-col gap-3 md:gap-0">
+            <Skeleton className="h-24 w-full md:h-16 md:rounded-none" />
+            <Skeleton className="h-24 w-full md:h-16 md:rounded-none" />
+            <Skeleton className="h-24 w-full md:h-16 md:rounded-none" />
+          </div>
+        ) : null}
+
+        {isError ? (
+          <p className="px-4 py-8 text-center text-sm text-destructive">
+            Não foi possível carregar os usuários.
+          </p>
+        ) : null}
+
+        {!isPending && !isError && data?.users.length === 0 ? (
+          <p className="px-4 py-8 text-center text-sm text-muted-foreground">
+            Nenhum usuário encontrado.
+          </p>
+        ) : null}
+
+        {!isPending && !isError
+          ? data?.users.map((user) => (
+              <UserManagementCard key={user.id} user={user} />
+            ))
+          : null}
+      </div>
 
       {!isPending && data && data.totalPages > 1 ? (
         <Pagination className="mt-6 pb-4">

@@ -20,7 +20,7 @@ const ALLOWED_ROUTE_PREFIXES_BY_ROLE: Record<
   ],
   [SystemRole.GUARD]: ["/veiculos", "/ocorrencias", "/notificacoes", "/perfil"],
   [SystemRole.RH]: ["/gestao-usuarios", "/perfil"],
-  [SystemRole.ADMIN]: ["/gestao-usuarios", "/veiculos", "/ocorrencias"],
+  [SystemRole.ADMIN]: ["/gestao-usuarios"],
 };
 
 function isOccurrenceWriteRoute(pathname: string): boolean {
