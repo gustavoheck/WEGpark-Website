@@ -6,9 +6,6 @@ import {
     UpdateTrafficAccidentFormValues,
 } from "../schemas/UpdateOccurrenceSchema";
 import OccurrencesListMock from "../mocks/OccurrenceListMock";
-import { BaseWarning } from "../types/BaseWarning";
-import { IllegalParking } from "../types/IllegalParking";
-import { TrafficAccident } from "../types/TrafficAccident";
 
 function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
