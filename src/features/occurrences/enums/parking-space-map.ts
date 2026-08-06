@@ -1,6 +1,6 @@
 export const PARKING_SPACE_MAP = {
     COMMON : "Comum",
-    PREGNANT_WOMAN : "Gestante",
+    PREGNANT_WOMEN : "Gestante",
     DISABLED : "Deficiente",
     VISITOR : "Visitante",
     CARPOOL : "Carona Solidária",

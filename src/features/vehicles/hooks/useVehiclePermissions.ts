@@ -19,8 +19,9 @@ export function useVehiclePermissions(vehicle?: Vehicle) {
   const isGuard = user.currentRole === SystemRole.GUARD;
   const isParkUser = user.currentRole === SystemRole.PARK;
   const isAdmin = user.currentRole === SystemRole.ADMIN;
+
   const isOwner =
-    isParkUser && Boolean(vehicle?.isOwner || user.uuid === vehicle?.ownerId);
+    user.uuid === vehicle?.vehicleUsers?.find((vehicleUser) => vehicleUser.isOwner)?.userUuid;
 
   return {
     canAdd: isParkUser || isAdmin,

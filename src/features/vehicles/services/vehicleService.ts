@@ -64,6 +64,19 @@ export async function getVehicle(
   };
 }
 
+export async function findVehicleByPlate(plate: string): Promise<Vehicle | null> {
+  const normalizedPlate = plate.trim().toUpperCase();
+  const result = await getVehicle(
+    { category: "plate", value: normalizedPlate },
+    { page: 0, size: 1 },
+  );
+
+  return (
+    result.vehicles.find(
+      (vehicle) => vehicle.plate.trim().toUpperCase() === normalizedPlate,
+    ) ?? null
+  );
+}
 export async function updateVehicle( 
     uuid : string, 
     request : UpdateVehicleRequest

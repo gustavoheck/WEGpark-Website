@@ -1,15 +1,23 @@
+import { ParkUserType } from "../enum/ParkUserType"
+
 export interface VehicleUser {
-    uuid: string
+    userUuid: string
     isOwner: boolean
+    telephone: string,
+    associationActive: boolean,
+    name: string,
+    userType: ParkUserType,
+    badgeNumber?: string,
+    location?: string,
+    boss?: string,
+    company?: string
 }
 
 export default interface Vehicle {
     uuid : string
     plate : string,
-    brand : string,
     model : string,
+    brand : string,
     color : string,
-    ownerId : string,
-    users: VehicleUser[],
-    isOwner? : boolean
+    vehicleUsers: VehicleUser[]
 }

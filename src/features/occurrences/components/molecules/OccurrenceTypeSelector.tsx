@@ -1,15 +1,15 @@
-import { Label } from "@/components/ui/label";
+﻿import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/shared/lib/utils";
 import { OCCURRENCE_UI } from "../../constants/occurence-ui";
-import { OccurrenceType } from "../../schemas/CreateOccurrenceSchema";
+import type { OccurrenceType } from "../../enums/occurrence-type";
 
 const options: { value: OccurrenceType; label: string; description: string }[] =
   [
     {
       value: "WARNING",
       label: OCCURRENCE_UI.WARNING.label,
-      description: "Registre um aviso relacionado ao veículo.",
+      description: "Registre um aviso relacionado ao veÃ­culo.",
     },
     {
       value: "ILLEGAL_PARKING",
@@ -19,7 +19,7 @@ const options: { value: OccurrenceType; label: string; description: string }[] =
     {
       value: "TRAFFIC_ACCIDENT",
       label: OCCURRENCE_UI.TRAFFIC_ACCIDENT.label,
-      description: "Registre informações sobre um sinistro.",
+      description: "Registre informaÃ§Ãµes sobre um sinistro.",
     },
   ];
 export function OccurrenceTypeSelector({
@@ -31,7 +31,7 @@ export function OccurrenceTypeSelector({
 }) {
   return (
     <div className="space-y-3">
-      <p className="text-lg font-semibold">Tipo da ocorrência</p>
+      <p className="text-lg font-semibold">Tipo da ocorrÃªncia</p>
       <RadioGroup
         value={value ?? ""}
         onValueChange={(newValue) => onChange(newValue as OccurrenceType)}
@@ -64,3 +64,4 @@ export function OccurrenceTypeSelector({
     </div>
   );
 }
+

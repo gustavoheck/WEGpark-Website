@@ -1,5 +1,5 @@
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { TrafficAccident } from "../../types/TrafficAccident";
+﻿import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { TrafficAccident } from "../../types/occurrence.type";
 import DetailOccurrenceInformation from "./DetailOccurrenceInformation";
 import OccurrenceDetailsLabel from "../atoms/OccurrenceDetailsLabel";
 import { ChevronRight } from "lucide-react";
@@ -53,3 +53,4 @@ export default function TraficAccidentDetail({ occurrence }: TraficAccidentDetai
         </>
     )
 }
+
