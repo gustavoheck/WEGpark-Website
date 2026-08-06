@@ -46,10 +46,10 @@ export default function Header() {
           aria-label="Abrir notificações"
           className={cn(
             buttonVariants({ variant: "none", size: "icon" }),
-            "flex items-center absolute right-2",
+            "absolute right-4 flex items-center text-white hover:text-white",
           )}
         >
-          <Bell className="size-7" />
+          <Bell className="size-7 text-white" />
         </Link>
       ) : (
         <span aria-hidden="true" />
