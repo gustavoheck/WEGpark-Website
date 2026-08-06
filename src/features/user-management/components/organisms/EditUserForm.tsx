@@ -37,12 +37,12 @@ interface EditUserFormProps {
 export default function EditUserForm({ user }: EditUserFormProps) {
   const router = useRouter();
   const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
-  const { mutate: updateUser } = useUpdateUser();
+  const { mutate: updateUser, isPending } = useUpdateUser();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, dirtyFields, isValid },
   } = useForm<UpdateUserFormValues>({
     resolver: zodResolver(updateUserSchema),
     mode: "onChange",
@@ -50,8 +50,12 @@ export default function EditUserForm({ user }: EditUserFormProps) {
     defaultValues: user,
   });
 
+  const hasChanges = Object.keys(dirtyFields).length > 0;
+
   function handleOpenConfirmation() {
-    setIsOpenConfirmation(true);
+    if (hasChanges) {
+      setIsOpenConfirmation(true);
+    }
   }
 
   function onSubmit(data: UpdateUserFormValues) {
@@ -112,6 +116,7 @@ export default function EditUserForm({ user }: EditUserFormProps) {
               type="email"
               registration={register("email")}
               error={errors.email as FieldError}
+              readOnly
             />
             <FormField
               text="telefone"
@@ -163,7 +168,7 @@ export default function EditUserForm({ user }: EditUserFormProps) {
 
           <FormButton
             text="salvar alterações"
-            disabled={!isDirty || !isValid}
+            disabled={!hasChanges || !isValid || isPending}
           />
 
           <AlertDialogComponent
@@ -173,6 +178,7 @@ export default function EditUserForm({ user }: EditUserFormProps) {
             description="Você deseja salvar as alterações feitas nesse usuário?"
             onClick={handleSubmit(onSubmit)}
             confirmText="Salvar"
+            pending={isPending}
           />
         </form>
       </CardContent>

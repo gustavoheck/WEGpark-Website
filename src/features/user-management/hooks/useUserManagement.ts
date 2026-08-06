@@ -2,10 +2,10 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createUser, listUsers } from "../services/userManagementService";
-import { CreateUserRequestDTO } from "../types/User";
+import { CreateUserRequestDTO, UserRole } from "../types/User";
 import { deactivateUser } from "../services/userManagementService";
 import { UpdateUserRequestDTO } from "../types/User";
-import { getUserById, updateUser, activateUser } from "../services/userManagementService";
+import { getUserById, updateUser, activateUser, setRhActiveOverride } from "../services/userManagementService";
 import { GetServiceProps } from "@/shared/types/GetServiceProps";
 
 export function useUsersList(page: number, filters?: GetServiceProps) {
@@ -26,11 +26,11 @@ export function useCreateUser() {
     });
 }
 
-export function useUser(id: string) {
+export function useUser(id: string, role: UserRole | null) {
     return useQuery({
-        queryKey: ["users", "detail", id],
-        queryFn: () => getUserById(id),
-        enabled: !!id,
+        queryKey: ["users", "detail", id, role],
+        queryFn: () => getUserById(id, role!),
+        enabled: !!id && !!role,
     });
 }
 
@@ -55,8 +55,9 @@ export function useDeactivateUser() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: string) => deactivateUser(id),
-        onSuccess: () => {
+        mutationFn: ({ id }: { id: string; role: UserRole }) => deactivateUser(id),
+        onSuccess: (_, { id, role }) => {
+            if (role === "HR") setRhActiveOverride(id, false);
             queryClient.invalidateQueries({ queryKey: ["users"] });
         },
     });
@@ -66,8 +67,9 @@ export function useActivateUser() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: string) => activateUser(id),
-        onSuccess: () => {
+        mutationFn: ({ id }: { id: string; role: UserRole }) => activateUser(id),
+        onSuccess: (_, { id, role }) => {
+            if (role === "HR") setRhActiveOverride(id, true);
             queryClient.invalidateQueries({ queryKey: ["users"] });
         },
     });

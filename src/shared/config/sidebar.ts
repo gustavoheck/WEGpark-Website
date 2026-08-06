@@ -19,13 +19,13 @@ const ALL_MENU_ITEMS: Record<
     title: "Veículos",
     href: "/veiculos",
     icon: CarFront,
-    roles: [SystemRole.PARK, SystemRole.GUARD, SystemRole.ADMIN],
+    roles: [SystemRole.PARK, SystemRole.GUARD],
   },
   occurrences: {
     title: "Ocorrências",
     href: "/ocorrencias",
     icon: Newspaper,
-    roles: [SystemRole.PARK, SystemRole.GUARD, SystemRole.ADMIN],
+    roles: [SystemRole.PARK, SystemRole.GUARD],
   },
   notifications: {
     title: "Notificações",
@@ -45,17 +45,17 @@ const ALL_MENU_ITEMS: Record<
     icon: PenBox,
     roles: [SystemRole.PARK],
   },
-  logout: {
-    title: "Sair",
-    icon: LogOut,
-    action: "logout",
-    roles: [SystemRole.PARK, SystemRole.GUARD, SystemRole.RH, SystemRole.ADMIN],
-  },
   userManagement: {
     title: "Gestão de Usuários",
     href: "/gestao-usuarios",
     icon: Users,
     roles: [SystemRole.RH, SystemRole.ADMIN],
+  },
+  logout: {
+    title: "Sair",
+    icon: LogOut,
+    action: "logout",
+    roles: [SystemRole.PARK, SystemRole.GUARD, SystemRole.RH, SystemRole.ADMIN],
   },
 };
 

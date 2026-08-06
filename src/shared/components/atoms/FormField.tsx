@@ -9,6 +9,7 @@ interface FormFieldProps {
     registration?: UseFormRegisterReturn;
     error?: RHFFieldError;
     disabled?: boolean;
+    readOnly?: boolean;
     defaultValue?: string;
 }
 
@@ -20,6 +21,7 @@ export default function FormField(
         error,
         type = "text",
         disabled = false,
+        readOnly = false,
         defaultValue = ""
     } :
     FormFieldProps
@@ -38,6 +40,7 @@ export default function FormField(
                 {...registration}
                 aria-invalid={!!error}
                 disabled={disabled}
+                readOnly={readOnly}
                 defaultValue={defaultValue}
             />
             {error ? (

@@ -2,18 +2,19 @@ import { useState } from "react";
 
 import { toast } from "@/components/ui/toast";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
+import { UserRole } from "../types/User";
 
 import { useActivateUser, useDeactivateUser } from "./useUserManagement";
 
 type ActiveDialog = "deactivate" | "activate" | null;
 
-export function useUserCardActions(userId: string) {
+export function useUserCardActions(userId: string, role: UserRole) {
   const [activeDialog, setActiveDialog] = useState<ActiveDialog>(null);
   const { mutate: deactivateUser } = useDeactivateUser();
   const { mutate: activateUser } = useActivateUser();
 
   function handleDeactivate() {
-    deactivateUser(userId, {
+    deactivateUser({ id: userId, role }, {
       onSuccess: () => {
         setActiveDialog(null);
         toast.add({
@@ -35,7 +36,7 @@ export function useUserCardActions(userId: string) {
   }
 
   function handleActivate() {
-    activateUser(userId, {
+    activateUser({ id: userId, role }, {
       onSuccess: () => {
         setActiveDialog(null);
         toast.add({
