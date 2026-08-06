@@ -11,6 +11,8 @@ import {
 } from "../types/vehicle";
 import { GetServiceProps } from "@/shared/types/GetServiceProps";
 import { mapVehicleResponseToDomain } from "../mappers/vehicleMapper";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const DEFAULT_PAGEABLE = {
   page: 0,
@@ -28,15 +30,58 @@ export interface VehiclePage {
   last: boolean;
 }
 
-export async function saveVehicle( request : VehicleRequest
-): Promise<Vehicle> {
-    const { data } = await api.post<VehicleResponse>("/vehicle", request);
-    return mapVehicleResponseToDomain(data);
+interface TokenUser {
+  uuid?: string;
+}
+
+function getHiddenVehiclesStorageKey(): string | null {
+  if (typeof window === "undefined") return null;
+
+  const token = Cookies.get("auth_token");
+  if (!token) return null;
+
+  try {
+    const { uuid } = jwtDecode<TokenUser>(token);
+    return uuid ? `wegpark:hidden-vehicles:${uuid}` : null;
+  } catch {
+    return null;
+  }
+}
+
+function getHiddenVehicleUuids(): Set<string> {
+  const key = getHiddenVehiclesStorageKey();
+  if (!key) return new Set();
+
+  try {
+    return new Set(JSON.parse(localStorage.getItem(key) ?? "[]") as string[]);
+  } catch {
+    return new Set();
+  }
+}
+
+function setVehicleHidden(vehicleUuid: string, hidden: boolean): void {
+  const key = getHiddenVehiclesStorageKey();
+  if (!key) return;
+
+  const hiddenVehicles = getHiddenVehicleUuids();
+  if (hidden) hiddenVehicles.add(vehicleUuid);
+  else hiddenVehicles.delete(vehicleUuid);
+  localStorage.setItem(key, JSON.stringify([...hiddenVehicles]));
+}
+
+export async function saveVehicle(request: VehicleRequest): Promise<Vehicle> {
+  const { data } = await api.post<VehicleResponse>("/vehicle", request);
+  const vehicle = mapVehicleResponseToDomain(data);
+  setVehicleHidden(vehicle.uuid, false);
+  return vehicle;
 }
 
 export async function getMyVehicles(): Promise<Vehicle[]> {
   const { data } = await api.get<VehicleResponse[]>("/vehicle/me");
-  return data.map(mapVehicleResponseToDomain);
+  const hiddenVehicles = getHiddenVehicleUuids();
+  return data
+    .map(mapVehicleResponseToDomain)
+    .filter((vehicle) => !hiddenVehicles.has(vehicle.uuid));
 }
 
 export async function getVehicle(
@@ -64,23 +109,33 @@ export async function getVehicle(
   };
 }
 
-export async function updateVehicle( 
-    uuid : string, 
-    request : UpdateVehicleRequest
+export async function updateVehicle(
+  uuid: string,
+  request: UpdateVehicleRequest,
 ): Promise<Vehicle> {
-    const { data } = await api.put<UpdateVehicleResponse>(`/vehicle/${uuid}`, request);
-    return mapVehicleResponseToDomain(data);
+  const { data } = await api.put<UpdateVehicleResponse>(
+    `/vehicle/${uuid}`,
+    request,
+  );
+  return mapVehicleResponseToDomain(data);
 }
 
-export async function requestVehicleAssociation(request: AssociationNotificationRequest): Promise<void> {
+export async function requestVehicleAssociation(
+  request: AssociationNotificationRequest,
+): Promise<void> {
   await api.post("/vehicle/associate/notification", request);
 }
 
-export async function confirmVehicleAssociation(notificationUuid: string): Promise<AssociatedVehicleUserResponse> {
-  const { data } = await api.post<AssociatedVehicleUserResponse>(`/vehicle/associate/${notificationUuid}`);
+export async function confirmVehicleAssociation(
+  notificationUuid: string,
+): Promise<AssociatedVehicleUserResponse> {
+  const { data } = await api.post<AssociatedVehicleUserResponse>(
+    `/vehicle/associate/${notificationUuid}`,
+  );
   return data;
 }
 
 export async function unlinkVehicle(vehicleUuid: string): Promise<void> {
   await api.post(`/vehicle/associate/disable/${vehicleUuid}`);
+  setVehicleHidden(vehicleUuid, true);
 }
