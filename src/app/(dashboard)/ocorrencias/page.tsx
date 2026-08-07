@@ -19,7 +19,9 @@ import {
 } from "@/features/occurrences/hooks/useOccurrence";
 import FloatingActionLink from "@/shared/components/atoms/FloatingActionLink";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
-import Filter, { type FilterParams } from "@/shared/components/molecules/Filter";
+import Filter, {
+  type FilterParams,
+} from "@/shared/components/molecules/Filter";
 import { canAccessRoute } from "@/shared/config/accessControl";
 import { useAuth } from "@/shared/context/AuthContext";
 import { SystemRole } from "@/shared/enum/SystemRoleType";
@@ -76,9 +78,7 @@ export default function OccurrencesPage() {
     <>
       <SectionTitle text="ocorrências" />
 
-      {canViewAllOccurrences &&
-      !isError &&
-      (occurrences.length > 0 || Boolean(filterParams)) ? (
+      {canViewAllOccurrences && !isError ? (
         <Filter filters={occurrenceFilters} onSubmit={handleFilterSubmit} />
       ) : null}
 
@@ -168,7 +168,6 @@ export default function OccurrencesPage() {
           </PaginationContent>
         </Pagination>
       ) : null}
-
     </>
   );
 }

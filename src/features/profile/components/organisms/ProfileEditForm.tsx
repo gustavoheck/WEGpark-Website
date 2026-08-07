@@ -7,7 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 
 import { FieldGroup } from "@/components/ui/field";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "@/components/ui/toast";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
@@ -189,7 +195,10 @@ export function ProfileEditForm() {
 
   if (profile.parkUserType === "GUARD") {
     return (
-      <Card>
+      <Card
+        size="sm"
+        className="mx-auto w-full max-w-5xl border-border/70 shadow-sm"
+      >
         <CardContent className="py-8 text-center text-muted-foreground">
           A edição do perfil da guarita ainda não está disponível na API.
         </CardContent>
@@ -203,13 +212,22 @@ export function ProfileEditForm() {
         <ProfilePicture
           name={profile.name}
           variant="secondary"
-          className="w-40 h-40 text-6xl mb-8"
+          className="mb-5 h-28 w-28 text-4xl"
         />
       </div>
-      <Card>
+      <Card
+        size="sm"
+        className="mx-auto w-full max-w-5xl border-border/70 shadow-sm"
+      >
+        <CardHeader className="border-b bg-muted/20 pb-4">
+          <CardTitle>Informações pessoais</CardTitle>
+          <CardDescription>
+            Mantenha seus dados de identificação atualizados.
+          </CardDescription>
+        </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(handleConfirmEdit)}>
-            <FieldGroup className="gap-4 mb-6">
+            <FieldGroup className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
               <FormField
                 text="nome"
                 id="name"
@@ -245,9 +263,7 @@ export function ProfileEditForm() {
                   register={
                     register as unknown as UseFormRegister<RhProfileFormValues>
                   }
-                  errors={
-                    errors as unknown as FieldErrors<RhProfileFormValues>
-                  }
+                  errors={errors as unknown as FieldErrors<RhProfileFormValues>}
                 />
               ) : (
                 <EmployeeProfileFields
@@ -262,6 +278,7 @@ export function ProfileEditForm() {
             </FieldGroup>
 
             <FormButton
+              desktopCompact
               text="salvar alterações"
               disabled={!isDirty}
             />

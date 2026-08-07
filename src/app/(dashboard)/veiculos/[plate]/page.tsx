@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { Check } from "lucide-react";
+import { CarFront, Check } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -16,9 +16,11 @@ import { useAuth } from "@/shared/context/AuthContext";
 
 function VehicleField({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <span className="text-lg font-semibold text-primary">{label}</span>
-      <p className="text-base font-semibold text-foreground">{value}</p>
+    <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5">
+      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        {label}
+      </span>
+      <p className="mt-1 text-base font-semibold text-foreground">{value}</p>
     </div>
   );
 }
@@ -27,7 +29,9 @@ export default function VehicleDetailsPage() {
   const params = useParams<{ plate: string }>();
   const { user } = useAuth();
   const { canViewAllVehicles } = useVehiclePermissions();
-  const plate = decodeURIComponent(params.plate ?? "").trim().toUpperCase();
+  const plate = decodeURIComponent(params.plate ?? "")
+    .trim()
+    .toUpperCase();
   const allVehiclesQuery = useGetVehicles(
     { category: "plate", value: plate },
     Boolean(plate) && canViewAllVehicles,
@@ -57,7 +61,9 @@ export default function VehicleDetailsPage() {
       </div>
 
       {isSearching ? (
-        <p className="text-center text-muted-foreground">Carregando veículo...</p>
+        <p className="text-center text-muted-foreground">
+          Carregando veículo...
+        </p>
       ) : null}
       {isError ? (
         <p className="text-center text-destructive">
@@ -71,19 +77,30 @@ export default function VehicleDetailsPage() {
       ) : null}
 
       {vehicle ? (
-        <Card className="mx-auto mb-8 max-w-3xl">
-          <CardHeader className="items-center text-center">
-            <h2 className="text-2xl font-medium text-primary">
-              {vehicle.brand} {vehicle.model}
-            </h2>
+        <Card
+          size="sm"
+          className="mx-auto mb-6 w-full max-w-5xl border-border/70 shadow-sm"
+        >
+          <CardHeader className="flex flex-row items-center gap-3 border-b bg-muted/20 pb-4">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <CarFront className="size-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="truncate text-lg font-semibold text-foreground">
+                {vehicle.brand} {vehicle.model}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Informações e identificação do veículo
+              </p>
+            </div>
             {isOwner ? (
-              <Badge className="mt-2 gap-1">
+              <Badge className="shrink-0 gap-1">
                 <Check className="size-3.5" />
                 Proprietário
               </Badge>
             ) : null}
           </CardHeader>
-          <CardContent className="flex flex-col gap-2 px-4">
+          <CardContent className="grid gap-3 px-3 sm:grid-cols-2 lg:grid-cols-4">
             <VehicleField label="Placa" value={vehicle.plate} />
             <VehicleField label="Marca" value={vehicle.brand} />
             <VehicleField label="Modelo" value={vehicle.model} />

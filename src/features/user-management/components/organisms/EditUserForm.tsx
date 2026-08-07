@@ -5,7 +5,13 @@ import { useForm, UseFormRegister, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { FieldGroup } from "@/components/ui/field";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
@@ -95,10 +101,19 @@ export default function EditUserForm({ user }: EditUserFormProps) {
   }
 
   return (
-    <Card>
+    <Card
+      size="sm"
+      className="mx-auto w-full max-w-5xl border-border/70 shadow-sm"
+    >
+      <CardHeader className="border-b bg-muted/20 pb-4">
+        <CardTitle>Informações do usuário</CardTitle>
+        <CardDescription>
+          Revise os dados pessoais e profissionais do usuário.
+        </CardDescription>
+      </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(handleOpenConfirmation)}>
-          <FieldGroup className="gap-4 mb-6">
+          <FieldGroup className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
             <input
               type="hidden"
               {...register("role")}
@@ -167,6 +182,7 @@ export default function EditUserForm({ user }: EditUserFormProps) {
           </FieldGroup>
 
           <FormButton
+            desktopCompact
             text="salvar alterações"
             disabled={!hasChanges || !isValid || isPending}
           />

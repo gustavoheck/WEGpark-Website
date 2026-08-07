@@ -11,7 +11,7 @@ export default function ConfirmedVehicleCard({
   onChangeVehicle,
 }: ConfirmedVehicleCardProps) {
   return (
-    <div className="rounded-lg border bg-muted/40 p-4">
+    <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 md:col-span-2">
       <p className="font-semibold">Veículo confirmado</p>
 
       <p className="text-sm text-muted-foreground">

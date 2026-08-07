@@ -1,7 +1,13 @@
 "use client";
 
 import { FieldGroup } from "@/components/ui/field";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { VehicleFormData, vehicleSchema } from "../../schemas/VehicleSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,8 +28,13 @@ export default function SaveForm() {
   const [isOpenConfirmationNormal, setIsOpenConfirmationNormal] =
     useState(false);
   const [isOpenConfirmationLink, setIsOpenConfirmationLink] = useState(false);
-  const { createVehicle, requestVehicleAssociation, isCreating, isRequestingVehicleAssociation } = useVehicle();
-  const [plate, setPlate] = useState("")
+  const {
+    createVehicle,
+    requestVehicleAssociation,
+    isCreating,
+    isRequestingVehicleAssociation,
+  } = useVehicle();
+  const [plate, setPlate] = useState("");
 
   const {
     register,
@@ -50,7 +61,7 @@ export default function SaveForm() {
         if (!axios.isAxiosError(error)) {
           toast.add({
             type: "error",
-            description: "Ocorreu um erro inesperado. Tente novamente."
+            description: "Ocorreu um erro inesperado. Tente novamente.",
           });
           return;
         }
@@ -61,7 +72,7 @@ export default function SaveForm() {
 
         switch (status) {
           case 409: {
-            setPlate(request.plate)
+            setPlate(request.plate);
             setIsOpenConfirmationLink(true);
 
             break;
@@ -78,30 +89,31 @@ export default function SaveForm() {
 
   function handleRequestOwnership() {
     requestVehicleAssociation(
-      { plate: plate }, {
-      onSuccess: async() => {
-        setIsOpenConfirmationLink(false);
-        toast.add({
-          type: "info",
-          description: "Proprietário notificado. Aguarde a resposta.",
-        });
+      { plate: plate },
+      {
+        onSuccess: async () => {
+          setIsOpenConfirmationLink(false);
+          toast.add({
+            type: "info",
+            description: "Proprietário notificado. Aguarde a resposta.",
+          });
 
-        await queryClient.invalidateQueries({
-          queryKey: ["current-user"],
-        });
-        await queryClient.invalidateQueries({
-          queryKey: ["requests", "vehicle-association"],
-        });
-        router.replace("/veiculos");
+          await queryClient.invalidateQueries({
+            queryKey: ["current-user"],
+          });
+          await queryClient.invalidateQueries({
+            queryKey: ["requests", "vehicle-association"],
+          });
+          router.replace("/veiculos");
+        },
+        onError: () => {
+          toast.add({
+            type: "error",
+            description: "Erro ao notificar proprietário. Tente novamente.",
+          });
+        },
       },
-      onError: () => {
-        toast.add({
-          type: "error",
-          description: "Erro ao notificar proprietário. Tente novamente.",
-        });
-      }
-    }
-    )
+    );
   }
 
   function handleOpenConfirmation() {
@@ -109,10 +121,19 @@ export default function SaveForm() {
   }
 
   return (
-    <Card>
+    <Card
+      size="sm"
+      className="mx-auto w-full max-w-5xl border-border/70 shadow-sm"
+    >
+      <CardHeader className="border-b bg-muted/20 pb-4">
+        <CardTitle>Dados do veículo</CardTitle>
+        <CardDescription>
+          Informe as características que identificam o veículo.
+        </CardDescription>
+      </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(handleOpenConfirmation)}>
-          <FieldGroup className="gap-4 mb-6">
+          <FieldGroup className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               text="placa"
               id="plate"
@@ -138,7 +159,11 @@ export default function SaveForm() {
               error={errors.color}
             />
           </FieldGroup>
-          <FormButton text="cadastrar veículo" disabled={!isValid} />
+          <FormButton
+            desktopCompact
+            text="cadastrar veículo"
+            disabled={!isValid}
+          />
           <AlertDialogComponent
             open={isOpenConfirmationNormal}
             onOpenChange={setIsOpenConfirmationNormal}

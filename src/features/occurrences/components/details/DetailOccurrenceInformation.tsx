@@ -1,10 +1,7 @@
 import OccurrenceDetailsLabel from "../atoms/OccurrenceDetailsLabel";
 
 type DetailValue =
-  | string
-  | { defaults?: { name?: string } | null }
-  | null
-  | undefined;
+  string | { defaults?: { name?: string } | null } | null | undefined;
 
 type DetailOccurrenceInformationProps = {
   label: string;
@@ -16,14 +13,12 @@ export default function DetailOccurrenceInformation({
   data,
 }: DetailOccurrenceInformationProps) {
   const value =
-    typeof data === "string"
-      ? data
-      : (data?.defaults?.name ?? "Não informado");
+    typeof data === "string" ? data : (data?.defaults?.name ?? "Não informado");
 
   return (
-    <div>
+    <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5">
       <OccurrenceDetailsLabel text={label} />
-      <p className="text-base font-semibold">{value}</p>
+      <p className="mt-1 text-base font-semibold text-foreground">{value}</p>
     </div>
   );
 }

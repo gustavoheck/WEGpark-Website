@@ -5,7 +5,13 @@ import { useForm, UseFormRegister, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
 import FormField from "@/shared/components/atoms/FormField";
 import FormButton from "@/shared/components/atoms/FormButton";
@@ -102,10 +108,19 @@ export function CreateUserForm() {
   }
 
   return (
-    <Card>
+    <Card
+      size="sm"
+      className="mx-auto w-full max-w-5xl border-border/70 shadow-sm"
+    >
+      <CardHeader className="border-b bg-muted/20 pb-4">
+        <CardTitle>Informações do usuário</CardTitle>
+        <CardDescription>
+          Preencha os dados pessoais e escolha o perfil de acesso.
+        </CardDescription>
+      </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(handleConfirm)}>
-          <FieldGroup className="gap-4 mb-6">
+          <FieldGroup className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               text="nome"
               id="name"
@@ -195,6 +210,7 @@ export function CreateUserForm() {
           ) : null}
 
           <FormButton
+            desktopCompact
             text={isPending ? "cadastrando..." : "cadastrar usuário"}
             disabled={!selectedRole || isPending}
           />

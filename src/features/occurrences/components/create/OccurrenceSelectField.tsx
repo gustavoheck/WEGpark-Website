@@ -24,16 +24,13 @@ export default function OccurrenceSelectField({
 }: OccurrenceSelectFieldProps) {
   return (
     <div className="grid gap-2">
-      <span className="text-lg font-semibold">{label}</span>
+      <span className="text-sm font-medium">{label}</span>
 
       <Select
         value={value ?? null}
         onValueChange={(nextValue) => onChange(nextValue ?? "")}
       >
-        <SelectTrigger
-          className="h-auto w-full py-5 text-lg"
-          aria-invalid={Boolean(error)}
-        >
+        <SelectTrigger className="w-full" aria-invalid={Boolean(error)}>
           <SelectValue placeholder="Selecione uma opção">
             {value ? (options[value] ?? value) : null}
           </SelectValue>
@@ -42,11 +39,7 @@ export default function OccurrenceSelectField({
         <SelectContent>
           <SelectGroup>
             {Object.entries(options).map(([optionValue, optionLabel]) => (
-              <SelectItem
-                key={optionValue}
-                value={optionValue}
-                className="py-3 text-lg"
-              >
+              <SelectItem key={optionValue} value={optionValue}>
                 {optionLabel}
               </SelectItem>
             ))}

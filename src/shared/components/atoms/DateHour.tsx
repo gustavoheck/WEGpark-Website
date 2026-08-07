@@ -7,9 +7,9 @@ export default function DateHour({ dateHour }: { dateHour: string }) {
   return (
     <time
       dateTime={dateHour}
-      className="flex flex-wrap items-baseline gap-1 text-xs text-muted-foreground"
+      className="mt-1 flex flex-wrap items-baseline gap-1 text-sm text-muted-foreground"
     >
-      <span className="font-bold text-foreground">{formattedDate}</span>
+      <span className="font-semibold text-foreground">{formattedDate}</span>
       <span>às {formattedTime}</span>
     </time>
   );
