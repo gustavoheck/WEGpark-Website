@@ -5,6 +5,7 @@ import {
     TableCell,
     TableRow,
 } from "@/components/ui/table";
+import AlertDialog from "@/shared/components/organisms/AlertDialog";
 import Vehicle from "@/shared/types/Vehicle";
 import { useVehiclePermissions } from "../../hooks/useVehiclePermissions";
 import VehicleCardButton from "./VehicleCardButton";
@@ -116,6 +117,26 @@ export default function VehicleTableRow({
                         />
                     )}
                 </div>
+
+                <AlertDialog
+                    open={isUnlinkDialogOpen && isOwner}
+                    onOpenChange={setIsUnlinkDialogOpen}
+                    title="Excluir veículo"
+                    description="Você realmente deseja excluir esse veículo? Esta ação removerá seu vínculo e os vínculos de todos os usuários com esse veículo."
+                    onClick={handleUnlink}
+                    confirmText="Excluir"
+                    pending={isUnlinking}
+                />
+
+                <AlertDialog
+                    open={isUnlinkDialogOpen && !isOwner}
+                    onOpenChange={setIsUnlinkDialogOpen}
+                    title="Desvincular veículo"
+                    description="Você realmente deseja se desvincular desse veículo? Esta ação removerá seu vínculo, e você só poderá recuperá-lo ao pedir permissão novamente."
+                    onClick={handleUnlink}
+                    confirmText="Desvincular"
+                    pending={isUnlinking}
+                />
             </TableCell>
         </TableRow>
     );

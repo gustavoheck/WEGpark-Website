@@ -11,6 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 import OccurrenceList from "@/features/occurrences/components/view/OccurrenceList";
 import {
   useGetMyOccurrences,
@@ -75,28 +76,46 @@ export default function OccurrencesPage() {
     <>
       <SectionTitle text="ocorrências" />
 
-      {canViewAllOccurrences && !isError && occurrences.length != 0 && (
+      {canViewAllOccurrences &&
+      !isError &&
+      (occurrences.length > 0 || Boolean(filterParams)) ? (
         <Filter filters={occurrenceFilters} onSubmit={handleFilterSubmit} />
+      ) : null}
+
+      {isLoading && occurrences.length === 0 && (
+        <div className="flex flex-col gap-3">
+          <Skeleton className="h-24 w-full md:h-16" />
+          <Skeleton className="h-24 w-full md:h-16" />
+          <Skeleton className="h-24 w-full md:h-16" />
+        </div>
       )}
 
-      {!isError && occurrences.length != 0 && (
+      {!isError && occurrences.length > 0 && (
         <OccurrenceList occurrences={occurrences} />
       )}
 
       {isError && (
-        <DisplayCard 
+        <DisplayCard
           Icon={AlertTriangle}
           title="Não foi possível carregar as ocorrências."
-          description="Tente carrega-las novamente"
+          description="Tente carregá-las novamente."
           destructive
         />
       )}
 
-      {!isError && occurrences.length === 0 && (
-        <DisplayCard 
+      {!isLoading && !isError && occurrences.length === 0 && (
+        <DisplayCard
           Icon={StickyNote}
-          title="Nenhuma ocorrência cadastrada no momento."
-          description="Ocorrências novas serão disponibilizados assim quando cadastrados."
+          title={
+            filterParams
+              ? "Nenhuma ocorrência encontrada"
+              : "Nenhuma ocorrência cadastrada"
+          }
+          description={
+            filterParams
+              ? "Tente alterar os filtros da pesquisa."
+              : "Novas ocorrências aparecerão aqui quando forem cadastradas."
+          }
         />
       )}
 
@@ -108,7 +127,7 @@ export default function OccurrencesPage() {
         />
       )}
 
-      {totalPages > 1 ? (
+      {!isError && totalPages > 1 ? (
         <Pagination className="mt-6 pb-4">
           <PaginationContent>
             <PaginationItem>

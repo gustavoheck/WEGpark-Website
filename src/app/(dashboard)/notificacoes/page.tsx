@@ -1,18 +1,21 @@
-"use client"
+"use client";
+
+import { AlertTriangle, BellOff } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import NotificationList from "@/features/notifications/components/NotificationList";
 import { useNotifications } from "@/features/notifications/hooks/useNotifications";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import { DisplayCard } from "@/shared/components/molecules/DisplayCard";
-import { AlertTriangle, BellOff } from "lucide-react";
 
 export default function Notifications() {
   const {
-      notifications,
-      isLoading,
-      isError
-    } = useNotifications();
+    notifications,
+    isLoading,
+    isError,
+    deleteNotification,
+    deletingNotificationUuid,
+  } = useNotifications();
 
   return (
     <>
@@ -28,27 +31,28 @@ export default function Notifications() {
 
       {!isLoading && isError && (
         <DisplayCard
-            Icon={AlertTriangle}
-            title="Não foi possível carregar as notificações"
-            description="Tente novamente mais tarde."
-            destructive
-         />
+          Icon={AlertTriangle}
+          title="Não foi possível carregar as notificações"
+          description="Tente novamente mais tarde."
+          destructive
+        />
       )}
 
       {!isLoading && !isError && notifications.length === 0 && (
         <DisplayCard
-            Icon={BellOff}
-            title="Nenhuma notificação no momento"
-            description="Novos avisos aparecerão aqui quando estiverem disponíveis."
-         />
+          Icon={BellOff}
+          title="Nenhuma notificação no momento"
+          description="Novos avisos aparecerão aqui quando estiverem disponíveis."
+        />
       )}
 
       {!isLoading && !isError && notifications.length > 0 && (
-        <NotificationList 
-        notifications={notifications}
+        <NotificationList
+          notifications={notifications}
+          onDelete={deleteNotification}
+          deletingNotificationUuid={deletingNotificationUuid}
         />
-      )}      
+      )}
     </>
-    
   );
 }

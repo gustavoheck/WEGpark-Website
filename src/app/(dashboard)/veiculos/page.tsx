@@ -11,6 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 import VehicleList from "@/features/vehicles/components/view/VehicleList";
 import { VEHICLE_CATEGORIES } from "@/features/vehicles/constants/vehicleFilters";
 import {
@@ -56,28 +57,42 @@ export default function VehiclePage() {
     <>
       <SectionTitle text="veículos" />
 
-      {canViewAllVehicles && !isError && vehicles.length != 0 && (
+      {canViewAllVehicles &&
+      !isError &&
+      (vehicles.length > 0 || Boolean(filterParams)) ? (
         <Filter filters={VEHICLE_CATEGORIES} onSubmit={handleFilterSubmit} />
+      ) : null}
+
+      {isSearching && vehicles.length === 0 && (
+        <div className="flex flex-col gap-3">
+          <Skeleton className="h-24 w-full md:h-16" />
+          <Skeleton className="h-24 w-full md:h-16" />
+          <Skeleton className="h-24 w-full md:h-16" />
+        </div>
       )}
 
-      {!isError && vehicles.length != 0 && (
+      {!isError && vehicles.length > 0 && (
         <VehicleList vehicles={vehicles} />
       )}
 
       {isError && (
-        <DisplayCard 
+        <DisplayCard
           Icon={AlertTriangle}
           title="Não foi possível carregar os veículos."
-          description="Tente carrega-los novamente"
+          description="Tente carregá-los novamente."
           destructive
         />
       )}
 
-      {!isError && vehicles.length === 0 && (
-        <DisplayCard 
+      {!isSearching && !isError && vehicles.length === 0 && (
+        <DisplayCard
           Icon={Car}
-          title="Nenhum veículo cadastrado no momento."
-          description="Veículos novos serão disponibilizados assim quando cadastrados."
+          title={filterParams ? "Nenhum veículo encontrado" : "Nenhum veículo cadastrado"}
+          description={
+            filterParams
+              ? "Tente alterar os filtros da pesquisa."
+              : "Novos veículos aparecerão aqui quando forem cadastrados."
+          }
         />
       )}
 
@@ -89,7 +104,7 @@ export default function VehiclePage() {
         />
       )}
 
-      {canViewAllVehicles && totalPages > 1 ? (
+      {!isError && canViewAllVehicles && totalPages > 1 ? (
         <Pagination className="mt-6 pb-4">
           <PaginationContent>
             <PaginationItem>

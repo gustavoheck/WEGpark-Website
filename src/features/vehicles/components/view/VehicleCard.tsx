@@ -172,42 +172,6 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
         </Card>
       </Collapsible>
 
-      <div className="hidden min-h-16 grid-cols-[minmax(0,1.3fr)_minmax(7rem,0.7fr)_auto] items-center gap-3 border-b px-4 py-2 last:border-b-0 md:grid">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Car className="size-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="truncate font-bold tracking-wide text-foreground">
-              {plate}
-            </p>
-            <p className="truncate text-xs text-muted-foreground">
-              {brand}{" "}
-              <span className="font-medium text-foreground">{model}</span>
-            </p>
-          </div>
-        </div>
-
-        <div className="flex min-w-0 flex-col items-start gap-1">
-          <Badge
-            variant="outline"
-            className="max-w-full font-semibold capitalize mix-blend-multiply"
-          >
-            <span className="truncate">{color}</span>
-          </Badge>
-          {isOwner ? (
-            <span className="flex items-center gap-1 text-xs font-medium text-primary">
-              <Check className="size-3.5" />
-              Proprietário
-            </span>
-          ) : null}
-        </div>
-
-        <div className="flex flex-wrap items-center justify-end gap-1">
-          {renderActions(true)}
-        </div>
-      </div>
-
       <AlertDialog
         open={isUnlinkDialogOpen && isOwner}
         onOpenChange={setIsUnlinkDialogOpen}
