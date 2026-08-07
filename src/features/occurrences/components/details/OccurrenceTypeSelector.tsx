@@ -30,22 +30,22 @@ export function OccurrenceTypeSelector({
   onChange: (value: OccurrenceType) => void;
 }) {
   return (
-    <div className="space-y-3">
-      <p className="text-lg font-semibold">Tipo da ocorrência</p>
+    <div className="space-y-3 md:col-span-2">
+      <p className="text-sm font-medium">Tipo da ocorrência</p>
       <RadioGroup
         value={value ?? ""}
         onValueChange={(newValue) => onChange(newValue as OccurrenceType)}
-        className="grid grid-cols-1 gap-4 md:grid-cols-3"
+        className="grid grid-cols-1 gap-3 md:grid-cols-3"
       >
         {options.map((option) => (
           <Label
             key={option.value}
             htmlFor={`occurrence-${option.value}`}
             className={cn(
-              "flex cursor-pointer flex-col gap-1 rounded-lg border p-4 transition-colors",
+              "flex cursor-pointer flex-col gap-1 rounded-xl border p-4 transition-colors hover:bg-muted/50",
               value === option.value
-                ? "border-primary bg-primary/5"
-                : "border-input"
+                ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                : "border-input",
             )}
           >
             <div className="flex items-center gap-2">
@@ -64,4 +64,3 @@ export function OccurrenceTypeSelector({
     </div>
   );
 }
-

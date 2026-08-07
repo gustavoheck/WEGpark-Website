@@ -10,7 +10,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
 import { toast } from "@/components/ui/toast";
 
@@ -32,8 +38,9 @@ import ConfirmedVehicleCard from "./ConfirmedVehicleCard";
 import OccurrenceDetailsFields from "./OccurrenceDetailsField";
 import VehicleConfirmationDialog from "./VehicleConfirmationDialog";
 
-const occurrenceFormResolver =
-  zodResolver(createOccurrenceSchema) as unknown as Resolver<OccurrenceFormInput>;
+const occurrenceFormResolver = zodResolver(
+  createOccurrenceSchema,
+) as unknown as Resolver<OccurrenceFormInput>;
 
 export default function CreateOccurrenceForm() {
   const router = useRouter();
@@ -42,7 +49,6 @@ export default function CreateOccurrenceForm() {
   const [foundVehicle, setFoundVehicle] = useState<Vehicle | null>(null);
   const [isVehicleDialogOpen, setIsVehicleDialogOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-
 
   const { mutate: createOccurrence, isPending } = useCreate();
   const { mutateAsync: findVehicleByPlate, isPending: isSearching } =
@@ -163,10 +169,19 @@ export default function CreateOccurrenceForm() {
 
   return (
     <FormProvider {...form}>
-      <Card>
+      <Card
+        size="sm"
+        className="mx-auto w-full max-w-5xl border-border/70 shadow-sm"
+      >
+        <CardHeader className="border-b bg-muted/20 pb-4">
+          <CardTitle>Dados da ocorrência</CardTitle>
+          <CardDescription>
+            Confirme o veículo e registre as informações do ocorrido.
+          </CardDescription>
+        </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(openConfirmation)}>
-            <FieldGroup className="mb-6 gap-4">
+            <FieldGroup className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
               <VehicleSearchField
                 disabled={Boolean(vehicle)}
                 searching={isSearching}
@@ -174,7 +189,7 @@ export default function CreateOccurrenceForm() {
               />
 
               {!vehicle && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground md:col-span-2">
                   Busque e confirme o veículo para preencher os dados da
                   ocorrência.
                 </p>
@@ -193,6 +208,7 @@ export default function CreateOccurrenceForm() {
             </FieldGroup>
 
             <FormButton
+              desktopCompact
               text={isPending ? "Registrando..." : "Registrar ocorrência"}
               disabled={
                 !vehicle ||

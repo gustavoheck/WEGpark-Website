@@ -23,7 +23,7 @@ export default function VehicleSearchField({
   } = useFormContext<OccurrenceFormInput>();
 
   return (
-    <div className="flex items-end gap-3">
+    <div className="flex items-end gap-3 md:col-span-2">
       <div className="flex-1">
         <FormField
           text="Placa"
@@ -38,7 +38,7 @@ export default function VehicleSearchField({
         type="button"
         onClick={onSearch}
         disabled={disabled || searching}
-        className="py-5"
+        size="lg"
       >
         <Search />
         {searching ? "Buscando..." : "Buscar veículo"}

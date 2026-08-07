@@ -50,7 +50,7 @@ export default function OccurrenceDetailsFields() {
       />
 
       {errors.occurrenceType?.message && (
-        <p className="text-sm text-destructive">
+        <p className="text-sm text-destructive md:col-span-2">
           {errors.occurrenceType.message}
         </p>
       )}
