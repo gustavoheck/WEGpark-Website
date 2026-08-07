@@ -24,15 +24,18 @@ export function ProfileView() {
           <ProfilePicture
             name={profile.name}
             variant="secondary"
-            className="mb-8 h-40 w-40 text-6xl"
+            className="mb-5 h-28 w-28 text-4xl"
           />
         </div>
       ) : null}
 
-      <Card>
-        <CardContent className="flex flex-col gap-4">
+      <Card
+        size="sm"
+        className="mx-auto w-full max-w-5xl border-border/70 shadow-sm"
+      >
+        <CardContent className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
           {isPending ? (
-            <div className="flex flex-col gap-4">
+            <div className="grid gap-3 sm:col-span-2 lg:col-span-3">
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
@@ -40,7 +43,7 @@ export function ProfileView() {
           ) : null}
 
           {isError ? (
-            <p className="text-sm text-destructive">
+            <p className="text-sm text-destructive sm:col-span-2 lg:col-span-3">
               Não foi possível carregar seus dados. Tente novamente.
             </p>
           ) : null}
@@ -48,7 +51,11 @@ export function ProfileView() {
           {!isPending && !isError && profile ? (
             <>
               <ProfileDetailField label="Nome" value={profile.name} />
-              <ProfileDetailField label="Email" value={profile.email} />
+              <ProfileDetailField
+                label="Email"
+                value={profile.email}
+                className="lg:col-span-2"
+              />
               <ProfileDetailField label="Telefone" value={profile.telephone} />
 
               {profile.parkUserType === "GUARD" ? (
@@ -88,12 +95,15 @@ export function ProfileView() {
             </>
           ) : null}
 
-          {!isPending && !isError && profile && profile.parkUserType !== "GUARD" ? (
+          {!isPending &&
+          !isError &&
+          profile &&
+          profile.parkUserType !== "GUARD" ? (
             <Link
               href="/perfil/editar"
               className={cn(
-                buttonVariants({ variant: "default" }),
-                "w-full py-5 text-lg font-bold capitalize",
+                buttonVariants({ variant: "default", size: "lg" }),
+                "w-full font-semibold capitalize sm:col-span-2 lg:col-span-3",
               )}
             >
               Editar informações

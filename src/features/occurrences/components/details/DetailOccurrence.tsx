@@ -10,7 +10,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ClipboardList } from "lucide-react";
 import { useState } from "react";
 import OccurrenceSpecificDetail from "./OccurrenceSpecificDetail";
 import DetailOccurrenceInformation from "./DetailOccurrenceInformation";
@@ -33,15 +33,24 @@ export default function DetailOccurence({ occurrence }: DetailOccurence) {
   } = vehicle ?? {};
 
   return (
-    <Card className="mb-8">
-      <CardHeader>
-        <h2 className="font-medium text-2xl text-center text-primary">
-          {label}
-        </h2>
+    <Card
+      size="sm"
+      className="mx-auto mb-6 w-full max-w-5xl border-border/70 shadow-sm"
+    >
+      <CardHeader className="flex flex-row items-center gap-3 border-b bg-muted/20 pb-4">
+        <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <ClipboardList className="size-5" />
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">{label}</h2>
+          <p className="text-sm text-muted-foreground">
+            Informações registradas sobre a ocorrência
+          </p>
+        </div>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2 px-0">
-        <div className="px-4 flex flex-col gap-2">
-          <div>
+      <CardContent className="space-y-4 px-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5">
             <OccurrenceDetailsLabel text="Data de Registro" />
             <DateHour dateHour={dateHour} />
           </div>
@@ -52,10 +61,10 @@ export default function DetailOccurence({ occurrence }: DetailOccurence) {
         <Collapsible
           open={isExpanded}
           onOpenChange={setIsExpanded}
-          className="flex flex-col gap-2"
+          className="overflow-hidden rounded-xl border border-border/60"
         >
           <CollapsibleTrigger
-            className="w-fit flex items-center gap-2 px-4"
+            className="flex w-full items-center justify-between p-3.5 text-left transition-colors hover:bg-muted/40"
             onClick={() => setIsExpanded(!isExpanded)}
           >
             <OccurrenceDetailsLabel text="Veículo" />
@@ -64,7 +73,7 @@ export default function DetailOccurence({ occurrence }: DetailOccurence) {
             />
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <div className="flex flex-col gap-3 bg-muted/50 p-4 shadow-inner border-b-2 border-muted">
+            <div className="grid gap-3 border-t bg-muted/20 p-3 sm:grid-cols-2 lg:grid-cols-4">
               <DetailOccurrenceInformation label="Placa" data={plate} />
               <DetailOccurrenceInformation label="Marca" data={brand} />
               <DetailOccurrenceInformation label="Modelo" data={model} />
@@ -72,7 +81,7 @@ export default function DetailOccurence({ occurrence }: DetailOccurence) {
             </div>
           </CollapsibleContent>
         </Collapsible>
-        <div className="flex flex-col gap-2">
+        <div className="overflow-hidden rounded-xl border border-border/60">
           <OccurrenceSpecificDetail occurrence={occurrence} />
         </div>
       </CardContent>
