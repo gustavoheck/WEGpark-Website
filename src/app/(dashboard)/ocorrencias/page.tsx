@@ -28,10 +28,27 @@ const MAX_VISIBLE_PAGES = 5;
 
 const occurrenceFilters: FilterCategory[] = [
   { text: "Placa", value: "plate" },
-  { text: "Data", value: "yearMonth" },
+  { text: "Data", value: "yearMonth", type: "month" },
   { text: "Portaria", value: "gate" },
-  { text: "Tipo", value: "occurrenceType" },
+  {
+    text: "Tipo",
+    value: "occurrenceType",
+    type: "select",
+    options: [
+      { text: "Aviso", value: "WARNING" },
+      { text: "Uso irregular da vaga", value: "ILLEGAL_PARKING" },
+      { text: "Sinistro", value: "TRAFFIC_ACCIDENT" },
+    ],
+  },
   { text: "Local", value: "location" },
+  { text: "Responsável", value: "responsableName" },
+  { text: "Crachá", value: "badgeNumber" },
+  {
+    text: "Recentes",
+    value: "recents",
+    type: "select",
+    options: [{ text: "Mês atual", value: "true" }],
+  },
 ];
 
 export default function OccurrencesPage() {

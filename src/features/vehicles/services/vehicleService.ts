@@ -17,6 +17,11 @@ const DEFAULT_PAGEABLE = {
   size: 10,
   sort: [],
 };
+const FILTER_PAGE_SIZE = 100;
+
+function normalizePlate(value: string): string {
+  return value.trim().toUpperCase().replaceAll("-", "");
+}
 
 export interface VehiclePage {
   vehicles: Vehicle[];
@@ -46,9 +51,55 @@ export async function getVehicle(
   const { category, value } = params;
   const requestedPageable = { ...DEFAULT_PAGEABLE, ...pageable };
 
+  if (category === "plate" && value?.trim()) {
+    const firstPage = await api.get<VehiclePageResponse>("/vehicle", {
+      params: { page: 0, size: FILTER_PAGE_SIZE },
+    });
+    const remainingPages = await Promise.all(
+      Array.from(
+        { length: Math.max(0, firstPage.data.totalPages - 1) },
+        (_, index) =>
+          api.get<VehiclePageResponse>("/vehicle", {
+            params: { page: index + 1, size: FILTER_PAGE_SIZE },
+          }),
+      ),
+    );
+    const normalizedSearch = normalizePlate(value);
+    const filteredVehicles = [
+      ...firstPage.data.content,
+      ...remainingPages.flatMap((response) => response.data.content),
+    ]
+      .map(mapVehicleResponseToDomain)
+      .filter((vehicle) =>
+        normalizePlate(vehicle.plate).includes(normalizedSearch),
+      );
+    const start = requestedPageable.page * requestedPageable.size;
+    const totalPages = Math.ceil(
+      filteredVehicles.length / requestedPageable.size,
+    );
+
+    return {
+      vehicles: filteredVehicles.slice(
+        start,
+        start + requestedPageable.size,
+      ),
+      totalPages,
+      totalElements: filteredVehicles.length,
+      page: requestedPageable.page,
+      size: requestedPageable.size,
+      first: requestedPageable.page === 0,
+      last: totalPages === 0 || requestedPageable.page >= totalPages - 1,
+    };
+  }
+
+  const normalizedValue =
+    category === "plate"
+      ? value && normalizePlate(value)
+      : value?.trim();
+
   const { data } = await api.get<VehiclePageResponse>("/vehicle", {
     params: {
-      ...(category && value ? { [category]: value } : {}),
+      ...(category && normalizedValue ? { [category]: normalizedValue } : {}),
       ...requestedPageable,
     },
   });

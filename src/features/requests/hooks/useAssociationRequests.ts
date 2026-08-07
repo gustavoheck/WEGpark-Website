@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "@/components/ui/toast";
+import { useAuth } from "@/shared/context/AuthContext";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
 import {
@@ -15,14 +16,18 @@ const REQUEST_QUERY_KEY = ["requests", "vehicle-association"] as const;
 
 export function useAssociationRequests() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const requestQueryKey = [...REQUEST_QUERY_KEY, user?.uuid] as const;
   const requestQuery = useQuery({
-    queryKey: REQUEST_QUERY_KEY,
+    queryKey: requestQueryKey,
     queryFn: listAssociationRequests,
+    enabled: Boolean(user?.uuid),
+    refetchOnMount: "always",
   });
 
   function refreshRelatedData() {
     void Promise.all([
-      queryClient.invalidateQueries({ queryKey: REQUEST_QUERY_KEY }),
+      queryClient.invalidateQueries({ queryKey: requestQueryKey }),
       queryClient.invalidateQueries({ queryKey: ["vehicle"] }),
       queryClient.invalidateQueries({ queryKey: ["notification"] }),
     ]);

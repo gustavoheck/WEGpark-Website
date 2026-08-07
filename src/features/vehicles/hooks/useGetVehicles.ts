@@ -47,6 +47,9 @@ export function useGetMyVehicles(enabled = true) {
     queryKey: ["vehicle", "me", userUuid],
     queryFn: getMyVehicles,
     enabled: enabled && Boolean(userUuid),
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: "always",
     select: (vehicles) =>
       vehicles.filter((vehicle) =>
         vehicle.vehicleUsers.some(

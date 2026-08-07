@@ -24,7 +24,7 @@ export default function OccurrenceDetailsPage() {
     isParkUser ? myOccurrenceQuery : generalOccurrenceQuery;
 
   useEffect(() => {
-    if (user) {
+    if (id && user) {
       getOccurrence(id);
     }
   }, [getOccurrence, id, user]);
