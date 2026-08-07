@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { AlertTriangle, Car, Plus } from "lucide-react";
 
 import {
   Pagination,
@@ -11,7 +11,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import VehicleList from "@/features/vehicles/components/organisms/VehicleList";
+import { Skeleton } from "@/components/ui/skeleton";
+import VehicleList from "@/features/vehicles/components/view/VehicleList";
 import { VEHICLE_CATEGORIES } from "@/features/vehicles/constants/vehicleFilters";
 import {
   useGetMyVehicles,
@@ -21,6 +22,7 @@ import { useVehiclePermissions } from "@/features/vehicles/hooks/useVehiclePermi
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import FloatingActionLink from "@/shared/components/atoms/FloatingActionLink";
 import Filter, { FilterParams } from "@/shared/components/molecules/Filter";
+import { DisplayCard } from "@/shared/components/molecules/DisplayCard";
 
 const MAX_VISIBLE_PAGES = 5;
 
@@ -55,26 +57,54 @@ export default function VehiclePage() {
     <>
       <SectionTitle text="veículos" />
 
-      {canAdd ? (
+      {canViewAllVehicles &&
+      !isError &&
+      (vehicles.length > 0 || Boolean(filterParams)) ? (
+        <Filter filters={VEHICLE_CATEGORIES} onSubmit={handleFilterSubmit} />
+      ) : null}
+
+      {isSearching && vehicles.length === 0 && (
+        <div className="flex flex-col gap-3">
+          <Skeleton className="h-24 w-full md:h-16" />
+          <Skeleton className="h-24 w-full md:h-16" />
+          <Skeleton className="h-24 w-full md:h-16" />
+        </div>
+      )}
+
+      {!isError && vehicles.length > 0 && (
+        <VehicleList vehicles={vehicles} />
+      )}
+
+      {isError && (
+        <DisplayCard
+          Icon={AlertTriangle}
+          title="Não foi possível carregar os veículos."
+          description="Tente carregá-los novamente."
+          destructive
+        />
+      )}
+
+      {!isSearching && !isError && vehicles.length === 0 && (
+        <DisplayCard
+          Icon={Car}
+          title={filterParams ? "Nenhum veículo encontrado" : "Nenhum veículo cadastrado"}
+          description={
+            filterParams
+              ? "Tente alterar os filtros da pesquisa."
+              : "Novos veículos aparecerão aqui quando forem cadastrados."
+          }
+        />
+      )}
+
+      {canAdd && (
         <FloatingActionLink
           href="/veiculos/adicionar"
           label="Cadastrar Veículo"
           Icon={Plus}
         />
-      ) : null}
+      )}
 
-      {canViewAllVehicles ? (
-        <Filter filters={VEHICLE_CATEGORIES} onSubmit={handleFilterSubmit} />
-      ) : null}
-      <VehicleList vehicles={vehicles} isLoading={isSearching} />
-
-      {isError ? (
-        <p className="py-8 text-center text-muted-foreground">
-          Não foi possível carregar os veículos.
-        </p>
-      ) : null}
-
-      {canViewAllVehicles && totalPages > 1 ? (
+      {!isError && canViewAllVehicles && totalPages > 1 ? (
         <Pagination className="mt-6 pb-4">
           <PaginationContent>
             <PaginationItem>

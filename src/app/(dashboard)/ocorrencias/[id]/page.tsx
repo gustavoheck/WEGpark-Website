@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useParams } from "next/navigation";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import DetailOccurrence from "@/features/occurrences/components/molecules/DetailOccurrence";
+import DetailOccurrence from "@/features/occurrences/components/details/DetailOccurrence";
 import {
   useGetMyOccurrenceById,
   useGetOccurrenceById,

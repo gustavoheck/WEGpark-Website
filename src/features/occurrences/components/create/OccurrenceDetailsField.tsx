@@ -4,7 +4,7 @@ import FormField from "@/shared/components/atoms/FormField";
 
 import type { OccurrenceFormInput } from "@/features/occurrences/types/occurrence-form.type";
 import TrafficAccidentOccurrenceFields from "./TrafficAccidentOccurrenceFields";
-import { OccurrenceTypeSelector } from "../molecules/OccurrenceTypeSelector";
+import { OccurrenceTypeSelector } from "../details/OccurrenceTypeSelector";
 import WarningOccurrenceFields from "./WarningOcurrenceFields";
 import IllegalParkingOccurrenceFields from "./IllegalParkingOccurrenceField";
 

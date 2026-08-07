@@ -31,7 +31,7 @@ const ALL_MENU_ITEMS: Record<
     title: "Notificações",
     href: "/notificacoes",
     icon: Bell,
-    roles: [SystemRole.PARK, SystemRole.GUARD],
+    roles: [SystemRole.PARK],
   },
   profile: {
     title: "Dados do Perfil",

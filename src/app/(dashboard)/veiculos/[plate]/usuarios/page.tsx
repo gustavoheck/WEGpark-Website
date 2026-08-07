@@ -1,11 +1,12 @@
 "use client";
 
-import { CarFront, Users } from "lucide-react";
+import { AlertTriangle, CarFront, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import UserList from "@/features/vehicles/components/organisms/UserList";
+import { Skeleton } from "@/components/ui/skeleton";
+import UserList from "@/features/vehicles/components/users/UserList";
 import {
   useGetMyVehicles,
   useGetVehicles,
@@ -13,6 +14,7 @@ import {
 import { useVehiclePermissions } from "@/features/vehicles/hooks/useVehiclePermissions";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
+import { DisplayCard } from "@/shared/components/molecules/DisplayCard";
 
 export default function VehicleUsersPage() {
   const params = useParams<{ plate: string }>();
@@ -32,8 +34,9 @@ export default function VehicleUsersPage() {
   const vehicle = vehicles.find(
     (item) => item.plate.trim().toUpperCase() === plate,
   );
-  const activeUserCount =
-    vehicle?.vehicleUsers.filter((user) => user.associationActive).length ?? 0;
+  const activeUsers =
+    vehicle?.vehicleUsers.filter((user) => user.associationActive) ?? [];
+  const activeUserCount = activeUsers.length;
 
   return (
     <section className="mx-auto w-full max-w-5xl pb-8">
@@ -43,27 +46,24 @@ export default function VehicleUsersPage() {
       </div>
 
       {isSearching ? (
-        <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">
-            Carregando veículo...
-          </CardContent>
-        </Card>
+        <Skeleton className="h-40 w-full" />
       ) : null}
-      {isError ? (
-        <Card>
-          <CardContent className="py-10 text-center text-destructive">
-            Não foi possível carregar o veículo.
-          </CardContent>
-        </Card>
+      {!isSearching && isError ? (
+        <DisplayCard
+          Icon={AlertTriangle}
+          title="Não foi possível carregar o veículo"
+          description="Tente novamente mais tarde."
+          destructive
+        />
       ) : null}
       {!isSearching && !isError && !vehicle ? (
-        <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">
-            Veículo não encontrado.
-          </CardContent>
-        </Card>
+        <DisplayCard
+          Icon={CarFront}
+          title="Veículo não encontrado"
+          description="Verifique a placa informada e tente novamente."
+        />
       ) : null}
-      {vehicle ? (
+      {!isSearching && !isError && vehicle ? (
         <div className="space-y-5">
           <Card className="gap-0 overflow-hidden border-border/70 py-0 shadow-sm">
             <CardContent className="flex flex-col gap-4 bg-muted/20 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
@@ -91,7 +91,15 @@ export default function VehicleUsersPage() {
             </CardContent>
           </Card>
 
-          <UserList users={vehicle.vehicleUsers} />
+          {activeUsers.length > 0 ? (
+            <UserList users={activeUsers} />
+          ) : (
+            <DisplayCard
+              Icon={Users}
+              title="Nenhum usuário vinculado"
+              description="Os usuários ativos deste veículo aparecerão aqui."
+            />
+          )}
         </div>
       ) : null}
     </section>
