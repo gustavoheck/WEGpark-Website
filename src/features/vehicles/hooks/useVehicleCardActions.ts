@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "@/components/ui/toast";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
 import { useVehicle } from "./useVehicle";
 
-export function useVehicleCardActions(vehicleUuid: string) {
+export function useVehicleCardActions(vehicleUuid: string, isOwner: boolean) {
+  const queryClient = useQueryClient();
   const [isUnlinkDialogOpen, setIsUnlinkDialogOpen] = useState(false);
   const { unlinkVehicle, isUnlinking } = useVehicle();
 
@@ -15,8 +17,11 @@ export function useVehicleCardActions(vehicleUuid: string) {
         setIsUnlinkDialogOpen(false);
         toast.add({
           type: "success",
-          description: "Veículo desvinculado com sucesso!",
+          description: isOwner
+            ? "Veículo excluído com sucesso!"
+            : "Veículo desvinculado com sucesso!",
         });
+        void queryClient.invalidateQueries({ queryKey: ["vehicle"] });
       },
       onError: (error) => {
         setIsUnlinkDialogOpen(false);
@@ -24,7 +29,9 @@ export function useVehicleCardActions(vehicleUuid: string) {
           type: "error",
           description: getApiErrorMessage(
             error,
-            "Erro ao desvincular o veículo. Tente novamente.",
+            isOwner
+              ? "Erro ao excluir o veículo. Tente novamente."
+              : "Erro ao desvincular o veículo. Tente novamente.",
           ),
         });
       },

@@ -26,10 +26,10 @@ export default function DetailOccurence({ occurrence }: DetailOccurence) {
 
   const { dateHour, location, gate, vehicle, guard } = occurrence.defaults;
   const {
-    plate = "Nao informado",
-    brand = "Nao informado",
-    model = "Nao informado",
-    color = "Nao informado",
+    plate = "Não informado",
+    brand = "Não informado",
+    model = "Não informado",
+    color = "Não informado",
   } = vehicle ?? {};
 
   return (

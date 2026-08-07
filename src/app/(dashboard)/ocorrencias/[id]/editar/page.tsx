@@ -21,11 +21,11 @@ export default function EditarOcorrenciaPage() {
         <section>
             <div className="flex items-center w-full pt-8 pb-10 gap-3 relative justify-center">
                 <BackButton />
-                <SectionTitle text="editar ocorrÃªncia" className="py-0" />
+                <SectionTitle text="editar ocorrência" className="py-0" />
             </div>
 
             {isPending && <Skeleton className="h-96 w-full" />}
-            {isError && <p className="text-sm text-destructive">NÃ£o foi possÃ­vel carregar a ocorrÃªncia.</p>}
+            {isError && <p className="text-sm text-destructive">Não foi possível carregar a ocorrência.</p>}
             {!isPending && !isError && occurrence && <EditOccurrenceForm occurrence={occurrence} />}
         </section>
     );

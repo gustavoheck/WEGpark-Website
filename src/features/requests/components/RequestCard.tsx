@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { CarFront, Link as LinkIcon } from "lucide-react";
+import { CarFront, Clock3, Link2, UserRound } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,110 +11,146 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { toast } from "@/components/ui/toast";
 import AlertDialogComponent from "@/shared/components/organisms/AlertDialog";
-import DialogComponent from "@/shared/components/organisms/Dialog";
-import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
 
-import { useLink } from "../hooks/UseLink";
 import { Request } from "../types/Request";
 
 interface RequestCardProps {
   request: Request;
+  onAccept: (requestUuid: string) => void;
+  onReject: (requestUuid: string) => void;
+  isAccepting: boolean;
+  isRejecting: boolean;
 }
 
-export default function RequestCard({ request }: RequestCardProps) {
-  const [isOpenConfirmative, setIsOpenConfirmative] = useState(false);
-  const [isOpenInformative, setIsOpenInformative] = useState(false);
-  const { mutate: link } = useLink();
+function formatRequestedAt(requestedAt: string): string {
+  const date = new Date(requestedAt);
 
-  function onSubmit() {
-    link(
-      { request },
-      {
-        onSuccess: () => {
-          setIsOpenConfirmative(false);
-          setIsOpenInformative(true);
-        },
-        onError: (error) => {
-          setIsOpenConfirmative(false);
-          toast.add({
-            type: "error",
-            description: getApiErrorMessage(
-              error,
-              "Não foi possível vincular o usuário.",
-            ),
-          });
-        },
-      },
-    );
+  if (Number.isNaN(date.getTime())) {
+    return "Data não informada";
+  }
+
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(date);
+}
+
+export default function RequestCard({
+  request,
+  onAccept,
+  onReject,
+  isAccepting,
+  isRejecting,
+}: RequestCardProps) {
+  const [isAcceptDialogOpen, setIsAcceptDialogOpen] = useState(false);
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const isPending = isAccepting || isRejecting;
+
+  function handleAccept() {
+    setIsAcceptDialogOpen(false);
+    onAccept(request.uuid);
+  }
+
+  function handleReject() {
+    setIsRejectDialogOpen(false);
+    onReject(request.uuid);
   }
 
   return (
-    <Card>
-      <CardHeader className="border-b pb-4 text-center text-xl font-semibold text-primary">
-        <h3>Solicitação de Vínculo</h3>
-      </CardHeader>
-      <CardContent className="flex items-center justify-center gap-4">
-        <div className="flex flex-col items-center justify-center gap-2 p-3">
-          <div className="flex w-fit items-center justify-center rounded-xl bg-primary p-3">
-            <CarFront className="size-10 text-white" />
+    <Card className="gap-0 border border-border/70 py-0 shadow-sm transition-shadow hover:shadow-md">
+      <CardHeader className="flex flex-row items-center justify-between gap-3 border-b bg-muted/30 py-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <Link2 className="size-5" />
           </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-center font-bold">Veículo</span>
-            <div className="flex flex-col">
-              <span className="text-center">{request.vehicle.brand}</span>
-              <span className="text-center">{request.vehicle.model}</span>
-            </div>
+          <div className="min-w-0">
+            <h2 className="truncate text-base font-semibold text-foreground">
+              Solicitação de vínculo
+            </h2>
+            <p className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Clock3 className="size-3.5" />
+              {formatRequestedAt(request.requestedAt)}
+            </p>
+          </div>
+        </div>
+        <Badge variant="outline" className="bg-background text-primary">
+          Pendente
+        </Badge>
+      </CardHeader>
+
+      <CardContent className="grid grid-cols-1 items-stretch gap-3 py-4 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">
+        <div className="flex min-w-0 items-center gap-3 rounded-xl bg-muted/50 p-3">
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-background text-primary ring-1 ring-border">
+            <UserRound className="size-5" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Solicitante
+            </p>
+            <p className="truncate font-semibold text-foreground">
+              {request.requesterName}
+            </p>
           </div>
         </div>
 
-        <LinkIcon className="size-8 rotate-45 text-foreground" />
+        <div className="flex items-center justify-center text-primary">
+          <Link2 className="size-5 rotate-45 md:rotate-0" />
+        </div>
 
-        <div className="flex flex-col items-center justify-between gap-2 p-3">
-          <div className="flex size-16 items-center justify-center rounded-full bg-primary">
-            <p className="text-2xl font-bold text-white">
-              {request.user.name.charAt(0)}
-            </p>
+        <div className="flex min-w-0 items-center gap-3 rounded-xl bg-muted/50 p-3">
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-background text-primary ring-1 ring-border">
+            <CarFront className="size-5" />
           </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-center font-bold">Usuário</span>
-            <span className="text-center">{request.user.name}</span>
+          <div className="min-w-0">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Veículo
+            </p>
+            <p className="truncate font-semibold text-foreground">
+              {request.vehicleDescription}
+            </p>
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex items-center justify-center gap-6">
+
+      <CardFooter className="flex flex-col-reverse gap-2 border-t bg-muted/20 p-3 sm:flex-row sm:justify-end">
         <Button
           type="button"
-          variant="link"
-          className="py-5 text-lg font-semibold"
-          onClick={() => setIsOpenConfirmative(true)}
+          variant="destructive"
+          className="w-full sm:w-auto"
+          disabled={isPending}
+          onClick={() => setIsRejectDialogOpen(true)}
         >
-          Aceitar
+          Recusar
         </Button>
         <Button
           type="button"
-          variant="link"
-          className="py-5 text-lg font-semibold"
+          className="w-full sm:w-auto"
+          disabled={isPending}
+          onClick={() => setIsAcceptDialogOpen(true)}
         >
-          Rejeitar
+          Aceitar vínculo
         </Button>
       </CardFooter>
 
       <AlertDialogComponent
-        open={isOpenConfirmative}
-        onOpenChange={setIsOpenConfirmative}
-        title="Vincular Usuário"
-        description="Você deseja vincular seu veículo a esse usuário?"
-        onClick={onSubmit}
-        confirmText="Vincular"
+        open={isAcceptDialogOpen}
+        onOpenChange={setIsAcceptDialogOpen}
+        title="Aceitar vínculo"
+        description={`Deseja permitir que ${request.requesterName} seja vinculado ao veículo ${request.vehicleDescription}?`}
+        onClick={handleAccept}
+        confirmText="Aceitar"
+        pending={isAccepting}
       />
 
-      <DialogComponent
-        open={isOpenInformative}
-        onOpenChange={setIsOpenInformative}
-        title="Usuário Vinculado"
-        description="O usuário foi vinculado com sucesso ao seu veículo."
+      <AlertDialogComponent
+        open={isRejectDialogOpen}
+        onOpenChange={setIsRejectDialogOpen}
+        title="Recusar vínculo"
+        description={`Deseja recusar a solicitação de ${request.requesterName} para o veículo ${request.vehicleDescription}?`}
+        onClick={handleReject}
+        confirmText="Recusar"
+        pending={isRejecting}
       />
     </Card>
   );

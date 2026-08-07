@@ -19,7 +19,7 @@ export function useVehicle() {
     mutationFn: ({ uuid, request }: { uuid: string; request: VehicleRequest }) => updateVehicle(uuid, request),
     onSuccess: invalidateVehicles,
   });
-  const unlinkMutation = useMutation({ mutationFn: unlinkVehicle, onSuccess: invalidateVehicles });
+  const unlinkMutation = useMutation({ mutationFn: unlinkVehicle });
   const requestAssociationMutation = useMutation({ mutationFn: requestVehicleAssociation });
   const confirmAssociationMutation = useMutation({
     mutationFn: confirmVehicleAssociation,

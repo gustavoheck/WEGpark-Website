@@ -33,13 +33,13 @@ export default function OccurrenceDetailsPage() {
     <section>
       <div className="relative flex w-full items-center justify-center gap-3 pt-8 pb-10">
         <BackButton />
-        <SectionTitle text="detalhes ocorrencia" className="py-0" />
+        <SectionTitle text="detalhes da ocorrência" className="py-0" />
       </div>
 
       {isPending ? <Skeleton className="h-96 w-full" /> : null}
       {isError ? (
         <p className="text-sm text-destructive">
-          Nao foi possivel carregar a ocorrencia.
+          Não foi possível carregar a ocorrência.
         </p>
       ) : null}
       {occurrence ? <DetailOccurrence occurrence={occurrence} /> : null}

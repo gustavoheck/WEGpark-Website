@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/shared/context/AuthContext";
 import { getMyVehicles, getVehicle } from "../services/vehicleService";
 import { GetServiceProps } from "@/shared/types/GetServiceProps";
 
@@ -39,10 +40,21 @@ export function useGetVehicles(
 }
 
 export function useGetMyVehicles(enabled = true) {
+  const { user } = useAuth();
+  const userUuid = user?.uuid;
+
   const query = useQuery({
-    queryKey: ["vehicle", "me"],
+    queryKey: ["vehicle", "me", userUuid],
     queryFn: getMyVehicles,
-    enabled,
+    enabled: enabled && Boolean(userUuid),
+    select: (vehicles) =>
+      vehicles.filter((vehicle) =>
+        vehicle.vehicleUsers.some(
+          (vehicleUser) =>
+            vehicleUser.userUuid === userUuid &&
+            vehicleUser.associationActive,
+        ),
+      ),
   });
 
   return {

@@ -62,7 +62,7 @@ export const createUserSchema = z
     })
     .refine(
         (data) =>
-            data.role !== "VISITOR"
+            data.role === "EMPLOYEE" || data.role === "GUARD"
                 ? data.email.toLowerCase().endsWith(CORPORATE_EMAIL_DOMAIN)
                 : true,
         {

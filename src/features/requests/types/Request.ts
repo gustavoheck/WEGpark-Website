@@ -1,8 +1,18 @@
-import User from "@/shared/types/User";
-import Vehicle from "@/shared/types/Vehicle";
-
 export interface Request {
-    uuid : string
-    vehicle : Vehicle
-    user : User
+  uuid: string;
+  requestedAt: string;
+  requesterName: string;
+  vehicleDescription: string;
+  message: string;
+}
+
+export interface NotificationResponse {
+  uuid: string;
+  notificationTime: string;
+  notificationType: "VEHICLE_ASSOCIATION" | "OCCURRENCE" | "FIVE_OCCURRENCE";
+  message: string;
+}
+
+export interface NotificationPageResponse {
+  content: NotificationResponse[];
 }

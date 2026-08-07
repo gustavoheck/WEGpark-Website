@@ -29,15 +29,26 @@ const visitorFields = z.object({
   cpf: z.string().regex(cpfRegex, "CPF inválido"),
 });
 
+const rhFields = z.object({
+  parkUserType: z.literal("RH"),
+  badgeNumber: z.string()
+    .min(1, "Informe o número do crachá")
+    .max(6, "O crachá não pode possuir mais de 6 dígitos"),
+  email: z.string().email("Informe um Email válido!"),
+});
+
 const employeeProfileSchema = baseSchema.merge(employeeFields);
 const visitorProfileSchema = baseSchema.merge(visitorFields);
+const rhProfileSchema = baseSchema.merge(rhFields);
 
 export type EmployeeProfileFormValues = z.infer<typeof employeeProfileSchema>;
 export type VisitorProfileFormValues = z.infer<typeof visitorProfileSchema>;
+export type RhProfileFormValues = z.infer<typeof rhProfileSchema>;
 
 export const profileSchema = z.discriminatedUnion("parkUserType", [
   employeeProfileSchema,
   visitorProfileSchema,
+  rhProfileSchema,
 ]);
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;

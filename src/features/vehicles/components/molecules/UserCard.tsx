@@ -1,24 +1,41 @@
 "use client";
 
-import { Card, CardHeader } from "@/components/ui/card";
+import { Check, UserRound } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import ProfilePicture from "@/shared/components/atoms/ProfilePicture";
 import { VehicleUser } from "@/shared/types/Vehicle";
 
 interface UserCardProps {
   user: VehicleUser;
-  name?: string;
 }
 
-export default function UserCard({ user, name }: UserCardProps) {
-
+export default function UserCard({ user }: UserCardProps) {
   return (
-    <Card className="flex h-18 flex-row items-center justify-between pr-4">
-      <CardHeader className="flex w-full items-center gap-3">
-        <ProfilePicture name={name} variant="secondary" />
-        <p className={`text-xl font-semibold ${user.isOwner ? "text-primary" : "text-foreground"}`}>
-          {name}
-        </p>
-      </CardHeader>
+    <Card className="gap-0 overflow-hidden border-border/70 py-0 shadow-sm transition-shadow hover:shadow-md">
+      <CardContent className="flex items-center gap-3 p-4">
+        <ProfilePicture name={user.name} variant="secondary" />
+
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="truncate font-semibold text-foreground">
+              {user.name}
+            </p>
+            {user.isOwner ? (
+              <Badge className="flex shrink-0 items-center gap-1 text-xs">
+                <Check className="size-3.5 text-white" />
+                Proprietário
+              </Badge>
+            ) : null}
+          </div>
+
+          <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+            <UserRound className="size-3.5" />
+            {user.isOwner ? "Responsável pelo veículo" : "Usuário vinculado"}
+          </p>
+        </div>
+      </CardContent>
     </Card>
   );
 }

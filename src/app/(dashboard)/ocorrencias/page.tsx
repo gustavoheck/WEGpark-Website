@@ -80,7 +80,15 @@ export default function OccurrencesPage() {
 
   return (
     <>
-      <SectionTitle text="ocorrencias" />
+      <SectionTitle text="ocorrências" />
+
+      {canCreate ? (
+        <FloatingActionLink
+          href="/ocorrencias/cadastrar"
+          label="Cadastrar ocorrência"
+          Icon={Plus}
+        />
+      ) : null}
 
       {canViewAllOccurrences ? (
         <Filter filters={occurrenceFilters} onSubmit={handleFilterSubmit} />
@@ -90,7 +98,7 @@ export default function OccurrencesPage() {
 
       {isError ? (
         <p className="py-8 text-center text-muted-foreground">
-          Nao foi possivel carregar as ocorrencias.
+          Não foi possível carregar as ocorrências.
         </p>
       ) : null}
 
@@ -136,13 +144,6 @@ export default function OccurrencesPage() {
         </Pagination>
       ) : null}
 
-      {canCreate ? (
-        <FloatingActionLink
-          href="/ocorrencias/cadastrar"
-          label="Cadastrar ocorrencia"
-          Icon={Plus}
-        />
-      ) : null}
     </>
   );
 }
