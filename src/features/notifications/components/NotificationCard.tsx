@@ -42,8 +42,8 @@ export default function NotificationCard({
           type="button"
           variant="ghost"
           size="icon"
-          aria-label="Remover notificação"
-          title="Remover notificação"
+          aria-label="Remover Notificação"
+          title="Remover Notificação"
           disabled={isDeleting}
           onClick={() => onDelete(notification.uuid)}
         >
