@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { AlertTriangle, Plus, StickyNote } from "lucide-react";
 
 import {
   Pagination,
@@ -11,7 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import OccurrenceList from "@/features/occurrences/components/organisms/OccurrenceList";
+import OccurrenceList from "@/features/occurrences/components/view/OccurrenceList";
 import {
   useGetMyOccurrences,
   useGetOccurrences,
@@ -22,34 +22,10 @@ import Filter, { type FilterParams } from "@/shared/components/molecules/Filter"
 import { canAccessRoute } from "@/shared/config/accessControl";
 import { useAuth } from "@/shared/context/AuthContext";
 import { SystemRole } from "@/shared/enum/SystemRoleType";
-import type FilterCategory from "@/shared/types/FilterCategory";
+import { DisplayCard } from "@/shared/components/molecules/DisplayCard";
+import { occurrenceFilters } from "@/features/occurrences/constants/occurrence-filters";
 
 const MAX_VISIBLE_PAGES = 5;
-
-const occurrenceFilters: FilterCategory[] = [
-  { text: "Placa", value: "plate" },
-  { text: "Data", value: "yearMonth", type: "month" },
-  { text: "Portaria", value: "gate" },
-  {
-    text: "Tipo",
-    value: "occurrenceType",
-    type: "select",
-    options: [
-      { text: "Aviso", value: "WARNING" },
-      { text: "Uso irregular da vaga", value: "ILLEGAL_PARKING" },
-      { text: "Sinistro", value: "TRAFFIC_ACCIDENT" },
-    ],
-  },
-  { text: "Local", value: "location" },
-  { text: "Responsável", value: "responsableName" },
-  { text: "Crachá", value: "badgeNumber" },
-  {
-    text: "Recentes",
-    value: "recents",
-    type: "select",
-    options: [{ text: "Mês atual", value: "true" }],
-  },
-];
 
 export default function OccurrencesPage() {
   const { user } = useAuth();
@@ -58,9 +34,9 @@ export default function OccurrencesPage() {
 
   const canViewAllOccurrences = Boolean(
     user &&
-      (user.currentRole === SystemRole.GUARD ||
-        user.currentRole === SystemRole.RH ||
-        user.currentRole === SystemRole.ADMIN),
+    (user.currentRole === SystemRole.GUARD ||
+      user.currentRole === SystemRole.RH ||
+      user.currentRole === SystemRole.ADMIN),
   );
   const canCreate = user
     ? canAccessRoute(user.currentRole, "/ocorrencias/cadastrar")
@@ -99,25 +75,38 @@ export default function OccurrencesPage() {
     <>
       <SectionTitle text="ocorrências" />
 
-      {canCreate ? (
+      {canViewAllOccurrences && !isError && occurrences.length != 0 && (
+        <Filter filters={occurrenceFilters} onSubmit={handleFilterSubmit} />
+      )}
+
+      {!isError && occurrences.length != 0 && (
+        <OccurrenceList occurrences={occurrences} />
+      )}
+
+      {isError && (
+        <DisplayCard 
+          Icon={AlertTriangle}
+          title="Não foi possível carregar as ocorrências."
+          description="Tente carrega-las novamente"
+          destructive
+        />
+      )}
+
+      {!isError && occurrences.length === 0 && (
+        <DisplayCard 
+          Icon={StickyNote}
+          title="Nenhuma ocorrência cadastrada no momento."
+          description="Ocorrências novas serão disponibilizados assim quando cadastrados."
+        />
+      )}
+
+      {canCreate && (
         <FloatingActionLink
           href="/ocorrencias/cadastrar"
           label="Cadastrar ocorrência"
           Icon={Plus}
         />
-      ) : null}
-
-      {canViewAllOccurrences ? (
-        <Filter filters={occurrenceFilters} onSubmit={handleFilterSubmit} />
-      ) : null}
-
-      <OccurrenceList occurrences={occurrences} isLoading={isLoading} />
-
-      {isError ? (
-        <p className="py-8 text-center text-muted-foreground">
-          Não foi possível carregar as ocorrências.
-        </p>
-      ) : null}
+      )}
 
       {totalPages > 1 ? (
         <Pagination className="mt-6 pb-4">

@@ -32,7 +32,7 @@ import Vehicle from "@/shared/types/Vehicle";
 
 import { useVehicleCardActions } from "../../hooks/useVehicleCardActions";
 import { useVehiclePermissions } from "../../hooks/useVehiclePermissions";
-import VehicleCardButton from "../atoms/VehicleCardButton";
+import VehicleCardButton from "./VehicleCardButton";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -71,7 +71,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
           href={`/veiculos/${encodeURIComponent(plate)}/usuarios`}
           compact={compact}
         />
-        {canEdit ? (
+        {canEdit && (
           <VehicleCardButton
             title="editar"
             Icon={Pencil}
@@ -79,8 +79,8 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
             variant="last"
             compact={compact}
           />
-        ) : null}
-        {canUnlink ? (
+        )}
+        {canUnlink && (
           <VehicleCardButton
             title="desvincular"
             Icon={Unlink}
@@ -90,8 +90,8 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
             pending={isUnlinking}
             compact={compact}
           />
-        ) : null}
-        {canDelete ? (
+        )}
+        {canDelete && (
           <VehicleCardButton
             title="excluir"
             Icon={Trash2}
@@ -101,7 +101,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
             pending={isUnlinking}
             compact={compact}
           />
-        ) : null}
+        )}
       </>
     );
   }

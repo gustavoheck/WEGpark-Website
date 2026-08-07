@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { AlertTriangle, Car, Plus } from "lucide-react";
 
 import {
   Pagination,
@@ -11,7 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import VehicleList from "@/features/vehicles/components/organisms/VehicleList";
+import VehicleList from "@/features/vehicles/components/view/VehicleList";
 import { VEHICLE_CATEGORIES } from "@/features/vehicles/constants/vehicleFilters";
 import {
   useGetMyVehicles,
@@ -21,6 +21,7 @@ import { useVehiclePermissions } from "@/features/vehicles/hooks/useVehiclePermi
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 import FloatingActionLink from "@/shared/components/atoms/FloatingActionLink";
 import Filter, { FilterParams } from "@/shared/components/molecules/Filter";
+import { DisplayCard } from "@/shared/components/molecules/DisplayCard";
 
 const MAX_VISIBLE_PAGES = 5;
 
@@ -55,24 +56,38 @@ export default function VehiclePage() {
     <>
       <SectionTitle text="veículos" />
 
-      {canAdd ? (
+      {canViewAllVehicles && !isError && vehicles.length != 0 && (
+        <Filter filters={VEHICLE_CATEGORIES} onSubmit={handleFilterSubmit} />
+      )}
+
+      {!isError && vehicles.length != 0 && (
+        <VehicleList vehicles={vehicles} />
+      )}
+
+      {isError && (
+        <DisplayCard 
+          Icon={AlertTriangle}
+          title="Não foi possível carregar os veículos."
+          description="Tente carrega-los novamente"
+          destructive
+        />
+      )}
+
+      {!isError && vehicles.length === 0 && (
+        <DisplayCard 
+          Icon={Car}
+          title="Nenhum veículo cadastrado no momento."
+          description="Veículos novos serão disponibilizados assim quando cadastrados."
+        />
+      )}
+
+      {canAdd && (
         <FloatingActionLink
           href="/veiculos/adicionar"
           label="Cadastrar Veículo"
           Icon={Plus}
         />
-      ) : null}
-
-      {canViewAllVehicles ? (
-        <Filter filters={VEHICLE_CATEGORIES} onSubmit={handleFilterSubmit} />
-      ) : null}
-      <VehicleList vehicles={vehicles} isLoading={isSearching} />
-
-      {isError ? (
-        <p className="py-8 text-center text-muted-foreground">
-          Não foi possível carregar os veículos.
-        </p>
-      ) : null}
+      )}
 
       {canViewAllVehicles && totalPages > 1 ? (
         <Pagination className="mt-6 pb-4">
