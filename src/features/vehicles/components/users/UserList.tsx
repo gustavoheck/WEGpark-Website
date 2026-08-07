@@ -3,7 +3,7 @@ import { Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { VehicleUser } from "@/shared/types/Vehicle";
 
-import UserCard from "../molecules/UserCard";
+import UserCard from "./UserCard";
 
 interface UserListProps {
   users: VehicleUser[];

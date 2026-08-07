@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import EditForm from "@/features/vehicles/components/molecules/EditForm";
+import EditForm from "@/features/vehicles/components/forms/EditForm";
 import {
   useGetMyVehicles,
   useGetVehicles,

@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import UserList from "@/features/vehicles/components/organisms/UserList";
+import UserList from "@/features/vehicles/components/users/UserList";
 import {
   useGetMyVehicles,
   useGetVehicles,

@@ -1,4 +1,4 @@
-import SaveForm from "@/features/vehicles/components/molecules/SaveForm";
+import SaveForm from "@/features/vehicles/components/forms/SaveForm";
 import BackButton from "@/shared/components/atoms/BackButton";
 import SectionTitle from "@/shared/components/atoms/SectionTitle";
 
