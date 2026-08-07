@@ -57,9 +57,7 @@ export default function VehiclePage() {
     <>
       <SectionTitle text="veículos" />
 
-      {canViewAllVehicles &&
-      !isError &&
-      (vehicles.length > 0 || Boolean(filterParams)) ? (
+      {canViewAllVehicles && !isError ? (
         <Filter filters={VEHICLE_CATEGORIES} onSubmit={handleFilterSubmit} />
       ) : null}
 
@@ -71,9 +69,7 @@ export default function VehiclePage() {
         </div>
       )}
 
-      {!isError && vehicles.length > 0 && (
-        <VehicleList vehicles={vehicles} />
-      )}
+      {!isError && vehicles.length > 0 && <VehicleList vehicles={vehicles} />}
 
       {isError && (
         <DisplayCard
@@ -87,7 +83,11 @@ export default function VehiclePage() {
       {!isSearching && !isError && vehicles.length === 0 && (
         <DisplayCard
           Icon={Car}
-          title={filterParams ? "Nenhum veículo encontrado" : "Nenhum veículo cadastrado"}
+          title={
+            filterParams
+              ? "Nenhum veículo encontrado"
+              : "Nenhum veículo cadastrado"
+          }
           description={
             filterParams
               ? "Tente alterar os filtros da pesquisa."

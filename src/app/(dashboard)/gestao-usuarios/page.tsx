@@ -51,7 +51,7 @@ export default function GestaoUsuariosPage() {
     <>
       <SectionTitle text="gestão de usuários" />
 
-      {!isPending && !isError && (users.length > 0 || filterParams) ? (
+      {!isError ? (
         <Filter filters={USER_CATEGORIES} onSubmit={handleFilterSubmit} />
       ) : null}
 
