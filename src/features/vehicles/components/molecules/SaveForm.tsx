@@ -89,6 +89,9 @@ export default function SaveForm() {
         await queryClient.invalidateQueries({
           queryKey: ["current-user"],
         });
+        await queryClient.invalidateQueries({
+          queryKey: ["requests", "vehicle-association"],
+        });
         router.replace("/veiculos");
       },
       onError: () => {

@@ -28,11 +28,15 @@ export async function getOccurrences(
   filters: GetServiceProps = {},
 ): Promise<PaginatedOccurrencesResponse> {
   const { category, value } = filters;
+  const normalizedValue =
+    category === "plate"
+      ? value?.trim().toUpperCase().replaceAll("-", "")
+      : value?.trim();
   const { data } = await api.get<BackendPage<OccurrenceResponse>>("/occurrence", {
     params: {
       page,
       size: PAGE_SIZE,
-      ...(category && value ? { [category]: value } : {}),
+      ...(category && normalizedValue ? { [category]: normalizedValue } : {}),
     },
   });
 
@@ -58,9 +62,27 @@ export async function getOccurrenceById(uuid: string): Promise<OccurrenceRespons
 export async function getMyOccurrenceById(
   uuid: string,
 ): Promise<OccurrenceResponse> {
-  const { data } = await api.get<OccurrenceResponse>(`/occurrence/me/${uuid}`);
-  return data;
+  let page = 0;
+  let totalPages = 1;
+
+  while (page < totalPages) {
+    const { data } = await api.get<BackendPage<OccurrenceResponse>>(
+      "/occurrence/me",
+      { params: { page, size: 100 } },
+    );
+    const occurrence = data.content.find((item) => item.uuid === uuid);
+
+    if (occurrence) {
+      return occurrence;
+    }
+
+    totalPages = data.totalPages;
+    page += 1;
+  }
+
+  throw new Error("Occurrence not found among the logged user's vehicles");
 }
+
 export async function updateOccurrence(
   uuid: string,
   request: OccurrenceRequest,

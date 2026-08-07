@@ -5,6 +5,14 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import FilterChoose from "../atoms/FilterChoose";
 import { useState } from "react";
 import FilterCategory from "@/shared/types/FilterCategory";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 export interface FilterParams {
     category: string;
@@ -19,6 +27,9 @@ interface FilterProps {
 export default function Filter({ filters, onSubmit }: FilterProps) {
     const [selectedFilter, setSelectedFilter] = useState("");
     const [searchValue, setSearchValue] = useState("");
+    const selectedCategory = filters.find(
+        (filter) => filter.value === selectedFilter,
+    );
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -39,6 +50,12 @@ export default function Filter({ filters, onSubmit }: FilterProps) {
         }
     }
 
+    function handleFilterChange(value: string) {
+        setSelectedFilter(value);
+        setSearchValue("");
+        onSubmit({ category: value, value: "" });
+    }
+
     return (
         <form className="mb-4" onSubmit={handleSubmit}>
             <Field>
@@ -47,15 +64,40 @@ export default function Filter({ filters, onSubmit }: FilterProps) {
                 </FieldLabel>
                 <div className="flex gap-3 md:flex-row">
                     <div className="">
-                        <FilterChoose filters={filters} onValueChange={setSelectedFilter} />
+                        <FilterChoose filters={filters} onValueChange={handleFilterChange} />
                     </div>
-                    <Input
-                        disabled={!selectedFilter}
-                        value={searchValue}
-                        onChange={(event) => handleSearchChange(event.target.value)}
-                        className="py-5 text-lg md:text-lg w-full"
-                        placeholder="Comece a digitar para realizar a busca."
-                    />
+                    {selectedCategory?.type === "select" ? (
+                        <Select
+                            value={searchValue || null}
+                            onValueChange={(value) => handleSearchChange(value ?? "")}
+                        >
+                            <SelectTrigger className="h-auto w-full py-5 text-lg md:text-lg">
+                                <SelectValue placeholder="Selecione uma opção">
+                                    {selectedCategory.options?.find(
+                                        (option) => option.value === searchValue,
+                                    )?.text}
+                                </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    {selectedCategory.options?.map((option) => (
+                                        <SelectItem key={option.value} value={option.value}>
+                                            {option.text}
+                                        </SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    ) : (
+                        <Input
+                            disabled={!selectedFilter}
+                            type={selectedCategory?.type === "month" ? "month" : "text"}
+                            value={searchValue}
+                            onChange={(event) => handleSearchChange(event.target.value)}
+                            className="w-full py-5 text-lg md:text-lg"
+                            placeholder="Comece a digitar para realizar a busca."
+                        />
+                    )}
                 </div>
             </Field>
             <button type="submit" className="hidden" />
