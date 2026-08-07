@@ -1,6 +1,12 @@
-import { NotificationTypeDetails } from "./NotificationType";
+import { NotificationType } from "./NotificationType";
 
 export default interface Notification {
-    uuid : string,
-    type : NotificationTypeDetails
+  uuid: string;
+  notificationTime: string;
+  notificationType: NotificationType;
+  message: string;
+}
+
+export interface NotificationPageResponse {
+  content: Notification[];
 }

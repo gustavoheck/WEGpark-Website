@@ -1,6 +1,19 @@
-import { PenBox, TriangleAlert } from "lucide-react";
+import { Link2, ShieldAlert, TriangleAlert } from "lucide-react";
 
 export const NOTIFICATION_UI_CONFIG = {
-    REQUEST : {label : "Solicitação", icon : PenBox, text : "Você tem uma nova solicitação!", href : "/solicitacoes"},
-    OCCURRENCE : {label : "Ocorrência", icon : TriangleAlert, text : "Você tem uma nova ocorrência cadastrada, confira!", href : "/ocorrencias"}
-}
+  VEHICLE_ASSOCIATION: {
+    label: "Solicitação de vínculo",
+    icon: Link2,
+    href: "/solicitacoes",
+  },
+  OCCURRENCE: {
+    label: "Nova ocorrência",
+    icon: TriangleAlert,
+    href: "/ocorrencias",
+  },
+  FIVE_OCCURRENCE: {
+    label: "Alerta de ocorrências",
+    icon: ShieldAlert,
+    href: "/ocorrencias",
+  },
+} as const;
