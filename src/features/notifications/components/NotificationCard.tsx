@@ -1,26 +1,64 @@
+import Link from "next/link";
+import { ArrowRight, Loader2, Trash2 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import DateHour from "@/shared/components/atoms/DateHour";
+
 import Notification from "../types/Notification";
 import { getNotificationConfig } from "../utils/notifications-helpers";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
 interface NotificationCardProps {
-    notification : Notification
+  notification: Notification;
+  onDelete: (notificationUuid: string) => void;
+  isDeleting: boolean;
 }
 
-export default function NotificationCard ({notification} : NotificationCardProps) {
+export default function NotificationCard({
+  notification,
+  onDelete,
+  isDeleting,
+}: NotificationCardProps) {
+  const { icon: IconNotification, label, href } =
+    getNotificationConfig(notification);
 
-    const { icon: IconNotification, text, href } = getNotificationConfig(notification)
+  return (
+    <Card className="flex-row items-center justify-between gap-4 px-4">
+      <div className="flex min-w-0 items-start gap-3">
+        <div className="mt-1 flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-primary">
+          <IconNotification className="size-5" />
+        </div>
+        <div className="min-w-0 space-y-1">
+          <p className="font-semibold text-foreground">{label}</p>
+          <p className="text-balance text-muted-foreground">
+            {notification.message}
+          </p>
+          <DateHour dateHour={notification.notificationTime} />
+        </div>
+      </div>
 
-    return (
-        <Card className="flex-row items-center text-balance justify-between px-4">
-            <div className="flex items-center gap-3">
-                <IconNotification className="size-8"/>
-                <p className="min-h-10 flex items-center">{text}</p>
-            </div>
-            <Link href={href}>
-                <ArrowRight className="size-7 text-primary"/>
-            </Link>
-        </Card>
-    )
+      <div className="flex shrink-0 items-center gap-1">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-label="Remover Notificação"
+          title="Remover Notificação"
+          disabled={isDeleting}
+          onClick={() => onDelete(notification.uuid)}
+        >
+          {isDeleting ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Trash2 className="size-4" />
+          )}
+        </Button>
+        <Button asChild variant="ghost" size="icon">
+          <Link href={href} aria-label={`Abrir ${label.toLowerCase()}`}>
+            <ArrowRight className="size-5 text-primary" />
+          </Link>
+        </Button>
+      </div>
+    </Card>
+  );
 }
