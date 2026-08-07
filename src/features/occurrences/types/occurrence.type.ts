@@ -18,7 +18,7 @@ interface DefaultOccurenceResponse {
 }
 
 interface BaseOccurrenceRequest {
-  defaults: DefaultOccurenceRequest;
+  defaults?: DefaultOccurenceRequest;
 }
 
 interface BaseOccurrenceResponse {

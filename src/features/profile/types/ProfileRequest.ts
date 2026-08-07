@@ -18,3 +18,14 @@ export interface VisitorProfileRequest {
   companyName?: string;
   cpf?: string;
 }
+
+export interface RhProfileRequest {
+  telephone: string;
+  name: string;
+  badgeNumber: string;
+}
+
+export type ProfileRequest =
+  | CollaboratorProfileRequest
+  | VisitorProfileRequest
+  | RhProfileRequest;

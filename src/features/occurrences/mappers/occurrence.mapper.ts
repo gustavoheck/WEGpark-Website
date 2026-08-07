@@ -65,11 +65,14 @@ export function mapCreateFormDataToEntity(
 export function mapUpdateFormDataToEntity(
   formData: UpdateOccurrenceFormValues,
 ): OccurrenceRequest {
-  const defaults = {
-    location: formData.location,
-    gate: formData.gate,
-    plate : formData.plate
-  };
+  const defaults =
+    formData.plate && formData.plate !== "Não informado"
+      ? {
+          location: formData.location,
+          gate: formData.gate,
+          plate: formData.plate,
+        }
+      : undefined;
 
   switch (formData.occurrenceType) {
     case "WARNING":

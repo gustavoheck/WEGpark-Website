@@ -25,6 +25,25 @@ export interface VisitorProfileResponse {
   cpf?: string;
 }
 
-export type ProfileResponse =
+export interface GuardProfileResponse {
+  defaults?: ParkUserDefaults;
+  parkUserDefaults?: ParkUserDefaults;
+  badgeNumber?: string;
+  location?: string;
+  boss?: string;
+}
+
+export interface RhProfileResponse {
+  uuid: string;
+  email?: string | null;
+  telephone?: string | null;
+  name?: string | null;
+  badgeNumber?: string | null;
+}
+
+export type ParkProfileResponse =
   | CollaboratorProfileResponse
-  | VisitorProfileResponse;
+  | VisitorProfileResponse
+  | GuardProfileResponse;
+
+export type ProfileResponse = ParkProfileResponse | RhProfileResponse;

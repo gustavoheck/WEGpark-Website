@@ -9,12 +9,12 @@ export const occurrenceTypes = [
 export type OccurrenceType = (typeof occurrenceTypes)[number];
 
 const baseFields = {
-  location: z.string().min(1, "Informe o local da ocorrÃªncia."),
+  location: z.string().min(1, "Informe o local da ocorrência."),
   gate: z.string().min(1, "Informe a portaria."),
 };
 
 const createWarningSchema = z.object({
-  plate: z.string().min(1, "Informe a placa do veÃ­culo."),
+  plate: z.string().min(1, "Informe a placa do veículo."),
   ...baseFields,
   occurrenceType: z.literal("WARNING"),
   warningType: z.string().min(1, "Selecione o tipo do aviso."),
@@ -22,7 +22,7 @@ const createWarningSchema = z.object({
 });
 
 const createIllegalParkingSchema = z.object({
-  plate: z.string().min(1, "Informe a placa do veÃ­culo."),
+  plate: z.string().min(1, "Informe a placa do veículo."),
   ...baseFields,
   occurrenceType: z.literal("ILLEGAL_PARKING"),
   parkingSpaceType: z.string().min(1, "Selecione o tipo de vaga."),
@@ -30,17 +30,17 @@ const createIllegalParkingSchema = z.object({
 });
 
 const createTrafficAccidentSchema = z.object({
-  plate: z.string().min(1, "Informe a placa do veÃ­culo."),
+  plate: z.string().min(1, "Informe a placa do veículo."),
   ...baseFields,
   occurrenceType: z.literal("TRAFFIC_ACCIDENT"),
   occurrenceDate: z.string().min(1, "Informe a data/hora do ocorrido."),
-  victimName: z.string().min(1, "Informe o nome da vÃ­tima."),
-  responsibleBossName: z.string().min(1, "Este campo Ã© obrigatÃ³rio."),
-  responsibleFactory: z.string().min(1, "Este campo Ã© obrigatÃ³rio."),
-  responsibleSection: z.string().min(1, "Este campo Ã© obrigatÃ³rio."),
-  trafficOccurrenceType: z.string().min(1, "Este campo Ã© obrigatÃ³rio."),
-  guardTestimony: z.string().min(1, "Este campo Ã© obrigatÃ³rio."),
-  victimTestimony: z.string().min(1, "Este campo Ã© obrigatÃ³rio."),
+  victimName: z.string().min(1, "Informe o nome da vítima."),
+  responsibleBossName: z.string().min(1, "Este campo é obrigatório."),
+  responsibleFactory: z.string().min(1, "Este campo é obrigatório."),
+  responsibleSection: z.string().min(1, "Este campo é obrigatório."),
+  trafficOccurrenceType: z.string().min(1, "Este campo é obrigatório."),
+  guardTestimony: z.string().min(1, "Este campo é obrigatório."),
+  victimTestimony: z.string().min(1, "Este campo é obrigatório."),
 });
 
 export const createOccurrenceSchema = z.discriminatedUnion("occurrenceType", [
@@ -51,17 +51,38 @@ export const createOccurrenceSchema = z.discriminatedUnion("occurrenceType", [
 
 export type OccurrenceFormValues = z.infer<typeof createOccurrenceSchema>;
 
-export const updateWarningSchema = createWarningSchema
-  .extend({
-    description: z.string().min(1, "Informe a descriÃ§Ã£o."),
-  });
+const updateDefaults = {
+  plate: z.string(),
+  location: z.string().min(1, "Informe o local da ocorrência."),
+  gate: z.string().min(1, "Informe a portaria."),
+};
 
-export const updateIllegalParkingSchema = createIllegalParkingSchema
-  .extend({
-    description: z.string().min(1, "Informe a descriÃ§Ã£o."),
-  });
+export const updateWarningSchema = z.object({
+  ...updateDefaults,
+  occurrenceType: z.literal("WARNING"),
+  warningType: z.string().min(1, "Selecione o tipo do aviso."),
+  description: z.string().min(1, "Informe a descrição."),
+});
 
-export const updateTrafficAccidentSchema = createTrafficAccidentSchema;
+export const updateIllegalParkingSchema = z.object({
+  ...updateDefaults,
+  occurrenceType: z.literal("ILLEGAL_PARKING"),
+  parkingSpaceType: z.string().min(1, "Selecione o tipo de vaga."),
+  description: z.string().min(1, "Informe a descrição."),
+});
+
+export const updateTrafficAccidentSchema = z.object({
+  ...updateDefaults,
+  occurrenceType: z.literal("TRAFFIC_ACCIDENT"),
+  occurrenceDate: z.string().min(1, "Informe a data/hora do ocorrido."),
+  victimName: z.string().min(1, "Informe o nome da vítima."),
+  responsibleBossName: z.string().min(1, "Este campo é obrigatório."),
+  responsibleFactory: z.string().min(1, "Este campo é obrigatório."),
+  responsibleSection: z.string().min(1, "Este campo é obrigatório."),
+  trafficOccurrenceType: z.string().min(1, "Este campo é obrigatório."),
+  guardTestimony: z.string().min(1, "Este campo é obrigatório."),
+  victimTestimony: z.string().min(1, "Este campo é obrigatório."),
+});
 
 export const updateOccurrenceSchema = z.discriminatedUnion("occurrenceType", [
   updateWarningSchema,

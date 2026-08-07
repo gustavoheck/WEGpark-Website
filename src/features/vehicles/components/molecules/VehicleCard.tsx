@@ -8,6 +8,7 @@ import {
   Eye,
   Pencil,
   Trash2,
+  TriangleAlert,
   Unlink,
   Users,
 } from "lucide-react";
@@ -47,14 +48,20 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
     setIsUnlinkDialogOpen,
     handleUnlink,
     isUnlinking,
-  } = useVehicleCardActions(uuid);
+  } = useVehicleCardActions(uuid, isOwner);
 
   function renderActions(compact = false) {
     return (
       <>
         <VehicleCardButton
-          title="ver ocorrências"
+          title="ver informações"
           Icon={Eye}
+          href={`/veiculos/${encodeURIComponent(plate)}`}
+          compact={compact}
+        />
+        <VehicleCardButton
+          title="ver ocorrências"
+          Icon={TriangleAlert}
           href="/ocorrencias"
           compact={compact}
         />
@@ -208,6 +215,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
         description="Você realmente deseja excluir esse veículo? Esta ação removerá seu vínculo e os vínculos de todos os usuários com esse veículo."
         onClick={handleUnlink}
         confirmText="Excluir"
+        pending={isUnlinking}
       />
 
       <AlertDialog
@@ -217,6 +225,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
         description="Você realmente deseja se desvincular desse veículo? Esta ação removerá seu vínculo, e você só poderá recuperá-lo ao pedir permissão novamente."
         onClick={handleUnlink}
         confirmText="Desvincular"
+        pending={isUnlinking}
       />
     </>
   );

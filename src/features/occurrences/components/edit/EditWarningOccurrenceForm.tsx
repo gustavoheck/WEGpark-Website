@@ -37,12 +37,12 @@ export default function EditWarningOccurrenceForm({
     register,
     handleSubmit,
     setValue,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isDirty },
   } = useForm<UpdateWarningFormValues>({
     resolver: zodResolver(updateWarningSchema),
     mode: "onChange",
     defaultValues: {
-      plate: occurrence.defaults.vehicle?.plate ?? "",
+      plate: occurrence.defaults.vehicle?.plate ?? "Não informado",
       occurrenceType: "WARNING",
       location: occurrence.defaults.location,
       gate: occurrence.defaults.gate,
@@ -72,7 +72,7 @@ export default function EditWarningOccurrenceForm({
 
           toast.add({
             type: "success",
-            description: "OcorrÃªncia atualizada com sucesso!",
+            description: "Ocorrência atualizada com sucesso!",
           });
 
           router.replace("/ocorrencias");
@@ -84,7 +84,7 @@ export default function EditWarningOccurrenceForm({
             type: "error",
             description: getApiErrorMessage(
               error,
-              "Erro ao atualizar a ocorrÃªncia. Tente novamente.",
+              "Erro ao atualizar a ocorrência. Tente novamente.",
             ),
           });
         },
@@ -99,13 +99,14 @@ export default function EditWarningOccurrenceForm({
       confirmationOpen={confirmationOpen}
       onConfirmationOpenChange={setConfirmationOpen}
       pending={isPending}
-      saveDisabled={!isDirty || !isValid || isPending}
+      saveDisabled={!isDirty || isPending}
     >
       <FormField
-        text="Placa do veiculo"
+        text="Placa do veículo"
         id="plate"
         registration={register("plate")}
         error={errors.plate}
+        readOnly
       />
       <FormField
         text="Local / parque"
@@ -135,7 +136,7 @@ export default function EditWarningOccurrenceForm({
       />
 
       <FormField
-        text="DescriÃ§Ã£o"
+        text="Descrição"
         id="description"
         registration={register("description")}
         error={errors.description}

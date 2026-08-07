@@ -34,7 +34,9 @@ export default function OccurrenceSelectField({
           className="h-auto w-full py-5 text-lg"
           aria-invalid={Boolean(error)}
         >
-          <SelectValue placeholder="Selecione uma opção" />
+          <SelectValue placeholder="Selecione uma opção">
+            {value ? (options[value] ?? value) : null}
+          </SelectValue>
         </SelectTrigger>
 
         <SelectContent>

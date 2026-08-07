@@ -1,11 +1,8 @@
-import { ParkUserType } from "@/shared/enum/ParkUserType";
-
 interface BaseProfile {
   uuid: string;
   email: string;
   telephone: string;
   name: string;
-  parkUserType: ParkUserType;
 }
 
 export interface CollaboratorProfile extends BaseProfile {
@@ -20,4 +17,20 @@ export interface VisitorProfile extends BaseProfile {
   cpf: string;
 }
 
-export type Profile = CollaboratorProfile | VisitorProfile;
+export interface RhProfile extends BaseProfile {
+  parkUserType: "RH";
+  badgeNumber: string;
+}
+
+export interface GuardProfile extends BaseProfile {
+  parkUserType: "GUARD";
+  badgeNumber: string;
+  location: string;
+  boss: string;
+}
+
+export type Profile =
+  | CollaboratorProfile
+  | VisitorProfile
+  | GuardProfile
+  | RhProfile;

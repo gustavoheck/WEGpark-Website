@@ -51,7 +51,21 @@ export function ProfileView() {
               <ProfileDetailField label="Email" value={profile.email} />
               <ProfileDetailField label="Telefone" value={profile.telephone} />
 
-              {profile.parkUserType === "VISITOR" ? (
+              {profile.parkUserType === "GUARD" ? (
+                <>
+                  <ProfileDetailField
+                    label="Número do crachá"
+                    value={profile.badgeNumber}
+                  />
+                  <ProfileDetailField label="Local" value={profile.location} />
+                  <ProfileDetailField label="Chefia" value={profile.boss} />
+                </>
+              ) : profile.parkUserType === "RH" ? (
+                <ProfileDetailField
+                  label="Crachá"
+                  value={profile.badgeNumber}
+                />
+              ) : profile.parkUserType === "VISITOR" ? (
                 <>
                   <ProfileDetailField
                     label="Empresa"
@@ -74,7 +88,7 @@ export function ProfileView() {
             </>
           ) : null}
 
-          {!isPending && !isError && profile ? (
+          {!isPending && !isError && profile && profile.parkUserType !== "GUARD" ? (
             <Link
               href="/perfil/editar"
               className={cn(

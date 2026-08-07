@@ -32,12 +32,12 @@ export default function EditTrafficAccidentOccurrenceForm({
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isDirty },
   } = useForm<UpdateTrafficAccidentFormValues>({
     resolver: zodResolver(updateTrafficAccidentSchema),
     mode: "onChange",
     defaultValues: {
-      plate: occurrence.defaults.vehicle?.plate ?? "",
+      plate: occurrence.defaults.vehicle?.plate ?? "Não informado",
       occurrenceType: "TRAFFIC_ACCIDENT",
       location: occurrence.defaults.location,
       gate: occurrence.defaults.gate,
@@ -71,7 +71,7 @@ export default function EditTrafficAccidentOccurrenceForm({
 
           toast.add({
             type: "success",
-            description: "OcorrÃªncia atualizada com sucesso!",
+            description: "Ocorrência atualizada com sucesso!",
           });
 
           router.replace("/ocorrencias");
@@ -83,7 +83,7 @@ export default function EditTrafficAccidentOccurrenceForm({
             type: "error",
             description: getApiErrorMessage(
               error,
-              "Erro ao atualizar a ocorrÃªncia. Tente novamente.",
+              "Erro ao atualizar a ocorrência. Tente novamente.",
             ),
           });
         },
@@ -98,13 +98,14 @@ export default function EditTrafficAccidentOccurrenceForm({
       confirmationOpen={confirmationOpen}
       onConfirmationOpenChange={setConfirmationOpen}
       pending={isPending}
-      saveDisabled={!isDirty || !isValid || isPending}
+      saveDisabled={!isDirty || isPending}
     >
       <FormField
-        text="Placa do veiculo"
+        text="Placa do veículo"
         id="plate"
         registration={register("plate")}
         error={errors.plate}
+        readOnly
       />
       <FormField
         text="Local / parque"
@@ -129,35 +130,35 @@ export default function EditTrafficAccidentOccurrenceForm({
       />
 
       <FormField
-        text="Tipo de ocorrÃªncia"
+        text="Tipo de ocorrência"
         id="trafficOccurrenceType"
         registration={register("trafficOccurrenceType")}
         error={errors.trafficOccurrenceType}
       />
 
       <FormField
-        text="Nome da vÃ­tima"
+        text="Nome da vítima"
         id="victimName"
         registration={register("victimName")}
         error={errors.victimName}
       />
 
       <FormField
-        text="Chefe responsÃ¡vel"
+        text="Chefe responsável"
         id="responsibleBossName"
         registration={register("responsibleBossName")}
         error={errors.responsibleBossName}
       />
 
       <FormField
-        text="FÃ¡brica responsÃ¡vel"
+        text="Fábrica responsável"
         id="responsibleFactory"
         registration={register("responsibleFactory")}
         error={errors.responsibleFactory}
       />
 
       <FormField
-        text="SeÃ§Ã£o responsÃ¡vel"
+        text="Seção responsável"
         id="responsibleSection"
         registration={register("responsibleSection")}
         error={errors.responsibleSection}
@@ -171,7 +172,7 @@ export default function EditTrafficAccidentOccurrenceForm({
       />
 
       <FormField
-        text="Relato da vÃ­tima"
+        text="Relato da vítima"
         id="victimTestimony"
         registration={register("victimTestimony")}
         error={errors.victimTestimony}

@@ -89,6 +89,7 @@ export default function SaveForm() {
         await queryClient.invalidateQueries({
           queryKey: ["current-user"],
         });
+        router.replace("/veiculos");
       },
       onError: () => {
         toast.add({
