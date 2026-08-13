@@ -134,7 +134,7 @@ Atualmente, a API exige o JWT no cabecalho `Authorization`. Por isso, o token fi
 
 ## Testes e qualidade
 
-O plano de testes e os registros de execucao manual estao em [plano-de-testes.md](plano-de-testes.md), com evidencias em `docs/evidencias/plano-de-testes/`.
+O plano de testes e os registros de execucao manual estao em [TESTE.md](TESTE.md), com evidencias em `docs/evidencias/plano-de-testes/`.
 
 Antes de enviar alteracoes, execute:
 
