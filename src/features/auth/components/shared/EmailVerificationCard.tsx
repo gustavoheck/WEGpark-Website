@@ -23,7 +23,7 @@ export function EmailVerificationCard({
   email,
   onBackToLogin,
 }: EmailVerificationCardProps) {
-  const { mutate: resendEmail, isPending } = useResendEmail();
+  const { mutate: resendEmail } = useResendEmail();
 
   const [cooldown, setCooldown] = useState(0);
 
